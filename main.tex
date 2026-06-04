@@ -78,26 +78,84 @@
 \newcommand{\compl}[1]{#1'}
 \newcommand{\compll}[1]{\overline{#1}}
 
+% Custom image command: \myimage{path}{caption}{options}
+\NewDocumentCommand{\myimage}{m m O{width=0.8\textwidth}}{
+  \begin{figure}[H]
+    \centering
+    \includegraphics[#3]{#1}
+    \ifstrempty{#2}{}{\caption{#2}}
+  \end{figure}
+}
+
+\title{Bioinformatics Algorithms - Lecture Notes}
+\author{Fulvio Marelli}
+\date{\today}
+
+\newcounter{docnum}
+\setcounter{docnum}{0}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\ifnum\value{section}>0 [\thedocnum].\thesection\ \leftmark\fi}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
 \begin{document}
 
+\begin{titlepage}
+    \centering
+    \vspace*{\fill}
+    \doublespacing
+    {\Huge \textbf{Bioinformatics Algorithms}}\\[0.5cm]
+    {\Large \textbf{Fulvio Marelli}}\\
+    \vspace*{2cm}
+
+    {\large Politecnico di Milano \\ A.A. 2025/2026} \\
+    \vspace*{\fill}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_1_1.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_2_1.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_2_2.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_3_1.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_4_1.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_4_2.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_4_3.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_5_1.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_6_1.tex}
 \newpage
+\stepcounter{docnum}
+\setcounter{section}{0}
 \input{data/r_6_2.tex}
 
 \end{document}
