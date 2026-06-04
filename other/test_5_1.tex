@@ -1,0 +1,284 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{minted}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{xcolor}
+
+% Custom environment for definitions and important concepts
+\newmdenv[
+    linecolor=black,
+    linewidth=1pt,
+    roundcorner=4pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    innerrightmargin=10pt,
+    innerleftmargin=10pt,
+    backgroundcolor=gray!5
+]{important}
+
+% Custom command for emphasis/exam-remarks
+\newcommand{\sta}{\textbf{\textcolor{red}{\sffamily\upshape [!]}} }
+
+
+\begin{document}
+% Lecture Notes: Bioinformatics Algorithms - Variant Calling and Downstream Analysis
+
+\section{Review: Read Mapping with Mismatches using Suffix Arrays}
+Before delving into variant calling, we review the recursive algorithm for mapping reads with a permissible number of mismatches using suffix arrays. This technique allows us to quickly discard unviable search paths by maintaining a lower bound on the expected number of errors.
+
+\begin{important}
+    \textbf{Lower Bound Error Array ($D$)}: An array precomputed prior to a search that stores the minimum number of mismatches guaranteed to occur when matching the remainder of a search word (from a specific index to the beginning) against a reference string.
+\end{important}
+
+To efficiently map a word like \textit{hazel} into a text like \textit{razle dazzle} allowing up to $D_{\max}$ errors, we compute the lower bounds first, traversing the word backwards. If the required minimum errors exceed our $D_{\max}$ threshold, the search branch is prematurely pruned.
+
+\begin{minted}{python}
+# [pseudocode]
+def recursive_search(word, i, D_max, suffix_interval):
+    # Base case: word is fully matched
+    if i < 0:
+        return suffix_interval
+        
+    # Prune branch if minimum expected errors exceed allowed errors
+    if D_max < D_min[i]:
+        return None 
+
+    results = []
+    # Try all possible characters in the alphabet to account for mismatches
+    for char in ['A', 'C', 'G', 'T']:
+        new_interval = compute_new_suffix_interval(suffix_interval, char)
+        
+        # Skip if the suffix interval is invalid (start > end)
+        if not is_valid(new_interval):
+            continue
+
+        # Recursive step
+        if char == word[i]:
+            # Match: move to next character without decreasing D_max
+            res = recursive_search(word, i-1, D_max, new_interval)
+        else:
+            # Mismatch: move to next character and decrease D_max
+            res = recursive_search(word, i-1, D_max - 1, new_interval)
+            
+        if res: results.extend(res)
+        
+    return results
+\end{minted}
+
+This recursive function searches for all viable matches of a word in a reference string while allowing for mismatches. It leverages a precomputed suffix array to narrow down the search space. Instead of checking every position in the genome, we only explore paths that correspond to actual sequences existing in the reference.
+
+\textbf{Step-by-step walkthrough of the search logic:}
+\begin{enumerate}
+    \item \textbf{Initialization:} The search starts at the end of the query word (e.g., $i=4$ for a 5-letter word) using the entire suffix array as the initial valid interval.
+    \item \textbf{Pruning Check:} Before exploring branches, the algorithm checks the precomputed $D_{\min}$ array. For instance, if searching for \textit{hazel} with $D_{\max}=1$, but $D_{\min} = 2$ (meaning the whole word requires at least two mismatches to align anywhere in the text), the algorithm exits immediately.
+    \item \textbf{Alphabet Iteration:} If pruning conditions are not met, the algorithm iterates over every letter in the alphabet. This is necessary because the true alignment in the reference might contain a different nucleotide than the query word due to allowed mismatches.
+    \item \textbf{Interval Validation:} For each candidate character, a new suffix array interval is computed. If the proposed substring does not exist in the reference string (resulting in an invalid interval where the left boundary exceeds the right boundary), the path is immediately discarded. 
+    \item \textbf{Recursive Call:} If the character matches the query string at the current index, the function recurses without penalty. If it is a mismatch, the function recurses while decrementing the remaining allowed errors ($D_{\max} - 1$).
+\end{enumerate}
+
+\section{Introduction to Downstream Analysis}
+Once sequencing reads are successfully aligned to a reference genome, the alignments can be utilized for various downstream biological applications. The specific application determines how the sequencing experiment is prepared before mapping.
+
+\begin{important}
+    \textbf{ChIP-seq (Chromatin Immunoprecipitation Sequencing)}: A method used to identify genomic regions where specific proteins (such as transcription factors like TP53) bind. Instead of sequencing the whole genome, DNA is shattered, proteins are bound, non-bound DNA is washed away, and the remaining fragments are sequenced.
+\end{important}
+
+In ChIP-seq, mapped reads concentrate around the binding sites, appearing as distinct "peaks" against random genomic noise. Computational "peak calling" statistically evaluates these accumulations to locate binding regions precisely.
+
+\begin{important}
+    \textbf{RNA-seq (RNA Sequencing)}: A technique that sequences transcribed RNA molecules (converted to complementary DNA, or cDNA) to measure gene expression levels and detect structural RNA variations.
+\end{important}
+
+RNA-seq reads map primarily to exonic (protein-coding) regions. A higher read coverage corresponds directly to higher expression levels of the gene. Additionally, reads can span splice junctions (starting in one exon and ending in another), which allows researchers to identify alternative splicing events or aberrant splicing caused by mutations.
+
+% [IMAGE: Sashimi plot showing RNA-seq read coverage over exonic regions. The top half shows standard splice junctions in a control sample, while the bottom half shows aberrant, skipped exons in a patient with a NEB gene mutation.]
+
+\begin{important}
+    \textbf{Hi-C}: A chromosome conformation capture method used to identify physical interactions between distant chromatin regions. Interacting regions are chemically fused and sequenced as paired ends.
+\end{important}
+
+In Hi-C, mapping one read of a pair to Chromosome 2 and its mate to Chromosome 4 indicates a physical interaction between those loci. Accumulations of such pairs yield two-dimensional interaction maps revealing the genome's 3D folding architecture.
+
+\section{Variant Calling and Genomic Variation}
+Variant calling is the process of identifying differences between the sequenced genome of an individual and the standard reference genome. This is a foundational step in identifying disease-causing mutations and understanding cancer genomics.
+
+\subsection{Germline vs. Somatic Mutations}
+\begin{important}
+    \textbf{Germline Mutation}: A variant inherited from an individual's parents or arisen in the germ cells (sperm or egg). It is present in practically every somatic cell of the resulting individual.
+\end{important}
+
+\begin{important}
+    \textbf{Somatic Mutation}: A variant acquired later in life in a specific tissue (e.g., due to UV radiation in skin cells or during tumor development). It is isolated to a specific clonal lineage of cells.
+\end{important}
+
+\textbf{Example:} Germline vs. Somatic Diseases
+\begin{itemize}
+    \item \textbf{Germline:} \textit{Fibrodysplasia Ossificans Progressiva} is caused by a single point mutation (c.617G>A) in the ACVR1 gene present in all cells, causing soft tissue to ossify upon trauma.
+    \item \textbf{Somatic:} \textit{Glioblastoma} tumors arise from accumulated somatic mutations in genes like ERBB2 and NF1. To identify these, researchers sequence both the tumor tissue and a matched normal control (e.g., blood) from the same patient to filter out the millions of benign germline variants.
+\end{itemize}
+
+\subsection{Types of Basic Genomic Variations}
+\begin{important}
+    \textbf{SNV (Single-Nucleotide Variant)}: A change in a single nucleotide observed in an individual. 
+    \\
+    \textbf{SNP (Single-Nucleotide Polymorphism)}: A specific SNV that is common within a population (conventionally present in $>1\%$ of the population).
+\end{important}
+
+While SNV and SNP are often used interchangeably, medical genomics usually searches for rare SNVs, not common SNPs, when diagnosing rare diseases. A typical human genome contains 3–4 million SNVs.
+
+\begin{important}
+    \textbf{Indels (Insertions and Deletions)}: Small insertions or deletions of base pairs. 
+\end{important}
+
+Indels can be particularly destructive if they occur within protein-coding regions. An insertion or deletion that is not a multiple of three causes a \textbf{frameshift mutation}, completely changing the downstream amino acid sequence and usually truncating the protein.
+
+\begin{important}
+    \textbf{Structural Variants (SVs)}: Large-scale genomic alterations (typically $\geq 1$ kbp), including deletions, duplications, inversions, and translocations.
+\end{important}
+
+SVs can be \textit{balanced} (no net change in the amount of DNA, e.g., inversions) or \textit{unbalanced} (an increase or decrease in DNA, e.g., Copy Number Variants). The average size of an SV is around 250,000 nucleotides, which is significantly larger than the average gene length.
+
+\section{Metrics of Quality and Variant Frequency}
+
+When searching for variants, we rely on the alignment of reads to a reference. The fraction of reads supporting the variant and the statistical confidence in the data are crucial.
+
+\begin{important}
+    \textbf{Variant Allele Frequency (VAF)}: The fraction of reads covering a specific position that support the alternate (variant) base.
+\end{important}
+
+For germline variants:
+\begin{itemize}
+    \item \textbf{Homozygous reference (aa):} VAF $\approx 0\%$
+    \item \textbf{Heterozygous variant (ab):} VAF $\approx 50\%$ (One copy is affected. Due to random sampling of DNA fragments, exact 50\% is rare, but values cluster around it).
+    \item \textbf{Homozygous variant (bb):} VAF $\approx 100\%$ (Both copies affected).
+\end{itemize}
+Somatic variants exhibit a much wider, more complex VAF spectrum due to tumor purity (presence of normal cells in the sample) and tumor clonality (sub-populations of tumor cells with different mutational profiles). A critical mutation conferring resistance to therapy might be present in only 5\% of the sequenced cells.
+
+\subsection{PHRED Quality Scores}
+To statistically weight our observations, we use PHRED scores, which logarithmically encode error probabilities.
+
+\begin{important}
+    \textbf{PHRED Quality Score ($Q_{PHRED}$)}: A transformation of the probability $p$ that a base call or read mapping is incorrect.
+    \[
+    Q_{PHRED} = -10 \log_{10} p
+    \]
+\end{important}
+
+If $Q=30$, the error probability is $1:1000$ (99.9\% accuracy). If $Q=20$, the error probability is $1:100$ (99\% accuracy). 
+We differentiate between two quality measures:
+\begin{itemize}
+    \item \textbf{Mapping Quality:} The confidence that the read genuinely belongs to its assigned genomic coordinate. Repetitive regions lower this score.
+    \item \textbf{Base Quality:} The confidence of the sequencing machine in the specific nucleotide call (e.g., light signal clarity during sequencing).
+\end{itemize}
+
+% [IMAGE: Pileup format from SAMtools output. Shows a specific genomic coordinate with an A in the reference. 16 reads support the reference A (shown as dots and commas), while 10 reads show a mismatching G, strongly indicating a heterozygous variant.]
+
+\section{Germline Genotype Calling Algorithms}
+The goal of genotype calling is to define the exact genotype (aa, ab, bb) for each position in the genome based on a column of aligned reads. Let $n$ be the total reads at a position, $k$ be the reference bases, and $n-k$ be the alternate bases.
+
+\subsection{The Naive Frequency Heuristic}
+Early pipelines applied a hard threshold filter ($Q \geq 20$) and then classified variants purely based on VAF boundaries (e.g., $20\% \leq \text{VAF} \leq 80\%$ is heterozygous).
+\sta \textbf{Problems with the naive approach:} It severely under-calls heterozygous variants at low sequencing depths. Observing 1 alternate base out of 6 total reads yields a $17\%$ VAF. A hard threshold categorizes this as homozygous reference, even though random sampling from a true 50/50 heterozygous site can easily produce a 1/6 ratio. Furthermore, filtering out low-quality bases entirely discards useful probabilistic information.
+
+\subsection{The MAQ Algorithm: A Probabilistic Bayesian Approach}
+To resolve the flaws of the frequency heuristic, the MAQ algorithm utilizes Bayesian statistics and \textbf{Maximum A Posteriori (MAP)} estimation.
+
+\begin{important}
+    \textbf{Bayes' Theorem for Mutually Exclusive Events}:
+    \[
+    P(E_i \mid D) = \frac{P(D \mid E_i) P(E_i)}{\sum_j P(D \mid E_j) P(E_j)}
+    \]
+    Where $E_i$ represents the underlying genotypes (aa, ab, bb) and $D$ is the observed alignment data.
+\end{important}
+
+\begin{important}
+    \textbf{Maximum A Posteriori (MAP) Estimate}: Selects the parameter (or genotype) $\hat{g}$ that maximizes the posterior probability:
+    \[
+    \hat{g} = \underset{g \in \{\langle a,a\rangle, \langle a,b\rangle, \langle b,b\rangle\}}{\operatorname{argmax}} p(g \mid D)
+    \]
+\end{important}
+
+\textbf{Step 1: Adjusting Qualities.} MAQ prevents high-quality bases on poorly mapped reads (or vice versa) from skewing the results by defining the effective base quality as the minimum of the base quality $Q_i$ and the mapping quality $Q_z$:
+\[
+Q_i' = \min(Q_i, Q_z)
+\]
+
+\textbf{Step 2: Prior Probabilities.} MAQ applies biological priors $P(g)$ based on whether a SNP is known:
+\[
+P(\langle a,a\rangle) = \frac{1-r}{2}, \quad P(\langle b,b\rangle) = \frac{1-r}{2}, \quad P(\langle a,b\rangle) = r
+\]
+Here, $r$ is the heterozygosity rate ($0.001$ for novel SNPs, $0.2$ for known SNPs). A higher $r$ for known SNPs makes the model more forgiving of borderline read ratios at sites known to vary in the population.
+
+\textbf{Step 3: Likelihoods.} MAQ calculates the likelihood of observing the data given a genotype, $P(D \mid g)$.
+For the heterozygous case $\langle a,b\rangle$, MAQ models the alternate read count using a binomial distribution with $p=0.5$:
+\[
+p(D \mid g=\langle a,b\rangle) \propto \binom{n}{k} \frac{1}{2^n}
+\]
+For the homozygous cases, seeing a contrary base is viewed strictly as a sequencing/mapping error. MAQ models the probability of observing exactly $k$ errors ($\alpha_{n,k}$) based on the adjusted error probabilities $\varepsilon_i$ derived from the PHRED scores.
+
+\textbf{Step 4: Posterior Selection.} The genotype with the highest combined product of prior and likelihood is selected, and a final PHRED-scaled confidence score is reported:
+\[
+Q_g = -10 \log_{10}[1 - P(\hat{g} \mid D)]
+\]
+
+\section{Somatic Variant Calling in Cancer (VarScan2)}
+Because somatic mutations exist alongside millions of germline variants, cancer pipelines \textit{must} compare a tumor sample against a matched normal sample from the same patient. 
+
+\begin{important}
+    \textbf{VarScan2 Somatic Calling Strategy}: Identifies variants independently in the tumor and normal samples. If the genotypes differ, it applies a one-tailed Fisher's Exact Test using a hypergeometric distribution to assess statistical significance.
+\end{important}
+
+To test if a variant is genuinely somatic rather than a randomly under-sampled germline trait, VarScan2 evaluates a $2 \times 2$ contingency table of reference vs. alternate reads in both tissues. 
+The probability of observing exactly $N_{T,alt}$ alternate reads in the tumor is defined by the hypergeometric distribution:
+\[
+P(X = N_{T,alt}) = \frac{\binom{N_T}{N_{T,alt}} \binom{N_C}{N_{C,alt}}}{\binom{N_{tot}}{N_{alt}}}
+\]
+To evaluate significance, the algorithm sums the probabilities of finding \textit{at least} $N_{T,alt}$ alternate reads ($P(X \geq N_{T,alt})$). If the $p$-value is $\leq 0.05$, the control sample is homozygous reference, and the tumor sample is variant, it is called a \textbf{somatic variant}.
+
+\sta \textbf{Loss of Heterozygosity (LOH):} If the germline is heterozygous ($A/T$), but the tumor shows exclusively $T$, this is flagged as LOH. This often occurs when the genomic region containing the $A$ allele is structurally deleted in the tumor cells.
+
+\section{Structural Variation: CNV Calling via Read Depth}
+Copy Number Variants (CNVs) are large-scale duplications or deletions. They can be detected using \textbf{read depth} (coverage). If a region is triplicated (3 copies instead of 2), it yields 1.5x the normal reads. If deleted (1 copy), it yields 0.5x reads.
+
+% [IMAGE: Read depth coverage plot comparing a tumor to a normal control. The tumor plot shows massive spikes (amplifications, up to 60 copies of a region) and deep troughs (deletions of entire chromosome arms) relative to the stable baseline of the control sample.]
+
+\subsection{Poisson Modeling and Z-Scores}
+Because exact per-base coverage is too noisy, the genome is partitioned into fixed windows (e.g., 1000 bp). The number of reads starting in a window follows a Poisson distribution where the mean and variance are $\lambda$:
+\[
+P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!} \quad \text{where} \quad \lambda = \frac{N}{G} \cdot W
+\]
+($N$ = total reads, $G$ = genome size, $W$ = window size). For large $\lambda$, this approximates a normal distribution. We evaluate abnormal coverage using a \textbf{z-score}:
+\[
+z = \frac{x - \mu}{\sigma}
+\]
+The z-score defines how many standard deviations a window's read count deviates from the baseline mean. Hard cut-offs fail because random noise causes significant variance even in normal regions. Therefore, consecutive windows must be evaluated together.
+
+\subsection{Event-Wise Testing (EWT) and Multiple Testing Corrections}
+Yoon et al. (2009) proposed Event-Wise Testing (EWT) to find continuous regions of altered depth. 
+1. Convert z-scores to upper-tail/lower-tail probabilities ($p$-values).
+2. Check intervals of length $\ell$. For duplications, an interval $\mathcal{A}$ of $\ell$ windows is significant if the worst (highest) $p$-value inside it satisfies:
+\[
+\max_i \{P_i^{\mathrm{Upper}} \mid i \in \mathcal{A}\} < \left(\frac{\ell}{L} \times \mathrm{FPR}\right)^{\frac{1}{\ell}}
+\]
+Where $L$ is the number of windows in the chromosome, and FPR is the target False Positive Rate. The algorithm iteratively expands the window size $\ell$ until the condition fails.
+
+\begin{important}
+    \textbf{Multiple Testing Problem}: If you use a standard significance threshold ($\alpha=0.05$) to test millions of windows individually, false positives are mathematically guaranteed.
+\end{important}
+
+If you conduct 50 independent tests where the null hypothesis is true, the probability of zero false positives is $0.95^{50} \approx 0.077$. Therefore, there is a 92.3\% chance of calling at least one spurious significant event. 
+
+\begin{important}
+    \textbf{Bonferroni Correction}: The most stringent multiple testing correction (MTC). To maintain an overall error rate of $\alpha$, the threshold for individual tests is reduced by dividing by the total number of tests $k$.
+    \[ p < \frac{\alpha}{k} \]
+\end{important}
+
+In the context of EWT, setting $\ell=1$ collapses the heuristic equation to exactly the Bonferroni correction: $\frac{\mathrm{FPR}}{L}$. However, Bonferroni is often too conservative and masks true positives (false negatives). The EWT equation relaxes this constraint slightly by grouping consecutive windows, effectively testing regions rather than isolated points.
+\end{document}

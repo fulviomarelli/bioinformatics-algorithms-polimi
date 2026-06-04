@@ -1,0 +1,171 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, tikz, booktabs, tabularx, minted, xcolor, mdframed}
+\usepackage[margin=1in]{geometry}
+
+\newmdenv[
+    backgroundcolor=blue!5,
+    linecolor=blue!50,
+    linewidth=2pt,
+    roundcorner=5pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt
+]{important}
+
+\newcommand{\sta}{\textbf{\textcolor{red}{* }}}
+
+\begin{document}
+% Lecture Notes: Foundations of DNA Sequencing Technology and Genome Assembly
+
+\section{Genome Assembly and De Bruijn Graphs}
+
+Genome assembly involves reconstructing a full reference genome from millions of short sequencing reads. Rather than directly calculating pairwise overlaps between all reads—which is computationally prohibitive and sensitive to repeated sequences—modern assemblers decompose reads into smaller, fixed-length substrings called $k$-mers and construct a De Bruijn graph.
+
+\subsection{Constructing the De Bruijn Graph}
+
+To build a De Bruijn graph, each read is divided into all possible overlapping $k$-mers. There is an important relationship between the chosen $k$-mer size and the implied overlap between merged sequences: selecting a $k$-mer size of $k$ inherently requires an overlap of $k-1$ bases to connect two segments. We cannot simply use an entire read (e.g., 200 bases) as a single $k$-mer, because merging would then require a 199-base overlap, demanding an unrealistically deep sequencing coverage.
+
+\begin{important}
+    \textbf{De Bruijn Graph}: A directed graph representing overlapping sequences. Each edge represents a specific $k$-mer from the original string. The nodes it connects represent the $(k-1)$-mer prefix (source node) and $(k-1)$-mer suffix (destination node) of that $k$-mer. Identical nodes are merged globally, preserving all original edges.
+\end{important}
+
+\textbf{Example:} Graph Construction
+Consider decomposing a text into 3-mers. If we have the 3-mer \texttt{GTC}, it forms a directed edge from the 2-mer node \texttt{GT} to the 2-mer node \texttt{TC}. If the next 3-mer is \texttt{TCA}, it forms an edge from \texttt{TC} to \texttt{CA}. Merging identical nodes across all reads creates a connected graph where the original string can be traced as a continuous path.
+
+% [IMAGE: A diagram showing the phrase "the more things that you read..." broken into k-mer edges and nodes, illustrating how paths naturally diverge and converge at repeated words like "the more".]
+
+To simplify the graph and make traversal more efficient, we can compress unambiguous paths. When a sequence of nodes does not contain any branching (i.e., each node has exactly one incoming and one outgoing edge), the nodes can be merged into a single extended node. This reduces the total number of edges without altering the possible paths through the graph.
+
+\subsection{Eulerian Paths and Cycles}
+
+The goal of genome assembly using a De Bruijn graph is to find a path that traverses the graph to reconstruct the original genomic sequence. There are two main approaches to graph traversal, but they have drastically different computational complexities.
+
+\begin{important}
+    \textbf{Eulerian Path}: A path through a graph that visits every \textit{edge} exactly once. Finding an Eulerian path can be solved efficiently in linear time.
+\end{important}
+
+\begin{important}
+    \textbf{Hamiltonian Path}: A path that visits every \textit{node} exactly once. This is an NP-complete problem.
+\end{important}
+
+Because $k$-mers are mapped to edges in our De Bruijn graph formulation, reconstructing the genome requires using every $k$-mer exactly once, which translates perfectly to the linear-time Eulerian Path problem.
+
+To quickly determine if a graph contains an Eulerian path or cycle without attempting to traverse it, we examine the degrees (connections) of its vertices:
+\begin{itemize}
+    \item \textbf{Undirected Graphs}: 
+    \begin{itemize}
+        \item \textit{Eulerian Cycle}: All vertices must have an even degree.
+        \item \textit{Eulerian Path}: Exactly two vertices must have an odd degree (representing the start and end nodes), while all others are even.
+    \item \end{itemize}
+    \item \textbf{Directed Graphs} (relevant for DNA sequence De Bruijn graphs):
+    \begin{itemize}
+        \item \textit{Eulerian Cycle}: Every node must have an equal in-degree and out-degree.
+        \item \textit{Eulerian Path}: One node must have exactly one more outgoing edge than incoming edges (Start Node), and one node must have exactly one more incoming edge than outgoing edges (End Node). All other nodes must have equal in-degrees and out-degrees.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Hierholzer's Algorithm}
+
+Once we confirm a directed graph meets the conditions for an Eulerian path, we can extract the path in $O(|E|)$ linear time using Hierholzer's algorithm.
+
+\begin{enumerate}
+    \item Verify the graph satisfies Eulerian path requirements. Identify the starting node (out-degree = in-degree + 1).
+    \item Initialize two stacks: a \texttt{temporary\_path} stack for backtracking and a \texttt{final\_path} stack for the result.
+    \item Push the start vertex $V$ onto the \texttt{temporary\_path} stack.
+    \item While the \texttt{temporary\_path} stack is not empty, look at the top vertex $U$.
+    \item If $U$ has unvisited outgoing edges: randomly select one edge leading to vertex $X$, mark the edge as visited (or delete it), and push $X$ onto the \texttt{temporary\_path} stack.
+    \item If $U$ has no unvisited outgoing edges: pop $U$ from the \texttt{temporary\_path} stack and push it onto the \texttt{final\_path} stack.
+    \item The final assembled sequence is generated by popping items off the \texttt{final\_path} stack from top to bottom.
+\end{enumerate}
+
+\subsection{Practical Problems in Assembly}
+
+While the Eulerian path model works perfectly in theory, real biological data introduces several complications:
+
+\begin{itemize}
+    \item \textbf{Choosing $k$-mer Size ($k$)}: If $k$ is too small (e.g., $k=3$), $k$-mers appear millions of times randomly, destroying unique paths. A larger $k$ (e.g., $k=50$) makes overlaps mostly unique, but exponentially increases memory usage. Memory can be mitigated by using a 2-bit encoding scheme for nucleotides (A=00, C=01, G=10, T=11).
+    \item \textbf{Repetitive Regions}: Long genomic repeats (e.g., "CATCATCAT...") cause identical $k$-mers from disparate physical loci to collapse into a single dense node with unexpectedly high edge counts, confusing the traversal.
+    \item \textbf{Sequencing Errors}: A single incorrect base in a read propagates to $k$ different $k$-mers. These erroneous $k$-mers appear at very low frequencies compared to the true genomic $k$-mers and create isolated "bubbles" in the graph. They are often handled by discarding low-frequency $k$-mers before assembly.
+    \item \textbf{Diploidy}: Organisms with two chromosome copies (maternal and paternal) often have heterozygous single-nucleotide differences. These create valid, distinct parallel paths in the graph that must be preserved.
+    \item \textbf{DNA Strands}: Sequencing reads can originate from the forward or reverse DNA strand. A $k$-mer and its reverse complement must be merged or tracked together to accurately assemble the double-stranded locus.
+\end{itemize}
+
+\section{Read Mapping and Suffix Data Structures}
+
+After genome assembly, or when a reference genome is already available, we often need to map millions of short sequence reads (e.g., 200 bases) back to the massive reference genome (e.g., 3 billion bases). We require an indexing data structure that allows for substring search times proportional to the length of the \textit{read}, independent of the length of the genome.
+
+\subsection{Suffix Tries and Suffix Trees}
+
+The fundamental concept is that any substring occurring anywhere in a text is a prefix to some suffix of that text.
+
+\begin{important}
+    \textbf{Suffix Tree}: A highly compressed data structure representing all suffixes of a text. By merging non-branching internal paths of a Suffix Trie into single edges and labeling those edges with coordinate integers (offset and length) instead of literal strings, space complexity is reduced from $O(M^2)$ to $O(M)$, where $M$ is the reference text length.
+\end{important}
+
+\textbf{Example:} Searching for "SI" in "Mississippi\$"
+Starting at the root, we match the prefix "S", taking the corresponding edge, followed by the edge for "I". Finding a match implies the pattern exists. To locate the genomic coordinates, a Depth-First Search (DFS) is performed on the subtree below the match to collect the starting indices of all enclosed leaf nodes.
+\sta The total search complexity is $O(N + K)$, where $N$ is the read length and $K$ is the number of matching occurrences.
+
+To map reads to the human genome, which consists of multiple independent chromosomes, we use a \textbf{Generalized Suffix Tree}. Each chromosome string is appended with a unique termination character (e.g., \$, \#, \%). Leaf nodes and edges are updated to store both the positional index and an identifier for the chromosome of origin.
+
+Despite having linear $O(M)$ nodes and edges, suffix trees exhibit a high constant factor. In practice, a suffix tree requires $\sim$12.5 to 20 bytes per node. Indexing the 3 billion base human genome would demand over 60 GB of RAM, rendering the structure impractical for standard computing environments.
+
+\subsection{Suffix Arrays}
+
+To overcome the memory bottleneck of Suffix Trees, we use Suffix Arrays.
+
+\begin{important}
+    \textbf{Suffix Array (SA)}: An array of integers representing the starting indices of all suffixes of a text, sorted in lexicographical order. 
+\end{important}
+
+By strictly storing integers (4 bytes per index), the Suffix Array slashes memory usage. Since the suffixes are lexicographically sorted, identical substrings group adjacently. Finding the longest match requires a binary search, avoiding the need to traverse the entire reference string. 
+
+\sta \textbf{Construction (Manber-Myers Algorithm):} 
+Naively generating and sorting all suffixes takes $O(M^2)$ time. The Manber-Myers algorithm reduces this to $O(M \log M)$. It initializes by sorting suffixes based on their first character ($2^0$). In subsequent recursive phases, it uses the known sorting order of length $2^{i-1}$ to sort substrings of length $2^i$. Instead of directly comparing strings, it calculates $(current\_index + 2^{i-1})$ and looks up its rank from the previous phase, completing each doubling phase in linear time.
+
+\section{The Burrows-Wheeler Transform (BWT) and FM Index}
+
+The ultimate breakthrough enabling modern read mapping is the combination of the Suffix Array and the Burrows-Wheeler Transform (BWT) to form the FM Index.
+
+\begin{important}
+    \textbf{Burrows-Wheeler Transform (BWT)}: A completely reversible transformation applied to a text that reorders characters to group identical letters together. It does not compress data itself, but outputs a block-sorted structure highly amenable to run-length encoding (e.g., bzip2 compression).
+\end{important}
+
+\subsection{Constructing the BWT}
+
+The naive construction of the BWT:
+\begin{enumerate}
+    \item Append a lexicographically minimal termination character (e.g., \verb|$|) to the input string $T$.
+    \item Form all cyclic rotations of $T$.
+    \item Sort the rotations lexicographically to generate the Burrows-Wheeler Matrix (BWM).
+    \item The last column (L) of the sorted BWM constitutes the BWT.
+\end{enumerate}
+
+% [OCR ERROR: The BWM table in the slides contains severe overlapping text and OCR artifacts like "$a_0$ abracadabra$ $a $$" and "$acadabraca$". Reconstructed standard logic based on transcript.]
+% [IMAGE: A tabular matrix showing all cyclic rotations of "abracadabra$" sorted alphabetically. The first column (F) contains the alphabetically sorted characters, and the last column (L) contains the BWT string.]
+
+Because the terminal \verb|$| character is unique and sorts first, sorting the cyclic rotations is functionally identical to sorting the suffixes. Therefore, the rows of the BWM correspond exactly to the indices in the Suffix Array. 
+
+We can compute the BWT in $O(M)$ linear time directly from the Suffix Array without building the massive $O(M^2)$ rotation matrix. The character in the BWT at index $i$ is simply the character immediately preceding the suffix in the original string $T$. 
+\[ BWT[i] = T[\,SA[i] - 1\,] \]
+\textit{(Exception: If $SA[i] = 0$, there is no preceding character, so $BWT[i] = \$ $)}.
+
+\subsection{The FM Index}
+
+\begin{important}
+    \textbf{FM Index}: A data structure introduced by Ferragina and Manzini (2000) that utilizes the BWT, a checkpointed Suffix Array, and auxiliary tables to enable exact string matching in time proportional strictly to the read length $O(N)$.
+\end{important}
+
+The FM index identifies occurrences of a read using \textbf{Last-to-First (LF) Mapping}. Because the L column (BWT) and the F column (First characters) are permutations of the same string, the $n$-th occurrence of a specific character in the L column corresponds to exactly the $n$-th occurrence of that character in the F column. 
+
+If a full Suffix Array were stored to look up coordinates after finding a match, it would still cost $4 \times |T|$ bytes. Instead, the FM index uses a \textbf{Selective Suffix Array} (checkpointing).
+
+\begin{itemize}
+    \item We only store every $k$-th value of the original Suffix Array.
+    \item When a string match terminates at a row lacking a checkpointed SA value, we iteratively apply LF mapping hops.
+    \item Because every $k$-th coordinate is stored, we must perform at most $k-1$ LF hops backward through the text to hit a checkpoint, from which we calculate the exact genomic index.
+\end{itemize}
+
+\sta By replacing Suffix Trees with the FM Index, the memory footprint required to map reads to the human genome plummets from 60 GB to approximately \textbf{1.5 GB}, allowing read alignment to run comfortably on standard hardware.
+
+\end{document}

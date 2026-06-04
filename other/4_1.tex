@@ -1,0 +1,242 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{tcolorbox}
+\usepackage{minted}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+% Custom environment for important definitions and theorems
+\newenvironment{important}{
+    \vspace{1em}
+    \begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+}{
+    \end{tcolorbox}
+    \vspace{1em}
+}
+
+% Custom command for exam-relevant / critical remarks
+\newcommand{\sta}{\textbf{[\textasteriskcentered\ CRITICAL NOTE:] }}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+
+\begin{document}
+\section{Advanced Genome Assembly: Path Finding and Practical Challenges}
+
+\providecommand{\sta}{\textbf{[*] }}
+\newenvironment{important}{\vspace{0.5em}\noindent\begin{center}\fbox{\begin{minipage}{0.95\textwidth}}}{\end{minipage}\end{center}\vspace{0.5em}}
+
+To assemble a genome from fragmented reads, we decompose sequence data into $k$-mers and construct a De Bruijn graph. The fundamental algorithmic challenge is finding a path that traverses all the edges (representing observed $k$-mers) to reconstruct the original genomic string. 
+
+\subsection{Eulerian Paths and Cycles}
+
+In our De Bruijn graph, every node represents a $(k-1)$-mer and every directed edge represents an observed $k$-mer. To reconstruct the genome without missing any sequence data, we must visit every edge exactly once. 
+
+\begin{important}
+  \textbf{Eulerian Path}: A path through a graph that visits every edge exactly once. It may start and end at different vertices.
+  
+  \textbf{Eulerian Cycle}: An Eulerian path that starts and ends at the exact same vertex.
+\end{important}
+
+To determine whether a directed graph contains an Eulerian path or cycle, we inspect the degrees of its vertices without having to trace the path manually. 
+
+\textbf{Property (Eulerian Cycle Conditions):}
+A connected directed graph has an Eulerian cycle if and only if every vertex has an equal in-degree and out-degree ($\text{in-degree} = \text{out-degree}$).
+
+\textbf{Property (Eulerian Path Conditions):}
+A connected directed graph has an Eulerian path if and only if:
+\begin{itemize}
+    \item Exactly one vertex has $\text{out-degree} = \text{in-degree} + 1$ (This must be the starting node).
+    \item Exactly one vertex has $\text{in-degree} = \text{out-degree} + 1$ (This must be the ending node).
+    \item All other vertices have $\text{in-degree} = \text{out-degree}$.
+\end{itemize}
+
+\sta By simply calculating the in-degree and out-degree of all nodes in our De Bruijn graph, we can instantly determine if an Eulerian path is theoretically possible. 
+
+\subsection{Hierholzer's Algorithm}
+
+Once we establish that an Eulerian path exists, we use Hierholzer's algorithm to extract it. This algorithm operates in linear time with respect to the number of edges, $\mathcal{O}(E)$, which is crucial given the massive size of genomic graphs.
+
+\begin{minted}{python}
+# [pseudocode]
+def find_eulerian_path(graph, start_vertex):
+    temp_path = [start_vertex]
+    final_path = []
+
+    while len(temp_path) > 0:
+        u = temp_path[-1]
+        
+        if has_unvisited_outgoing_edges(graph, u):
+            v = get_random_unvisited_outgoing_edge(graph, u)
+            mark_edge_as_visited(graph, u, v)
+            temp_path.append(v)
+        else:
+            final_path.append(temp_path.pop())
+
+    return final_path[::-1] # return the reversed stack
+\end{minted}
+
+This algorithm finds an Eulerian path in a directed graph by exhaustively exploring unvisited edges. It is highly relevant to genome assembly because finding this path through a De Bruijn graph effectively reconstructs the target contiguous sequence (contig). The core design choice relies on two stacks, which elegantly handle "dead ends" by back-tracking and ensuring nodes are appended to the final path in the correct topological order.
+
+The algorithm functions through the following steps:
+\begin{enumerate}
+    \item \textbf{Initialization}: Identify the required starting node (the one with one extra outgoing edge) and push it onto the \texttt{temp\_path} stack.
+    \item \textbf{Exploration}: Look at the node on the top of the \texttt{temp\_path} stack. If it has unvisited outgoing edges, randomly select one, follow it to the target node, mark the edge as visited, and push the new node onto \texttt{temp\_path}.
+    \item \textbf{Backtracking (Popping)}: If the node on top of \texttt{temp\_path} has no more unvisited outgoing edges (a dead end), pop it off \texttt{temp\_path} and push it onto \texttt{final\_path}.
+    \item \textbf{Termination}: Repeat until \texttt{temp\_path} is empty. The \texttt{final\_path} stack now contains the Eulerian path in reverse order.
+\end{enumerate}
+
+\sta The very first node to be popped to the \texttt{final\_path} stack is guaranteed to be the ending node of the Eulerian path, as it is the only node where we can run out of outgoing edges while still having an unbalanced incoming edge.
+
+\subsection{Practical Problems in Genome Assembly}
+
+While the Eulerian path framework is mathematically elegant, real-world biological data introduces several complicating factors:
+
+\begin{itemize}
+    \item \textbf{Choice of $k$-mer size}: $k$ must be large enough to ensure that most $k$-mers map uniquely to a single location in the genome (e.g., $k=50$). If $k$ is too small, the graph becomes overly tangled. However, larger $k$-mers require longer overlapping sequence reads.
+    \item \textbf{Memory limitations}: Decomposing billions of reads into $k$-mers requires immense RAM. Using a 2-bit notation (where A=00, C=01, G=10, T=11) compresses four nucleotides into a single byte, massively reducing the memory footprint.
+    \item \textbf{Repetitive regions}: Genomes contain vast stretches of repeats (e.g., "CATCATCAT..."). These regions cause multiple distant genomic regions to collapse into a single node with abnormally high coverage, creating unresolvable cycles in the graph.
+    \item \textbf{Sequencing errors}: Errors create artificial $k$-mers. Because a single error affects up to $k$ different overlapping $k$-mers, errors typically manifest as low-frequency "branches" or "bubbles" in the graph. Filtering out low-frequency $k$-mers usually cleans up these artifacts.
+    \item \textbf{Diploid genomes}: Humans have two copies of each chromosome (diploidy). Biological variations between the maternal and paternal copies (like heterozygous SNPs) create genuine structural divergences (bubbles) in the De Bruijn graph.
+    \item \textbf{Strand orientation}: A read might come from the forward or reverse DNA strand. We must include both the read and its reverse complement in our graph construction to ensure all overlapping segments merge correctly.
+\end{itemize}
+
+
+\section{Read Mapping and Reference-Based Assembly}
+
+While de novo assembly builds a genome from scratch, reference-based assembly (or read mapping) aligns newly sequenced reads against an already known, established reference genome.
+
+\subsection{Motivation and Clinical Applications}
+
+We generally use read mapping when we want to discover how a specific individual's genome differs from the species standard. 
+De novo assembly is extremely computationally demanding and error-prone, so if we already possess a high-quality reference (like the Human Genome), we leverage it to guide the assembly of the individual reads.
+
+Major applications include:
+\begin{itemize}
+    \item \textbf{Medical Diagnostics}: Finding germline mutations associated with hereditary disorders or somatic mutations driving cancer growth. 
+    \item \textbf{Precision Medicine}: Tailoring medical treatments based on a patient's genetic profile.
+    \item \textbf{Functional Genomics}: Mapping RNA-seq data to measure gene expression, or ChIP-seq to identify transcription factor binding and epigenetic marks.
+\end{itemize}
+
+\textbf{Example:} Tumor vs. Control mapping
+When a patient has cancer, we sequence both the tumor tissue and healthy control tissue. By mapping reads from both samples to the reference genome, we can isolate mutations present \textit{only} in the tumor (somatic) versus mutations present in all the patient's cells (germline).
+
+\subsection{The Naive String Search Approach}
+
+How do we physically align short reads to a 3-billion-base reference? Our first intuition might be to slide the read along the genome, base by base, and check for perfect matches.
+
+\begin{important}
+  \textbf{Naive String Search Complexity}:
+  Running a naive sliding-window alignment for a read of length $L$ against a genome of length $G$ takes $\mathcal{O}(G \cdot L)$ time.
+\end{important}
+
+For a single read, this is manageable. However, modern Next-Generation Sequencing (NGS) outputs millions of reads ($\ell$). The runtime for the entire dataset would be $\mathcal{O}(G \cdot \ell \cdot L)$. Since $\ell \cdot L$ equals the total sequenced bases (which is often $30\times$ the genome size for standard coverage), this requires evaluating hundreds of billions of combinations. This is computationally unfeasible. We need sublinear time search algorithms based on substring indexing.
+
+\subsection{String Search with Tries}
+
+Instead of sliding reads one by one, we can index the reads themselves using a data structure called a Trie.
+
+\begin{important}
+  \textbf{Trie}: A multi-way tree representing a collection of strings over an alphabet. Each path from the root down to a leaf node uniquely spells out one of the strings in the collection.
+\end{important}
+
+\textbf{The Termination Character (\texttt{\$}):}
+We append a unique termination character (e.g., \texttt{\$}) to the end of every string in our collection. This symbol must be lexicographically smaller than the rest of the alphabet (\texttt{\$} < A < C < G < T). 
+The \texttt{\$} ensures that no string in the collection acts as a prefix for another string. For example, if we search for both \texttt{an} and \texttt{anna}, \texttt{an\$} prevents the shorter word from simply being an unidentifiable internal node of the longer word. Every key uniquely terminates at a leaf node.
+
+If we build a Trie out of all our sequenced reads, we only have to slide the entire Trie down the genome \textit{once}. At each genomic position, we descend the Trie to check if any read perfectly matches.
+\sta While this reduces the runtime to $\mathcal{O}(L' \cdot G)$ (where $L'$ is the max read length), the memory required to store a Trie of hundreds of millions of reads is $\mathcal{O}(n_b)$ (the total size of all reads combined). This causes massive memory explosions.
+
+\subsection{Suffix Tries}
+
+To fix the memory issue of indexing reads, we flip the paradigm: we index the genome instead, and then drop the reads through it.
+
+\begin{important}
+  \textbf{Suffix Trie}: A Trie constructed from \textit{all possible suffixes} of a single reference string (the genome).
+\end{important}
+
+Every substring in a text is simply a prefix of some suffix of that text. Therefore, if we place every suffix of the genome into a Trie, we can find any read by starting at the root and following the characters. If the path terminates or breaks, the read does not exist in the genome.
+
+\begin{minted}{python}
+# [pseudocode]
+def build_suffix_trie(T):
+    T = T + "$"
+    root = Node()
+    
+    for i in range(len(T)):
+        current_node = root
+        for c in T[i:]:
+            if c not in current_node.edges:
+                current_node.edges[c] = Node()
+            current_node = current_node.edges[c]
+            
+    return root
+\end{minted}
+
+This algorithm constructs a suffix trie by iteratively looping over every position in the target text and inserting the remaining sequence as a path in the tree. By doing this, we index the reference genome so any sequenced read can be queried in time proportional to the read's length, rather than the genome's length. The \texttt{\$} ensures that every suffix is explicitly capped at a leaf.
+
+% [IMAGE: A large tree diagram showing all suffixes of the word MISSISSIPPI$. The paths branch out at every letter, demonstrating the immense number of nodes required just to store a small word.]
+
+\textbf{Size Complexity of Suffix Tries:}
+\begin{itemize}
+    \item \textbf{Best Case (e.g., \texttt{aaaa\$})}: The tree remains extremely narrow. It generates exactly $2m+2$ nodes, yielding $\mathcal{O}(m)$ space complexity.
+    \item \textbf{Worst Case (e.g., \texttt{AAABBB\$})}: The branching forces the creation of independent chains for every single suffix combination. This yields $\mathcal{O}(m^2)$ nodes.
+\end{itemize}
+
+\sta For real-world genomes like the human reference, an $\mathcal{O}(m^2)$ space complexity is entirely unpractical. A standard Suffix Trie for 3 billion bases would overwhelm any system's RAM.
+
+\subsection{From Suffix Tries to Suffix Trees}
+
+We can heavily compress a Suffix Trie to make its space complexity strictly linear, resulting in a Suffix Tree.
+
+We achieve this by combining all non-branching paths into single edges. If a node only has one outgoing edge, it is biologically redundant. We merge it with its child node and combine the string labels. 
+
+\textbf{Property (Suffix Tree Node Count):}
+By collapsing non-branching paths, every internal node is guaranteed to have at least two children. A tree with $m$ leaves where every internal node branches at least twice can have at most $m-1$ internal nodes. Thus, the total number of nodes is rigidly bounded at $\mathcal{O}(m)$.
+
+However, explicitly writing out the concatenated strings on the edges still requires $\mathcal{O}(m^2)$ memory. We solve this by replacing the physical string labels with two $\mathcal{O}(1)$ integers: \texttt{(offset, length)}. Instead of storing "ISSIPPI", the edge simply stores pointers referring back to the original genome string in memory.
+
+\textbf{Example:} Leaf Tracking
+If we attach an integer to every leaf node representing the starting index of the suffix it defines, finding a read's alignment position is trivial. We follow the read through the Suffix Tree. Upon completing the read string, we look at the subtree below our stopping point. The numbers on the leaf nodes exactly match the genomic coordinates where that read maps.
+
+Suffix trees are built in $\mathcal{O}(m)$ time using \textbf{Ukkonen's Algorithm}, an online construction method that exploits the fact that shorter suffixes are inherently contained inside longer suffixes, preventing redundant edge creation.
+
+\sta \textbf{Generalized Suffix Trees}: We can represent multiple distinct sequences (like 23 human chromosomes) in a single tree by terminating each sequence with a unique character (e.g., \texttt{\$}, \texttt{\#}, \texttt{\%}). This allows multi-chromosome mapping and inter-sequence analysis.
+
+\subsection{Suffix Arrays}
+
+While Suffix Trees reduce time to $\mathcal{O}(m)$, they have a high constant factor (taking 12 to 20 bytes per node), making them bulky for a 3-billion-base genome. This leads us to Suffix Arrays, the foundational logic used in modern aligners (like BWT-based aligners).
+
+\begin{important}
+  \textbf{Suffix Array}: A lexicographically sorted array of all the suffixes of a string, represented solely by their starting indices. It requires only 4 bytes per character of the input sequence.
+\end{important}
+
+\textbf{Naive Suffix Array Construction:}
+\begin{enumerate}
+    \item Form all possible suffixes from the input string $T$, noting the 0-based starting position of each.
+    \item Sort the suffixes lexicographically (alphabetically), keeping the termination symbol \texttt{\$} as the absolute lowest priority.
+    \item Discard the strings and store only the array of starting indices.
+\end{enumerate}
+
+\textbf{Example:} Finding Repeated Substrings
+In a standard string, finding the longest repeated substring requires $\mathcal{O}(D \cdot N^2)$ complexity where $D$ is the length of the match. However, in a Suffix Array, all occurrences of identical substrings are lexicographically pushed together to be adjacent neighbors. We simply scan the array for adjacent elements with the longest common prefix. Complexity drops drastically to $\mathcal{O}(D \cdot N)$.
+
+\textbf{Manber and Myers Algorithm ($O(N \log N)$):}
+Instead of naively sorting massive strings, the Manber-Myers algorithm uses an ingenious recursive radix sort.
+\begin{enumerate}
+    \item Initialization: Sort suffixes based solely on their first character.
+    \item Recursive Phase: Using the order from phase 1, sort the suffixes based on their first 2 characters.
+    \item Continue recursively doubling the sort depth (4 characters, 8 characters, 16 characters).
+\end{enumerate}
+Because we dynamically reuse the rank information established in the previous depth passes, we completely avoid making deep string comparisons, yielding an efficient $\mathcal{O}(N \log N)$ index build time.
+
+
+\end{document}

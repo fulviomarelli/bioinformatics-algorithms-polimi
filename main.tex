@@ -1,0 +1,94 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[a4paper,margin=1.8cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\usepackage{enumitem}
+\usepackage[breakable, most]{tcolorbox}
+\usepackage{wrapfig}
+\usepackage{tabto}
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{latexsym}
+\usepackage{caption}
+\usepackage{multicol}
+\usepackage{minted}
+\usepackage{xparse}
+\usepackage{cancel}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage[fixed]{fontawesome5}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{parskip}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usetikzlibrary{automata, positioning, circuits.logic.US}
+
+\newcommand{\xor}{\oplus}
+
+\linespread{1.3}
+
+% Blue definition box
+\tcbset{
+  mytheorembox/.style={
+    colframe=blue!80!black,
+    colback=blue!5,
+    coltitle=black,
+    left=5pt,
+    right=5pt, top=5pt, bottom=5pt,
+    boxrule=2pt,
+    leftrule=2pt,
+    rightrule=0pt,
+    toprule=0pt,
+    bottomrule=0pt,
+    sharp corners,
+    breakable,
+  }
+}
+
+\newtcolorbox{important}[1][]{
+  mytheorembox,
+  #1
+}
+
+\graphicspath{{img/}}
+
+\ctikzset{
+    logic ports=american,
+    logic ports/scale=1.2,
+}
+
+\titleformat{\section}[block]
+  {\Large\bfseries}
+  {}
+  {0pt}{}
+  [\vspace{0.01em}\titlerule]
+
+\newcommand{\sta}{ $\blacktriangleright$ }
+\newcommand{\compl}[1]{#1'}
+\newcommand{\compll}[1]{\overline{#1}}
+
+\begin{document}
+
+\input{data/r_1_1.tex}
+\input{data/r_2_1.tex}
+\input{data/r_2_2.tex}
+\input{data/r_3_1.tex}
+\input{data/r_4_1.tex}
+\input{data/r_4_2.tex}
+\input{data/r_4_3.tex}
+\input{data/r_5_1.tex}
+\input{data/r_6_1.tex}
+\input{data/r_6_2.tex}
+
+\end{document}

@@ -1,0 +1,236 @@
+```latex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{minted}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{xcolor}
+
+% Custom environment for definitions and important concepts
+\newmdenv[
+    linecolor=black,
+    linewidth=1pt,
+    roundcorner=4pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    innerrightmargin=10pt,
+    innerleftmargin=10pt,
+    backgroundcolor=gray!5
+]{important}
+
+% Custom command for emphasis/exam-remarks
+\newcommand{\sta}{\textbf{\textcolor{red}{\sffamily\upshape [!]}} }
+
+\begin{document}
+% Lecture Notes: Sequences and Sequence Alignment
+\section{Introduction to Biological Sequences}
+
+Information in living cells is primarily encoded in the form of sequences. The application of information science to molecular biology has been highly successful because biological molecules can be effectively modeled as strings of characters. The most common biological sequences include:
+\begin{itemize}
+    \item \textbf{DNA sequences}: Double-stranded nucleic acids, typically represented by the alphabet \{A, C, G, T\}.
+    \item \textbf{RNA sequences}: Single-stranded nucleic acids, represented by the alphabet \{A, C, G, U\}.
+    \item \textbf{Protein sequences}: Polypeptides composed of amino acids, represented by a 20-letter alphabet.
+\end{itemize}
+
+While the true biological function of a molecule heavily depends on its three-dimensional (3D) folding structure (e.g., protein-protein interactions or DNA binding), many critical characteristics can be inferred directly from its one-dimensional (1D) sequence. For instance, analyzing RNA sequences allows us to measure gene expression (gene activity based on the number of RNA copies produced) and identify alternative splicing events. Furthermore, genome sequences can be analyzed computationally to identify new genes or predict structural properties by comparing them to known sequences in databases.
+
+\section{Alphabets, Strings, and Sequences}
+
+To analyze biological sequences algorithmically, we must first formalize them using standard concepts from theoretical computer science.
+
+\begin{important}
+\textbf{Alphabet (\(\Sigma\))}: A finite set of symbols (or characters). No assumption is made about the inherent nature of these symbols.
+\end{important}
+
+For DNA sequences, we usually define \(\Sigma = \{\text{A, C, G, T}\}\). However, sequencing platforms may output ambiguous bases, expanding the alphabet. For example, the symbol `N' is used to denote an entirely unknown nucleotide, while `R' may be used to denote a nucleotide that is known to be a purine (either A or G). 
+
+For protein sequences, the alphabet consists of 20 letters. Occasionally, a 21st amino acid (selenocysteine) denoted by `U', or an unknown amino acid denoted by `X', may be present. 
+
+\begin{important}
+\textbf{String (Word)}: Any finite sequence of symbols chosen from a given alphabet \(\Sigma\). 
+\end{important}
+
+Strings represent biological molecules, and their indexing varies by domain: in computer science, strings are zero-based, whereas in biology, researchers typically use 1-based numbering to describe genomic locations. 
+
+\subsection{Sequence Orientation}
+Biological sequences have an inherent directional orientation based on their chemical synthesis.
+\begin{itemize}
+    \item \textbf{DNA/RNA Orientation}: From the \(5'\) end to the \(3'\) end. Cellular machinery builds new DNA in this exact direction, making it the standard representation.
+    \item \textbf{Double-stranded DNA}: Because the second DNA strand is the precise reverse complement of the first, it is standard practice to represent double-stranded DNA as a single string. \sta However, computational searches for genes or binding motifs must always check both the given string and its reverse complement.
+    \item \textbf{Protein Orientation}: From the N-terminus to the C-terminus. Every protein sequence technically begins with a Methionine (represented by the letter `M', encoded by the start codon AUG) and concludes translation at a stop codon (UAA, UAG, UGA), which does not code for an amino acid and is omitted from the final string representation.
+\end{itemize}
+
+\subsection{Formal Language Operations}
+
+Let \(S\) and \(T\) be strings over \(\Sigma\). The length of string \(S\) is denoted as \(|S|\). The unique string of length 0 is the \textbf{empty string}, denoted \(\varepsilon\).
+
+\begin{itemize}
+    \item \textbf{Kleene Closure (\(\Sigma^*\))}: The infinite set of all possible strings over \(\Sigma\) of any length (including \(\varepsilon\)). \(\Sigma^+\) denotes the set of all non-empty strings.
+    \item \textbf{Concatenation}: The combination of two strings \(s\) and \(t\) into \(st\). Note that \(s\varepsilon = \varepsilon s = s\).
+    \item \textbf{Substring}: A string \(s\) is a substring of \(t\) if there exist strings \(u\) and \(v\) (possibly empty) such that \(t = usv\). If \(u = \varepsilon\), \(s\) is a prefix; if \(v = \varepsilon\), \(s\) is a suffix. A string of length \(n\) has \(1 + \frac{n(n+1)}{2}\) substrings.
+\end{itemize}
+
+\begin{important}
+\textbf{Palindrome}: A string that reads exactly the same forwards and backwards (e.g., its reverse string is identical to itself). 
+\end{important}
+
+\sta In bioinformatics, a palindromic DNA sequence is defined differently than a standard textual palindrome: it must be identical to its \textbf{reverse complement} (reading both strands \(5' \rightarrow 3'\)). 
+
+\textbf{Example:} 
+The DNA sequence "GATC" is a palindrome. 
+Its complement is "CTAG". When the complement is reversed (read \(5' \rightarrow 3'\)), it becomes "GATC", which perfectly matches the original string. Conversely, "CAAC" is not a biological palindrome.
+
+\begin{important}
+\textbf{Rotation}: A string \(t = vu\) is a rotation of \(s = uv\). The total number of possible rotations for any given string is exactly equal to its length.
+\end{important}
+
+\section{Comparison of Biological Sequences}
+
+Comparing sequences allows us to determine evolutionary relationships, assess functional similarity across species, and map newly sequenced reads back to a reference genome. When we claim that humans share 50\% of their genes with bananas, it means that half of our genes have homologous counterparts in the banana genome due to evolution, not that the exact nucleotide sequences are 50\% identical.
+
+Sequence discrepancies generally arise from two distinct sources:
+\begin{enumerate}
+    \item \textbf{Technical (Sequencing) Errors}: The sequencing machine misidentifies a base. For common Illumina platforms, the error rate is very low (\(< 0.1\%\)), but given the massive volume of data (millions of reads), algorithms must handle millions of accumulated sequencing errors. These errors usually appear randomly on single reads.
+    \item \textbf{Biological Errors (Mutations)}: Mistakes made by the cellular machinery during DNA replication that escape repair mechanisms. These are inherited and appear consistently across multiple reads spanning a specific genomic location.
+\end{enumerate}
+
+Types of biological mutations include:
+\begin{itemize}
+    \item \textbf{Base Substitutions (SNPs/SNVs)}: A single nucleotide is replaced by another.
+    \item \textbf{Indels}: Small insertions or deletions of DNA fragments (often just a few base pairs). 
+    \item \textbf{Structural Variants}: Large-scale genomic events (\(>1\) kb) including inversions, translocations (intra- or inter-chromosomal), and massive duplications. Our primary alignment algorithms do not account for these large-scale variants.
+\end{itemize}
+
+\subsection{Distance Measures}
+
+To quantify similarity, we require robust distance metrics.
+
+\begin{important}
+\textbf{Hamming Distance}: The number of positions at which the corresponding symbols in two strings of \textbf{equal length} are different.
+\end{important}
+
+\sta The Hamming distance is insufficient for biological sequences. While it successfully models base substitutions, it utterly fails when indels are present. An insertion of a single base shifts the entire sequence, causing the Hamming distance to evaluate the rest of the string as mismatched, even if the underlying sequence is identical.
+
+\begin{important}
+\textbf{Edit Distance (Levenshtein Distance)}: The minimum number of string operations required to transform one string into another. Allowed operations are insertions, deletions, and substitutions.
+\end{important}
+
+The Edit Distance beautifully captures biological reality because it natively accounts for SNPs (substitutions) and indels (insertions/deletions) regardless of sequence length. 
+
+% [OCR ERROR: original text was "\operatorname {l e v} (a, b) = \left\{ \begin{array}{l l} & \mid a | | a | \\ | b | \quad \mathrm {i f} | a | \quad \mathrm {if} | b | = 0, \\ | b | = 0, \\ | b | = 0, \\ \mid a | b | = 0, \\ \mid a | b | = 0, \\ 1, \mathrm {a}, \\ \mathrm {a}, \\ \mathrm {a}, \\ \mathrm {a}, \\ \mathrm {a}, \\ \end{array}"]
+The formal recursive definition of the Levenshtein distance compares the "tails" of strings (the string excluding its first character):
+\begin{equation}
+\operatorname{lev}(a,b) = \begin{cases}
+  |a| & \text{if } |b| = 0 \\
+  |b| & \text{if } |a| = 0 \\
+  \operatorname{lev}(\operatorname{tail}(a), \operatorname{tail}(b)) & \text{if } a = b \\
+  1 + \min \begin{cases}
+    \operatorname{lev}(\operatorname{tail}(a), b) & \text{(Deletion)} \\
+    \operatorname{lev}(a, \operatorname{tail}(b)) & \text{(Insertion)} \\
+    \operatorname{lev}(\operatorname{tail}(a), \operatorname{tail}(b)) & \text{(Substitution)}
+  \end{cases} & \text{otherwise}
+\end{cases}
+\end{equation}
+
+Because transformations are symmetric, a deletion when converting \(a\) to \(b\) is mathematically identical to an insertion when converting \(b\) to \(a\). The challenge is that testing all possible combinations of these operations results in an infinite search space, necessitating an algorithmic shortcut.
+
+\section{Alignment for Minimum Edit Distance (Dynamic Programming)}
+
+To compute the Edit Distance efficiently and find the optimal sequence alignment, we utilize Dynamic Programming (DP). We break the problem down by computing the distances of increasingly larger prefixes of the two strings.
+
+Let \(a(i)\) be the prefix of string \(a\) of length \(i\), and \(b(j)\) be the prefix of string \(b\) of length \(j\). Assuming we have already computed the edit distances for smaller prefixes, the recurrence relation is defined as:
+
+% [OCR ERROR: original text was "E \left(a (i), b (j)\right) = \min \left\{ \begin{array}{l} \left\{ \begin{array}{l l} 1 + E \left(a (i), b (j)\right) = \min \left\{ \right. \\ 1 + E \left(a (i), b (j)\right) = \min \left\{a (i), b (j)\right) = \min \left\{ \right\rangle\right\rangle\leftarrow a _ {i} \right\rangle \leftarrow a _ {i} \neq b _ {j} ..."]
+\begin{equation}
+E(a(i), b(j)) = \min \begin{cases}
+E(a(i-1), b(j)) + 1 \\
+E(a(i), b(j-1)) + 1 \\
+E(a(i-1), b(j-1)) + \begin{cases} 0 & \text{if } a_i = b_j \\ 1 & \text{if } a_i \neq b_j \end{cases}
+\end{cases}
+\end{equation}
+
+\subsection{Matrix Initialization and Filling}
+
+We construct a matrix of size \((|a|+1) \times (|b|+1)\). 
+\begin{enumerate}
+    \item \textbf{Initialization}: We label the 0-th row and 0-th column with a gap `-', representing an empty string. The edit distance between an empty string and a sequence of length \(k\) is simply \(k\) (requiring \(k\) insertions). Thus, we initialize the first row with \(0, 1, 2, \dots, m\) and the first column with \(0, 1, 2, \dots, n\).
+    \item \textbf{Matrix Filling}: For every empty cell \((i, j)\), we look at three neighboring cells:
+    \begin{itemize}
+        \item \textbf{Cell to the left} (\(E(a(i), b(j-1))\)): Add 1. This models advancing in string \(b\) but not \(a\), thus inserting a gap in \(a\).
+        \item \textbf{Cell to the top} (\(E(a(i-1), b(j))\)): Add 1. This models advancing in string \(a\) but not \(b\), thus inserting a gap in \(b\).
+        \item \textbf{Diagonal cell} (\(E(a(i-1), b(j-1))\)): Add 0 if the current characters match (\(a_i = b_j\)), or add 1 if they mismatch (\(a_i \neq b_j\)). This models substituting or matching two characters.
+    \end{itemize}
+    \item \textbf{Resolution}: Take the minimum of these three computed values and place it in cell \((i, j)\). The final edit distance between the two full strings will be found in the bottom-right cell \((n, m)\).
+\end{enumerate}
+
+\subsection{Backtracking and Alignment Reconstruction}
+
+While the matrix provides the total number of operations, we must perform a \textbf{traceback (backtracking)} from cell \((n, m)\) to cell \((0, 0)\) to retrieve the actual biological alignment. We simply follow the pointers that recorded which of the three neighbors provided the minimal value.
+
+\textbf{Example: Backtracking paths for "SUGAR" and "SUCRE"}
+Because multiple paths can sometimes yield the exact same minimum edit distance (in this case, 3), the algorithm can produce multiple mathematically optimal but visually different alignments.
+
+\begin{minted}{text}
+# [Path 1: Prefers substitution (diagonal movement)]
+SUGAR
+SUCRE
+\end{minted}
+Here, G is substituted with C, A is substituted with R, and R is substituted with E. This is useful when biological gap penalties are harsh.
+
+\begin{minted}{text}
+# [Path 2: Prefers gaps (horizontal/vertical movement)]
+SUGAR-
+SUC-RE
+\end{minted}
+Here, the total distance is still 3 (delete G, insert C, insert E). Biologically, this might be preferred if sequences are known to undergo frequent frameshifts or indels. Which optimal path is selected depends entirely on the specific biological scoring constraints defined by the researcher. The backtracking process itself runs in \(O(n+m)\) linear time, while the matrix filling runs in \(O(nm)\).
+
+\section{Measuring Sequence Similarity}
+
+Instead of quantifying how \textit{different} strings are via distances, we can measure how \textit{similar} they are. While "Percent Identity" is often used, it is flawed because different optimal alignments of the same sequences can produce wildly different percent identity scores.
+
+\begin{important}
+\textbf{Longest Common Subsequence (LCS)}: The maximum number of characters that appear in both strings in the exact same order, though not necessarily consecutively. 
+\end{important}
+
+Note that a \textit{subsequence} differs from a \textit{substring} (which must be strictly consecutive). The maximum number of subsequences of a string of length \(n\) is \(2^n\). The DP algorithm for LCS is nearly identical to the Edit Distance matrix, but instead of finding the \textit{minimum} cost, we seek the \textit{maximum} reward. A score is increased by 1 only when a diagonal movement yields a perfect character match (\(a_i = b_j\)); gaps and mismatches yield 0 additional score. 
+
+\section{Combining Distance and Similarity}
+
+\subsection{Global Alignment (Needleman-Wunsch)}
+
+We can combine the distance approach (penalizing differences) and similarity approach (rewarding conserved letters) into a comprehensive scoring system. 
+
+\begin{important}
+\textbf{Needleman-Wunsch Algorithm}: The foundational dynamic programming algorithm for global biological sequence alignment, developed in 1970. It maximizes a scoring matrix using predefined weights.
+\end{important}
+
+Instead of simple \([+1, 0]\) rules, we assign arbitrary positive weights to matches (\(w_m > 0\)), and negative weights to mismatches (\(w_s < 0\)) and gaps (\(w_d < 0\)). The recurrence relation becomes:
+
+% [OCR ERROR: original text was "E \left(a (i), b (j)\right) = \max \left\{ \begin{array}{l} \left\{ \begin{array}{l} w _ {\mathrm {d} + E \left(a (i), b (j)\right) = \max \left\{a (i), b (j)\right) \ \left. \right\rangle ..."]
+\begin{equation}
+E(a(i), b(j)) = \max \begin{cases}
+E(a(i-1), b(j)) + w_d \\
+E(a(i), b(j-1)) + w_d \\
+E(a(i-1), b(j-1)) + \begin{cases} w_m & \text{if } a_i = b_j \\ w_s & \text{if } a_i \neq b_j \end{cases}
+\end{cases}
+\end{equation}
+
+By reading the final alignment column by column, the final alignment score is simply the sum of all individual column weights.
+
+\subsection{Gap Penalty Models}
+
+Not all gaps are biologically equal. A single insertion of a 5-base sequence is biologically much more probable than 5 independent insertions of 1-base sequences. To model this, sequence aligners implement diverse gap penalty models:
+\begin{itemize}
+    \item \textbf{Linear gap penalty}: The penalty is strictly multiplied by the length of the gap. "---" costs \(3 \times w_d\).
+    \item \textbf{Constant gap penalty}: A fixed negative score is applied for any gap, regardless of whether it is 1 base or 10 bases long. This is used when an algorithm prefers fewer, larger gaps, leaving longer contiguous matched segments undisturbed.
+    \item \textbf{Affine gap penalty}: The most widely used biological model. It charges a high \textbf{gap opening penalty} for the first gap character, but a significantly lower \textbf{gap extension penalty} for every subsequent gap character added to the same contiguous block. This beautifully models biological indels, where a block deletion is a single evolutionary event.
+\end{itemize}
+
+\end{document}
+```

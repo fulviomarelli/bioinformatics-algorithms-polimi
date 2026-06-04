@@ -1,0 +1,155 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, tikz, booktabs, tabularx, minted, xcolor, mdframed}
+\usepackage[margin=1in]{geometry}
+
+\newmdenv[
+    backgroundcolor=blue!5,
+    linecolor=blue!50,
+    linewidth=2pt,
+    roundcorner=5pt,
+    innertopmargin=10pt,
+    innerbottommargin=10pt
+]{important}
+
+\newcommand{\sta}{\textbf{\textcolor{red}{* }}}
+
+\begin{document}
+
+% Lecture Notes: BWT/FM Index Algorithms for Read Mapping
+
+\section{The FM Index and BWT Reconstruction}
+To effectively align millions of short sequence reads to a massive reference genome (such as the 3 billion nucleotide human genome), aligners cannot afford to scan the text linearly. Instead, modern alignment tools rely on highly optimized indexing structures. A foundational concept for these tools is the Burrows-Wheeler Transform (BWT), which rearranges the genome into a block-sorted format. The BWT is then augmented with auxiliary data structures to form the FM Index, allowing for rapid querying and memory efficiency.
+
+\begin{important}
+    \textbf{FM Index (Full-text index in Minute space)}: A memory-efficient data structure built upon the Burrows-Wheeler Transform. It enables fast substring searches by explicitly storing a compressed representation of the text and utilizing checkpoints for auxiliary metadata to maintain a small memory footprint.
+\end{important}
+
+\subsection{LF Mapping and String Reconstruction}
+A crucial aspect of searching within the BWT is the ability to traverse the text backwards. This is made possible by the relationship between the first column (F) and the last column (L) of the sorted Burrows-Wheeler matrix.
+
+\begin{important}
+    \textbf{Property (LF Mapping)}: The relative order of identical characters in the F column is perfectly preserved in the L column. Consequently, the $i$-th occurrence of a character in the F column corresponds to exactly the same original character as the $i$-th occurrence of that character in the L column.
+\end{important}
+
+Instead of memorizing absolute positions in the original genome (T-ranks), we track the sequential occurrence of characters within the columns (B-ranks). \sta Because storing explicit B-ranks for every character in a 3-billion-letter genome is prohibitive, the FM Index employs a cumulative count strategy. 
+
+\subsection{Components of the Practical FM Index}
+A naive suffix array or suffix tree for the human genome would require tens of gigabytes of RAM. The FM Index dramatically reduces this space (down to $\sim$1.5 GB) by maintaining four core components:
+\begin{itemize}
+    \item \textbf{The L Column (BWT)}: The transform itself. Because the matrix is sorted, the L column contains long runs of identical characters, making it highly compressible.
+    \item \textbf{F Column Counts (Array C)}: The F column is entirely lexicographically sorted. We do not store the column; we only store the cumulative total of characters that are lexicographically strictly smaller than each alphabet symbol.
+    \item \textbf{Tally Table Checkpoints}: Storing the explicit occurrence count of characters (B-rank) at every row is too expensive. Instead, occurrences are explicitly saved only at every $K$-th row. To find the count at an unindexed row, the algorithm jumps to the nearest checkpoint and scans the L column. 
+    \item \textbf{Selective Suffix Array}: To map a match back to its original genomic coordinate, Suffix Array (SA) values are retained only for every $K$-th position of the original string. \sta If a match resolves to an unindexed row, the algorithm steps backwards through the LF mapping until it hits an indexed position, computing the true coordinate via the number of hops.
+\end{itemize}
+
+\section{Exact Matching in BWA}
+The Burrows-Wheeler Aligner (BWA) leverages the FM Index to find exact matches iteratively. Because the BWT conceptually groups all identical prefixes, every search pattern corresponds to a contiguous block of rows.
+
+\begin{important}
+    \textbf{Suffix Array (SA) Interval}: A contiguous range of indices $[\underline{R}(W), \overline{R}(W)]$ in the suffix array (and correspondingly, the BWT matrix) that encompasses all occurrences of a substring $W$ from the original text $T$.
+\end{important}
+
+To find a match, the algorithm starts at the final character of the search pattern $W$ and works backward, iteratively narrowing the SA interval by prepending the preceding characters. 
+
+The iterative step defines the interval for the suffix $W_k = a_k W_{k+1}$, where $a_k$ is the current character being prepended, using the following bounds:
+\begin{align}
+    \underline{R}(W_k) &= C(a_k) + \text{Occ}(a_k, \underline{R}(W_{k+1}) - 1) + 1 \label{eq:lower_bound} \\
+    \overline{R}(W_k) &= C(a_k) + \text{Occ}(a_k, \overline{R}(W_{k+1})) \label{eq:upper_bound}
+\end{align}
+
+Here, $C(a_k)$ is the count of all characters lexicographically strictly smaller than $a_k$, and $\text{Occ}(a_k, i)$ is the number of occurrences of $a_k$ in the BWT up to index $i$.
+
+\textbf{Example:} Perfect Matching of ``go'' in $T = \text{`googol\$'}$
+What it illustrates: How the SA interval is computed backward one character at a time using the arrays $C$ and $\text{Occ}$.
+\begin{enumerate}
+    \item \textbf{Step 1: Search for ``o'' (last character).} The algorithm computes the bounds for just the letter ``o''. Using precalculated matrices, $\underline{R}(\text{``o''}) = 4$ and $\overline{R}(\text{``o''}) = 6$. The SA interval is $$.
+    \item \textbf{Step 2: Search for ``go'' (prepending ``g'').} The algorithm plugs the bounds of ``o'' into equations \eqref{eq:lower_bound} and \eqref{eq:upper_bound} to find the occurrences of ``g'' that strictly precede these ``o''s.
+    \item The calculation updates the interval to $\underline{R}(\text{``go''}) = 1$ and $\overline{R}(\text{``go''}) = 2$.
+\end{enumerate}
+
+\textbf{Example:} Finding ``abra'' in ``abracadabra\$''
+What it illustrates: The conceptual manual traversal of LF mapping without formulas.
+\begin{enumerate}
+    \item Start with the final character ``a''. Look up its contiguous block in the F column. This is the starting SA interval.
+    \item Check the corresponding indices in the L column to find occurrences of the preceding character, ``r''.
+    \item The discovered ``r''s establish a new bounded range in the F column via their B-ranks.
+    \item Within this new range in the L column, look for the next preceding character, ``b''.
+    \item Move to the corresponding ``b'' block in the F column and look for the initial ``a''. The final block contains all complete matches of ``abra''.
+\end{enumerate}
+
+\section{Inexact Matching and Error Bounds}
+In practical biological applications, exact matching is insufficient due to sequencing machinery errors and natural single nucleotide variants (SNPs) between the sample and the reference.
+
+\begin{important}
+    \textbf{Inexact Matching Problem}: Given a search pattern $W$ of length $m$, a text $T$ of length $n$, and a distance threshold $d_{max}$, find all substrings $T^p$ starting at position $p$ such that the distance $d(W, T^p) \leq d_{max}$.
+\end{important}
+
+\subsection{Prefix Tries and Depth-First Search}
+To handle mismatches, algorithms conceptually traverse a Prefix Trie.
+
+% [IMAGE: Prefix trie for string T = "GOOOGOL$" showing depth-first search for the word "LOL" with a maximum distance $d_{max}=1$. A dashed line indicates a path containing an allowed mismatch (e.g., matching "G" instead of "L"). The nodes represent suffix array intervals.]
+
+\begin{important}
+    \textbf{Prefix Trie}: A tree data structure identical to a suffix trie of the reversed text. A path from a leaf to the root gives a unique prefix of $T$, allowing search operations to proceed backward from the final character of a search string.
+\end{important}
+
+A brute-force approach performs a Depth-First Search (DFS) on the prefix trie, branching out and accumulating an error count. When the accumulated error exceeds $d_{max}$, the branch is pruned. However, to prevent a combinatorial explosion, BWA calculates a heuristic lower bound of expected errors to stop unpromising DFS branches early.
+
+\subsection{BWA Inexact Search Algorithms}
+The BWA algorithm implements inexact matching recursively. It relies on a helper array $D$ that anticipates future mismatches.
+
+\begin{minted}{text}
+# [pseudocode]
+Algorithm 1 InexactSearch(W, z)
+1: CalculateD(W)
+2: return InexRecur(W, |W|-1, z, 1, |T|-1)
+\end{minted}
+
+This main function orchestrates the search. It first computes the lower bound of mismatches via `CalculateD`. Then, it calls `InexRecur`, passing the full word length ($|W|-1$), the total allowed mismatches ($z$), and the maximal starting SA interval bounds ($1$ to $|T|-1$).
+
+\begin{minted}{text}
+# [pseudocode]
+Algorithm 2 CalculateD(W)
+1: z <- 0
+2: j <- 0
+3: for i = 0 to |W|-1 do
+4:     if W[j..i] is not a substring of T
+5:         z <- z + 1
+6:         j <- i + 1
+7:     end if
+8:     D(i) <- z
+9: end for
+10: return D
+\end{minted}
+
+The `CalculateD(W)` algorithm acts as an early stopping mechanism. It scans the search word $W$ from front to back. Whenever it encounters a substring $W[j..i]$ that does not exist \textit{anywhere} in the reference text $T$, it increments an error counter $z$ and resets the start of the substring. \sta The returned array $D(i)$ represents the absolute minimum number of mismatches guaranteed to occur in the prefix $W[0..i]$.
+
+\textbf{Example:} `CalculateD(W)` execution
+What it illustrates: How the error bound $D(i)$ is computed for $W = \text{``LOL''}$ in $T = \text{``GOOGOL\$''}$.
+\begin{enumerate}
+    \item $i=0$: $W[0..0]$ is ``L''. ``L'' exists in $T$. $D(0) = 0$.
+    \item $i=1$: $W[0..1]$ is ``LO''. ``LO'' does not exist in $T$. We increment the error $z=1$ and update $j=2$. $D(1) = 1$.
+    \item $i=2$: $W[2..2]$ is ``L''. ``L'' exists in $T$. $D(2)$ remains $1$.
+    \item During the DFS, if we are evaluating the final letter and have already accumulated $1$ error, the lookup to $D$ will inform us that the prefix guarantees at least $1$ more error, exceeding our budget of $1$. The search branch is immediately aborted.
+\end{enumerate}
+
+\begin{minted}{text}
+# [pseudocode]
+Algorithm 3 InexRecur(W, i, z, k, l)
+1: if i < 0 then
+2:     return {k, l}  // i.e., return the valid SA interval
+3: end if
+4: // [OCR ERROR: Original text heavily corrupted. Logic proceeds below:]
+5: // Initialize empty interval set I
+6: // For each nucleotide b in {A, C, G, T}:
+7: //     Calculate k_new and l_new using C and Occ arrays.
+8: //     If k_new <= l_new:
+9: //         If D(i-1) <= z - cost(W[i], b):
+10: //            I = I union InexRecur(W, i-1, z - cost, k_new, l_new)
+11: return I
+\end{minted}
+
+The recursive function `InexRecur` explores intervals for each possible preceding nucleotide `b`. If appending `b` to the current match keeps the interval valid ($k_{new} \leq l_{new}$), the algorithm evaluates whether the mismatch penalty exceeds the budget $z$ minus the guaranteed prefix errors $D(i-1)$. If the budget is respected, it recurses deeper (meaning backward in the word). If $i < 0$, the algorithm has successfully mapped the entire read and returns the suffix array interval, which can subsequently be mapped to physical coordinates using the Selective Suffix Array.
+
+\end{document}

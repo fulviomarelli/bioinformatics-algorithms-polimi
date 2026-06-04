@@ -1,0 +1,164 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{tcolorbox}
+\usepackage{minted}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+% Custom commands and environments as per instructions
+\newcommand{\sta}{\textcolor{red}{\textbf{\large $\star$}} \textit}
+\newtcolorbox{important}{
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries,
+    arc=4mm
+}
+
+\begin{document}
+% Lecture Notes: Foundations of DNA Sequencing Technology and Genome Assembly - Sequence Alignment (Part 2)
+
+\section{Comparing Sequences and Evolutionary History}
+Comparing strings and sequences is a fundamental problem in computational biology, deeply rooted in the concept of shared history. Just as we can trace the evolutionary history of languages by comparing words (e.g., inferring that the English "sugar" and French "sucre" derive from a common ancestral Arabic word "sukkar"), we can compare biological sequences to infer biological function and evolutionary relationships. 
+
+% [IMAGE: Diagram showing the tree of life and speciation events branching outward to represent common evolutionary origins of species.]
+
+If the hypothesis that all species share a common origin holds true, we expect to find traces of evolution embedded within DNA. The more recently two species diverged (speciation), the more similar their DNA, genes, and corresponding proteins should be. Sequence alignment is our most powerful tool for reconstructing this genomic history.
+
+\textbf{Example:} Aligning homologous genes across species
+Aligning the protein sequences encoded by the SHH (sonic hedgehog) gene in humans and mice, or the Histone 3 (H3) gene in humans and yeast, reveals highly conserved regions. This sequence similarity implies a shared essential biological function that has been preserved by evolution.
+% [IMAGE: Text-based multiline alignment of protein sequences comparing human and mouse SHH genes, and human and yeast H3 genes, showing matching and mismatching amino acids.]
+
+\section{Global Sequence Alignment}
+In global sequence alignment, we attempt to align two complete sequences from start to finish. This is the \textit{de facto} standard for comparing biological sequences that are directly related by evolution, such as homologous genes (orthologs inherited from a common ancestor, or paralogs derived by gene duplication).
+
+\begin{important}
+    \textbf{Needleman-Wunsch Algorithm}: A dynamic programming algorithm used to find the optimal global sequence alignment between two strings by maximizing a similarity score (or minimizing edit distance) across their entire lengths.
+\end{important}
+
+\subsection{Terminology and Operations}
+When building an alignment, we compare letters from sequence \( a \) (length \( n \)) and sequence \( b \) (length \( m \)). Every operation in the alignment matrix corresponds to specific types of matches and differences:
+
+\begin{itemize}
+    \item \textbf{Sequence Match:} Two aligned letters are identical.
+    \item \textbf{Sequence Mismatch:} Two aligned letters are different (a substitution).
+    \item \textbf{Gap:} A letter from one sequence is aligned with nothing in the other sequence (an insertion or deletion, depending on the perspective).
+\end{itemize}
+
+\sta Note on Terminology: In bioinformatics literature and tool outputs (like CIGAR strings in read mapping), the term "Alignment Match" simply implies that two positions are aligned to each other without a gap; it does \textit{not} necessarily guarantee they are the exact same letter (a sequence match).
+
+\subsection{Scoring Alignments and Substitution Matrices}
+Instead of merely counting the number of differences (edit distance), it is far more effective to assign a combination of positive rewards for similarities and negative penalties for differences. 
+
+Let \( w_d < 0 \) be the gap penalty, \( w_s < 0 \) be the mismatch penalty, and \( w_m > 0 \) be the match score. We can formalize this using a substitution matrix.
+
+\begin{important}
+    \textbf{Substitution Matrix (\( \sigma \))}: An \( |\Sigma| \times |\Sigma| \) symmetrical matrix that provides a specific alignment score for every pair of symbols \( s_i, s_j \) in an alphabet \( \Sigma \). It replaces strict match/mismatch scores with context-aware scoring.
+\end{important}
+
+Substitution matrices differ heavily based on the type of biological sequence:
+\begin{itemize}
+    \item \textbf{For DNA/RNA:} The scoring is usually simple. All matches receive the same positive score, and all mismatches receive the same negative penalty.
+    \item \textbf{For Amino Acids (Proteins):} Matrices are much more complex. Because some amino acids share similar chemical properties (e.g., both are hydrophobic and tend to fold inside the protein), "conservative substitutions" or "quasi-matches" between them might receive a positive score or a minor penalty, as they rarely disrupt protein structure. Substituting a hydrophobic amino acid with a hydrophilic one, however, is heavily penalized.
+\end{itemize}
+
+\subsection{The Dynamic Programming Matrix and Backtracking}
+To compute the optimal alignment, we iteratively build a matrix \( A \) where cell \( A(i,j) \) contains the optimal score for the prefixes \( a_{1\dots i} \) and \( b_{1\dots j} \).
+
+% [OCR ERROR: The slide formula for Needle-Wunsch recurrence contained heavily corrupted text. Reconstructed mathematically based on transcript explanation and standard algorithm definitions.]
+The score of any cell is computed recursively:
+\[
+A(i, j) = \max \begin{cases} 
+A(i-1, j) + w_d & \text{(Vertical move: gap in sequence } b \text{)} \\
+A(i, j-1) + w_d & \text{(Horizontal move: gap in sequence } a \text{)} \\
+A(i-1, j-1) + \sigma(a_i, b_j) & \text{(Diagonal move: match or substitution)}
+\end{cases}
+\]
+
+To reconstruct the actual alignment—rather than just finding the final score—we must perform \textbf{backtracking}.
+
+\begin{enumerate}
+    \item \textbf{Store Pointers:} As the matrix is populated, keep track of which operation (vertical, horizontal, or diagonal) yielded the maximum value for each cell. If multiple operations yield the same maximum value, store all corresponding pointers.
+    \item \textbf{Start at the End:} Begin at the bottom-right cell \( A(n, m) \), which holds the final alignment score for the complete strings.
+    \item \textbf{Trace the Path:} Follow the stored arrows backward to the top-left cell \( A(0,0) \). 
+    \begin{itemize}
+        \item A diagonal move indicates aligning \( a_i \) with \( b_j \).
+        \item A horizontal move indicates aligning \( b_j \) with a gap.
+        \item A vertical move indicates aligning \( a_i \) with a gap.
+    \end{itemize}
+\end{enumerate}
+
+\sta It is crucial to store \textit{all} valid pointers for cells where multiple moves yield the same optimal score. This allows us to reconstruct all mathematically equivalent optimal alignments, as different paths represent different locations where a gap or substitution could logically occur without altering the final score. 
+
+\subsection{Advanced Gap Penalties}
+We have primarily defined linear gap penalties, where a gap of length \( L \) costs \( L \times w_d \). However, biologically, once a deletion or insertion event occurs, extending that gap is mechanically easier than initiating a new one.
+\begin{itemize}
+    \item \textbf{Constant Gap Penalty:} A gap of any length costs a single flat penalty.
+    \item \textbf{Affine Gap Penalty:} The most realistic model. It defines a severe \textit{gap opening penalty} and a much smaller \textit{gap extension penalty}. This requires slightly modifying the dynamic programming matrix to track whether the previous cell was already part of a gap.
+\end{itemize}
+
+\section{Longest Common Subsequence (LCS)}
+An alternative to standard edit distance is measuring the length of identical elements preserved between two sequences.
+
+\begin{important}
+    \textbf{Subsequence vs. Substring}: 
+    A \textbf{substring} is a sequence of \textit{consecutive} characters taken from the original string. 
+    A \textbf{subsequence} is a set of characters taken from the original string in their original order, but not necessarily consecutive (characters in between can be omitted).
+\end{important}
+
+Because elements in a subsequence do not need to be contiguous, a string of length \( n \) has \( 2^n \) possible subsequences (we either include or exclude each letter, representable as a binary string), compared to far fewer substrings.
+
+\textbf{Example:} "sue day" as a subsequence
+"sue day" is a valid subsequence of "Saturday". It illustrates that characters can be dropped from the middle of the original word while preserving the order of the remaining letters.
+
+To find the Longest Common Subsequence between two strings using dynamic programming, we adapt our scoring model:
+\begin{itemize}
+    \item Matches (diagonal moves with identical characters) increase the score by 1.
+    \item Mismatches and gaps contribute 0. We do not penalize them, but they do not increase the sequence length.
+    \item We maximize the score to find the longest subsequence.
+\end{itemize}
+
+\section{Local Sequence Alignment}
+Global alignment expects entire sequences to match. However, this has major shortcomings biologically because different macromolecules evolve at different speeds. Redundancy in the genetic code means DNA can change while the resulting protein remains identical. Furthermore, functionally essential domains of a protein (like active binding sites) are highly conserved due to negative selection against mutations, whereas other regions mutate freely.
+
+When sequences share only regional similarities (e.g., conserved exons amidst highly variable introns), forcing a global alignment creates meaningless noise. 
+
+\begin{important}
+    \textbf{Local Sequence Alignment (Smith-Waterman Algorithm)}: An algorithm that finds the optimal partial alignment between two sequences. It identifies the two consecutive substrings (one from sequence \( a \), one from sequence \( b \)) that produce the highest possible alignment score.
+\end{important}
+
+\subsection{The Smith-Waterman Algorithm}
+The problem with a naive approach to local alignment is computational complexity: examining every pair of substrings between two strings of length \( n \) and \( m \) takes \( O(n^2 m^2) \) time. The Smith-Waterman algorithm brilliantly reduces this to \( O(nm) \) using dynamic programming.
+
+The algorithm relies on a profound observation: if we allow negative scores for mismatches and gaps, an optimal local alignment must have a positive score. Otherwise, the optimal choice would just be aligning two empty substrings (score 0). Therefore, whenever a partial alignment score drops below zero, it is mathematically advantageous to abandon that alignment and start over.
+
+The recursive computation adds a crucial fourth choice: \textbf{Zero}.
+\[
+M(i, j) = \max \begin{cases} 
+0 & \text{(Reset the alignment)} \\
+M(i-1, j) + w_d \\
+M(i, j-1) + w_d \\
+M(i-1, j-1) + \sigma(a_i, b_j)
+\end{cases}
+\]
+
+\subsection{Smith-Waterman Traceback}
+Because the alignment does not necessarily span the entire sequences, the traceback mechanism differs from Needleman-Wunsch:
+\begin{enumerate}
+    \item \textbf{Initialization:} The first row and column are initialized purely with 0s (no negative gap penalties to start).
+    \item \textbf{Identify the Best Score:} Once the matrix is filled, the optimal local alignment score is \textit{not} necessarily in the bottom-right cell. You must search the \textit{entire} matrix for the highest positive score.
+    \item \textbf{Traceback to Zero:} Begin traceback from that highest-scoring cell. Follow the pointers backward.
+    \item \textbf{Termination:} Stop tracing when you reach a cell with a score of 0. Cells with 0 have no pointers because they represent the start of a new local alignment. The path between the zero-cell and the maximum-score cell constitutes the best local alignment.
+\end{enumerate}
+
+\sta To find the \textit{second} or \textit{third} best local alignments, we look for the next highest scores in the matrix that do not belong to the cells already used in the primary traceback path, and perform new tracebacks from those origins.
+
+\end{document}

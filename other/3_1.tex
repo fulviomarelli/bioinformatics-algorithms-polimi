@@ -1,0 +1,288 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{tcolorbox}
+\usepackage{minted}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+% Custom environment for important definitions and theorems
+\newenvironment{important}{
+    \vspace{1em}
+    \begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=10pt, bottom=10pt]
+}{
+    \end{tcolorbox}
+    \vspace{1em}
+}
+
+% Custom command for exam-relevant / critical remarks
+\newcommand{\sta}{\textbf{[\textasteriskcentered\ CRITICAL NOTE:] }}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+
+\begin{document}
+
+% Lecture Notes: Foundations of DNA Sequencing Technology and Genome Assembly
+\section{De Novo Genome Assembly}
+
+The computational challenge of piecing together a genome sequence from its fundamental components is central to bioinformatics. As the costs of DNA sequencing have precipitously declined, the primary bottleneck in genomic studies has shifted from data generation to data processing. 
+
+\subsection{Sequencing Basics: Paired-end vs. Single-end}
+
+Modern Next-Generation Sequencing (NGS) strategies typically sequence only a fragment of the target DNA.
+\begin{itemize}
+    \item \textbf{Single-end sequencing}: The sequencing machine reads only one end of the DNA fragment for a certain number of bases (e.g., 100-200 base pairs). This is often sufficient for applications like ChIP-seq, where simply identifying binding sites is the goal.
+    \item \textbf{Paired-end sequencing}: Both ends of the DNA fragment are sequenced. This generates a pair of reads.
+\end{itemize}
+
+\begin{important}
+\textbf{Paired-end Sequencing}: A strategy where both the 5' and 3' ends of the same DNA fragment are sequenced, yielding two reads with a known approximate distance between them.
+\end{important}
+
+The advantage of paired-end sequencing is that we know the reads originated from the same fragment and we roughly know the distance separating them (based on the average size distribution of the prepared DNA library). This is highly useful for identifying structural variants. 
+\textbf{Example:} If two paired reads map to a reference genome 10,000 bases apart, but the original sequenced fragment was only 800 bases long, this strongly implies that the sequenced individual has a genetic deletion of roughly 9,200 bases relative to the reference. 
+
+\subsection{Genome Assembly vs. Read Mapping}
+
+Once millions of short reads are generated, there are two primary ways to interpret them, depending on whether a reference genome exists.
+
+\begin{important}
+\textbf{Genome Assembly}: The process of reconstructing a genome de novo from short sequencing reads without relying on a reference sequence. It is akin to piecing together a shredded newspaper.
+
+\textbf{Read Mapping}: Aligning sequence reads to a pre-existing, known reference genome to find exactly where they originate.
+\end{important}
+
+There are two major classes of genome assembly algorithms:
+\begin{enumerate}
+    \item \textbf{Overlap-Layout-Consensus (OLC)}: Widely used historically with low-throughput, longer-read Sanger sequencing. It matches read overlaps directly.
+    \item \textbf{De Bruijn Graph (DBG)}: The dominant method since the introduction of NGS. It shreds reads into smaller $k$-mers to build mathematical graphs.
+\end{enumerate}
+
+\section{Sequencing Data: Models and Intuition}
+
+To mathematically understand genome assembly, consider an idealized genome modeled as a long random sequence of four bases containing no repeats. We perform whole-genome sequencing (WGS) with no sequencing errors, generating equal-length reads sampled from random starting positions. This is fundamentally a massive random sampling process.
+
+\subsection{The Poisson Model for Sequence Coverage}
+
+Because reads begin randomly across the genome, the probability that any specific base is covered by a given read is extremely low. However, since we perform the sampling process millions of times, we model the sequence coverage using the Poisson distribution.
+
+\begin{important}
+\textbf{Poisson Distribution}: Expresses the probability of a given number of events occurring in a fixed interval of space or time, assuming these events are independent and identically distributed (i.i.d).
+\end{important}
+
+\[ f(k; \lambda) = P(X = k) = \frac{e^{-\lambda} \lambda^k}{k!} \]
+
+Here:
+\begin{itemize}
+    \item $k$ represents the number of reads that overlap a certain genomic position (the "coverage depth" of that base).
+    \item $\lambda$ represents the mean sequencing depth (the average number of reads covering each base in the entire genome).
+\end{itemize}
+
+We can calculate the average coverage depth ($\lambda$) based on physical sequencing parameters. Let:
+\begin{itemize}
+    \item $G$ = genome size (e.g., $3 \times 10^9$ bases for the human genome).
+    \item $L$ = read length (e.g., 100 bases).
+    \item $N$ = total number of sequencing reads.
+\end{itemize}
+
+The total number of sequenced bases is simply $n_b = N \times L$. The average coverage depth per base is thus:
+\[ \lambda = \frac{n_b}{G} = \frac{N \cdot L}{G} \]
+
+\textbf{Example:} Calculating required reads for a 10x coverage.
+To cover the human genome ($3 \times 10^9$ bases) with an average 10-fold coverage ($\lambda=10$) using 200-base reads ($L=200$):
+\[ N = \frac{\lambda G}{L} = \frac{10 \times 3 \times 10^9}{200} = 150,000,000 \text{ reads} \]
+\sta In modern clinical sequencing, a 30x coverage is considered "really good," which would require roughly 450 million reads.
+
+\subsection{K-mers and Coverage}
+
+Instead of looking at whole reads, assembly algorithms shred reads into smaller subsequences of length $k$, called \textbf{k-mers}.
+
+\begin{important}
+\textbf{k-mer}: A contiguous subsequence of $k$ nucleotides extracted from a longer DNA sequence or read.
+\end{important}
+
+In a sequence of length $L$, there are $L - k + 1$ overlapping k-mer subsequences. If we have $N$ total reads, the total number of k-mers in our WGS dataset is:
+\[ n_k = N \times (L - k + 1) \]
+
+The coverage depth in terms of k-mers ($d_k$) is the total number of k-mers divided by the genome size:
+\[ d_k = \frac{n_k}{G} \]
+
+This creates a relationship between base coverage ($\lambda$) and k-mer coverage ($d_k$):
+\[ \frac{\lambda}{d_k} = \frac{n_b / G}{n_k / G} = \frac{L}{L - k + 1} \]
+
+\textbf{Estimating Genome Size:} 
+For a completely unsequenced organism, we do not know $G$. However, if $k$ is large enough (e.g., $k=50$), almost every k-mer originates from a unique position in the genome. We can count the frequency of every k-mer in our reads and plot this empirical distribution. The peak of this distribution gives us the mean k-mer coverage depth ($d_k$). 
+% [IMAGE: A line graph displaying an empirical k-mer coverage depth distribution. The x-axis represents depth (how many times a k-mer is seen), and the y-axis represents frequency (how many distinct k-mers have that depth). A clear peak is visible around depth 30.4. This peak represents the average k-mer coverage.]
+
+With $d_k$ identified from the data, we can estimate the unknown genome size:
+\[ G \approx \frac{n_k}{d_k} \]
+And subsequently find the true base coverage:
+\[ \lambda \approx \frac{L}{L - k + 1} \times d_k \]
+
+\subsection{Missing Bases and Coverage Limits}
+
+Using the Poisson distribution, we can calculate the probability that a base is entirely missed during sequencing (i.e., covered by zero reads, $k=0$):
+\[ P(X = 0) = \frac{e^{-\lambda} \lambda^0}{0!} = e^{-\lambda} \]
+
+Consequently, the probability of seeing at least one read at a given position is:
+\[ P(X > 0) = 1 - e^{-\lambda} \]
+
+If we want to ensure that 99\% of the genome is covered by at least one read, we set this probability to 0.99 and solve for $\lambda$:
+\begin{align*}
+1 - e^{-\lambda} &= 0.99 \\
+e^{-\lambda} &= 0.01 \\
+-\lambda &= \ln(0.01) \approx -4.605
+\end{align*}
+Thus, an average depth of $\approx 4.6$x is required to cover 99\% of the genome. This statistically explains why initial Sanger sequencing projects aimed for 6x coverage.
+\sta Note: This mathematical model suggests that covering 100\% of the genome at least once would require an infinite average coverage ($\lambda \to \infty$). There will always be tiny gaps left entirely unsequenced by random chance.
+
+\section{Genome Assembly: Contigs and Gaps}
+
+Because we cannot cover 100\% of the genome, genome assembly algorithms do not produce a single continuous sequence. Instead, they produce \textbf{contigs}.
+
+\begin{important}
+\textbf{Contig}: A contiguous DNA sequence reconstructed by merging overlapping sequencing reads. Contigs are the best possible representation of the original genome given the data.
+\end{important}
+
+% [IMAGE: A diagram showing several short sequencing reads (lines) overlapping to form longer continuous blocks (contigs). There are gaps between the contigs where no read coverage exists.]
+
+\subsection{Expected Contig Statistics}
+We can estimate the number of bases stranded in gaps. Consider an interval exactly as long as a read ($L$). The expected number of reads starting at any single specific base is $N/G$. Therefore, the expected number of reads starting within an interval of length $L$ is $L \times (N/G) = \lambda$. 
+
+Assuming a Poisson distribution, the probability that \textit{zero} reads start in this $L$-length interval is $e^{-\lambda}$. If no read starts in this interval preceding a base, that base falls into a gap.
+\begin{itemize}
+    \item Expected number of nucleotides in gaps: $G \cdot e^{-\lambda}$
+    \item Expected number of nucleotides inside contigs: $G \cdot (1 - e^{-\lambda})$
+\end{itemize}
+
+Every contig has exactly one unique "rightmost read". A read is the rightmost read if no other read starts within its span (an interval of length $L$). Since every read has a probability $e^{-\lambda}$ of having no other read start within its length, the total expected number of contigs is:
+\[ \text{Expected Contigs} = N \cdot e^{-\lambda} \]
+
+Dividing the expected total contig length by the expected number of contigs yields the average contig size:
+\[ \text{Average Contig Size} = \frac{(1 - e^{-\lambda}) \cdot G}{N e^{-\lambda}} \]
+
+\textbf{Example:} If we aim for $\lambda=6$ coverage of the human genome with $L=500$ reads, we need $N=36$ million reads. This yields an estimated 89,235 contigs with an average length of 33,536 nucleotides. 
+
+\subsection{Overlaps and the N50 Metric}
+
+In reality, we cannot assume reads belong together just because their ends touch. We require a minimum physical overlap to be confident they are contiguous. 
+Let $\theta$ be the minimum fraction of read length $L$ required to declare a valid overlap (e.g., $\theta = 0.1$ means 10\% of the read must overlap). 
+
+To be the rightmost read of a contig now, a read simply needs no other read to start within its first $(1 - \theta)L$ bases. The expected number of contigs increases because we are enforcing a stricter overlap requirement:
+\[ \mathbb{E}[\# \text{contigs}] = N e^{-(1 - \theta)L \cdot \frac{N}{G}} = N e^{-(1 - \theta)\lambda} \]
+
+Because assemblies output thousands of contigs of varying sizes, we need a metric to evaluate assembly quality.
+\begin{important}
+\textbf{N50}: A metric of genome assembly quality. If all contigs are sorted from largest to smallest, the N50 is the length of the specific contig at which the cumulative length covers exactly 50\% of the total genome size.
+\end{important}
+\sta The longer the N50, the better the assembly, as it means fewer and larger contigs are covering the bulk of the genome.
+
+\section{Graph Theory in Genome Assembly}
+
+Instead of finding direct read overlaps (the OLC approach), modern algorithms frame assembly as a graph traversal problem. This is rooted in the classical "Seven Bridges of Königsberg" problem formulated by Leonhard Euler in 1736.
+
+\subsection{Hamiltonian vs. Eulerian Paths}
+If we break our genome into k-mers, we have two fundamental ways to build a graph to reconstruct the sequence.
+
+\textbf{Approach 1: The Naive Assembly (Hamiltonian Path)}
+\begin{itemize}
+    \item \textbf{Nodes}: The k-mers themselves.
+    \item \textbf{Edges}: Drawn between nodes if the $k-1$ suffix of one matches the $k-1$ prefix of the other.
+    \item \textbf{Goal}: Find a path that visits every \textit{node} exactly once.
+\end{itemize}
+\begin{important}
+\textbf{Hamiltonian Path Problem}: Finding a path in a graph that visits every vertex (node) exactly once. This problem is NP-complete, meaning its computational time scales exponentially and it is computationally infeasible for large genomes.
+\end{important}
+
+\textbf{Approach 2: The De Bruijn Graph (Eulerian Path)}
+Instead of placing the k-mers on the nodes, we place them on the edges.
+\begin{itemize}
+    \item \textbf{Nodes}: Suffixes and prefixes of length $(k-1)$.
+    \item \textbf{Edges}: The k-mers themselves, connecting a $(k-1)$ prefix to a $(k-1)$ suffix.
+    \item \textbf{Goal}: Find a path that visits every \textit{edge} exactly once. (Nodes can be visited multiple times).
+\end{itemize}
+\begin{important}
+\textbf{Eulerian Path Problem}: Finding a path that visits every edge in a graph exactly once. Unlike the Hamiltonian problem, this can be solved efficiently in linear time.
+\end{important}
+
+\subsection{Constructing the De Bruijn Graph (DBG)}
+
+To construct a DBG from sequencing data:
+\begin{enumerate}
+    \item Decompose all sequences into overlapping k-mers.
+    \item Represent each k-mer as a directed edge connecting a $(k-1)$ prefix node to a $(k-1)$ suffix node.
+    \item \textbf{Merge all identical nodes}: Ensure each $(k-1)$ sequence exists only once as a node in the graph, while meticulously preserving all edges connected to them. 
+\end{enumerate}
+
+% [IMAGE: A diagram showing the construction of a De Bruijn graph for a small string. Multiple nodes labeled "TC", "CA", etc., are merged into single nodes, but their connecting edges (representing the 3-mers) are retained, resulting in a complex network with multiple edges looping between specific nodes.]
+
+\textbf{Compression}: Once constructed, the DBG often contains long, unambiguous paths without any branching (i.e., a series of nodes where each has an in-degree of 1 and an out-degree of 1). These deterministic paths can be compressed by merging the nodes into a single, longer sequence node to simplify the graph structure without losing information.
+
+\textbf{Example: The Dr. Seuss-Ome}
+If we shred the sentence "The more that you read, the more things you will know..." into 3-word k-mers, we will see that the phrase "the more" appears multiple times. In a DBG, "the more" becomes a heavily trafficked node with multiple outgoing edges (to "things", "places", "that"). The assembler must trace the correct Eulerian path through these branching choices to successfully reconstruct the text.
+
+\section{Finding Eulerian Paths: Hierholzer's Algorithm}
+
+Before applying an algorithm, we evaluate if an Eulerian path or cycle mathematically exists based on the node degrees (in-degree = number of incoming edges, out-degree = number of outgoing edges).
+
+\begin{important}
+\textbf{Traversability Rules for Directed Graphs}:
+\begin{itemize}
+    \item \textbf{Eulerian Cycle}: Exists if, for \textit{all} nodes, $degree_{in} = degree_{out}$.
+    \item \textbf{Eulerian Path}: Exists if all nodes have $degree_{in} = degree_{out}$, EXCEPT exactly two nodes:
+    \begin{itemize}
+        \item Start Node: $degree_{out} = degree_{in} + 1$
+        \item End Node: $degree_{in} = degree_{out} + 1$
+    \end{itemize}
+\end{itemize}
+\end{important}
+
+If these conditions are met, we can find the exact sequence using \textbf{Hierholzer's Algorithm}, which operates in $\mathcal{O}(E)$ linear time.
+
+\textbf{Algorithm Execution Steps:}
+\begin{enumerate}
+    \item Verify the graph satisfies the degree requirements for a path. Identify the starting vertex $v$ (the one with the extra outgoing edge).
+    \item Initialize two stacks (Last-In-First-Out structures): a temporary stack `tpath` (for exploration) and an end stack `epath` (for the final solution).
+    \item Push the start vertex $v$ to `tpath`.
+    \item Let $u$ be the top vertex on `tpath`. Check if all outgoing edges from $u$ have been visited:
+    \item \textbf{If YES}: Pop $u$ from `tpath` and push it to `epath`. (This signifies a dead-end or finished path, building the final sequence backwards).
+    \item \textbf{If NO}: Select a random unvisited outgoing edge $(u,x)$. Push vertex $x$ to `tpath`, and mark the edge $(u,x)$ as deleted/visited.
+    \item Repeat from step 4 until `tpath` is completely empty.
+\end{enumerate}
+
+When finished, `epath` contains the nodes in the exact order of the Eulerian path. The starting vertex will be at the TOP of `epath`, and the end vertex will be at the BOTTOM.
+
+\section{Practical Problems in Genome Assembly}
+
+Biological realities complicate mathematical ideals. Several factors must be accommodated when implementing DBG algorithms in practice:
+
+\subsection{Choosing K-mer Size ($k$)}
+$k$ determines the required overlap between reads. 
+\begin{itemize}
+    \item If $k$ is too small (e.g., $k=5$), the sequence is not unique, and the DBG becomes hopelessly tangled. 
+    \item If $k$ is large enough (e.g., $k=50$), k-mers are mostly unique to specific genomic locations. 
+\end{itemize}
+However, computational memory scales as $\mathcal{O}(nk)$. For a $3.2 \times 10^9$ bp genome and $k=27$, storing nodes requires immense RAM. 
+\sta \textbf{Optimization}: DNA has 4 bases, requiring only 2 bits to encode (e.g., A=00, C=01, G=10, T=11). This \textit{two-bit notation} allows 4 nucleotides to be compressed into a single 8-bit byte, drastically reducing memory overhead.
+
+\subsection{Sequencing Errors}
+A single base error in a read corrupts every k-mer that overlaps it. For example, if $k=5$, one erroneous base spawns 5 unique, false k-mers. 
+Because errors are essentially random, these false k-mers appear at a very low frequency (often only a count of 1) compared to true k-mers covering the same region.
+\textbf{Solution}: A common heuristic is to trim or drop k-mers with extremely low frequencies before building the DBG.
+
+\subsection{Repetitive Regions and Ploidy}
+Genomes contain tandem repeats (e.g., "CATCATCATCAT"). Shredded into k-mers, these look identical and collapse into a single high-frequency node in the DBG, losing distance context.
+Furthermore, organisms are usually diploid (two copies of each chromosome). If alleles differ (e.g., an A/G variant), the graph splits into a temporary "bubble" before merging back together, which algorithms must recognize as a biological variant rather than an error.
+
+\subsection{Strand Ambiguity}
+Standard WGS is not strand-specific. A read might originate from the forward strand or the reverse strand. Therefore, for every k-mer observed, the assembler must also generate and merge its reverse complement into the graph to ensure continuity regardless of which strand was randomly sequenced.
+
+\end{document}

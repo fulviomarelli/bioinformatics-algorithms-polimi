@@ -1,0 +1,139 @@
+
+
+% Lecture Notes: Read Mapping, Suffix Arrays, and the Burrows-Wheeler Transform
+
+\section{Introduction to Sequence Indexing and Suffix Trees}
+
+The fundamental problem of read mapping in genomics involves searching for millions of short sequence reads within a massive reference sequence, such as the human genome. Given the scale of the reference genome (over 3 billion bases), naive search algorithms are computationally intractable. To achieve rapid search times, we must preprocess the reference genome into an efficient searchable data structure. 
+
+\subsection{From Suffix Tries to Suffix Trees}
+
+A naive approach to indexing all possible substrings of a reference sequence is to construct a \textbf{Suffix Trie}, an explicit tree where every possible suffix of the string corresponds to a path from the root to a leaf. Because every substring of the reference is a prefix of some suffix, finding a match only requires traversing the trie for the length of the query string. 
+
+However, the space complexity of a suffix trie is a major bottleneck.
+\begin{important}
+    \textbf{Property (Suffix Trie Complexity):} For an input string of length \( m \), the space complexity of a naive suffix trie scales quadratically, \( \mathcal{O}(m^2) \). For a 3 billion base pair genome, this explosion in memory is practically unfeasible.
+\end{important}
+
+To resolve this, paths in the trie that do not branch can be merged into single edges, forming a \textbf{Suffix Tree}. 
+\begin{itemize}
+    \item \textbf{Edge Compaction:} The number of nodes is reduced to scale linearly with the original string length, \( \mathcal{O}(m) \).
+    \item \textbf{Label Compression:} Instead of storing the actual string labels on the edges, each edge stores two integers: the offset (starting position in the original string) and the length. This keeps the memory usage linear, \( \mathcal{O}(m) \).
+    \item \textbf{Search Complexity:} Searching for a pattern of length \( n \) within the suffix tree yields a time complexity of \( \mathcal{O}(n + k) \), where \( k \) is the number of occurrences (matches) found.
+\end{itemize}
+
+Despite these optimizations, naive suffix tree implementations require over 20 bytes per node, and even optimal implementations require roughly 12.5 bytes per node. For a genome of 3 billion bases, this still exceeds practical memory limits.
+
+\subsection{Generalized Suffix Trees and Biological Applications}
+
+The human genome consists of multiple distinct chromosomes, not a single continuous string. To index multiple sequences simultaneously, we construct a \textbf{Generalized Suffix Tree}.
+
+\begin{important}
+    \textbf{Generalized Suffix Tree:} A suffix tree that indexes multiple original strings. Unique termination characters (e.g., \verb|$|, \verb|#|, \verb|%|) are appended to each input string to distinguish their respective suffixes.
+\end{important}
+
+In this structure:
+\begin{itemize}
+    \item Leaf nodes must carry two labels: the starting position of the suffix and an integer identifying the source string.
+    \item Edges similarly carry three integers: the start position, the length, and the source string ID.
+\end{itemize}
+
+\sta \textbf{Biological Application:} Generalized suffix trees can identify the longest common substring between two sequences (by descending the tree to the deepest node containing leaves from both strings) or identify palindromic sequences. The latter is crucial for analyzing RNA secondary structures, where an RNA molecule folds and binds to its own reverse-complementary sequence to form functional three-dimensional ``stems''.
+
+\section{The Suffix Array}
+
+To overcome the memory overhead of suffix trees, modern aligners rely on more compact data structures, notably the \textbf{Suffix Array}.
+
+\begin{important}
+    \textbf{Suffix Array (SA):} An array of integers containing the starting positions (indices) of all suffixes of an input string, sorted in lexicographical order. 
+\end{important}
+
+\textbf{Example:} Let the string be \verb|Mississippi$|.
+\begin{enumerate}
+    \item Identify all suffixes (e.g., \verb|Mississippi$|, \verb|ississippi$|, \ldots, \verb|$|) and record their original starting indices.
+    \item Sort the suffixes lexicographically (treating the termination symbol \verb|$| as preceding all other characters).
+    \item The final Suffix Array stores \textit{only} the original starting indices of the sorted suffixes.
+\end{enumerate}
+
+\subsection{Advantages and Searching}
+The SA requires only one integer per input character, making its memory footprint strictly linear and considerably smaller than a suffix tree. Because the suffixes are lexicographically sorted, any repeated substrings will occupy contiguous blocks in the array. 
+
+To search for a query string in an SA, one can perform a binary search. Because we only store pointers, each comparison requires looking up the actual sequence in the reference genome. The search time complexity is bounded by \( \mathcal{O}(n \times D) \), where \( n \) is the array length and \( D \) is the query length.
+
+\subsection{Efficient Suffix Array Construction}
+A naive construction (generating all suffixes and sorting them) takes \( \mathcal{O}(m^2) \) time and is intractable for whole genomes. However, improved algorithms compute the SA much faster. 
+
+The Manber \& Myers algorithm achieves \( \mathcal{O}(m \log m) \) time by employing a prefix-doubling strategy:
+\begin{enumerate}
+    \item First, sort all suffixes based on their first character (\( 2^0 \)).
+    \item In a recursive phase, use the relative order of the first \( 2^{i-1} \) characters to sort the first \( 2^i \) characters. 
+    \item \textit{Intuition:} If we want to sort two suffixes by their first 8 characters, and we know they share the first 4 characters, we merely need to determine the lexicographical order of their \textit{next} 4 characters. Because the SA already contains the relative order of all 4-character suffixes from the previous iteration, we can determine the order of the 8-character blocks in constant time via simple index lookups.
+\end{enumerate}
+While linear-time \( \mathcal{O}(m) \) construction algorithms now exist, prefix-doubling intuitively demonstrates how redundant sorting is avoided.
+
+\section{The Burrows-Wheeler Transform (BWT)}
+
+The \textbf{Burrows-Wheeler Transform (BWT)} applies a reversible transformation to a block of text. While it does not compress data by itself, it reorders characters to produce runs of identical characters, making the data highly compressible via move-to-front coding or run-length encoding (as used in \texttt{bzip2}).
+
+\begin{important}
+    \textbf{Burrows-Wheeler Transform:} A string transformation obtained by forming all cyclic rotations of the input text (appended with a terminal \verb|$|), sorting them lexicographically, and extracting the last column of the resulting matrix.
+\end{important}
+
+\subsection{BWT Construction}
+To construct the BWT for a text \( T \):
+\begin{enumerate}
+    \item Append a termination character \verb|$| to \( T \).
+    \item Generate all \( m \) cyclic rotations of \( T \).
+    \item Sort the rotations lexicographically to form the \textit{Burrows-Wheeler Matrix}.
+    \item The BWT is the last column (often denoted \( L \)) of this sorted matrix.
+\end{enumerate}
+
+% [IMAGE: A matrix showing the cyclic rotations of "abracadabra$" sorted lexicographically. The first column is denoted 'F' (First) and the last column is 'L' (Last). The 'L' column represents the final BWT output, highlighting clusters of repeated characters like 'aaaa'.]
+
+Because each row is a cyclic rotation, the last character of any row always immediately precedes the first character of that row in the original circular string. 
+
+\subsection{Relationship Between BWT and Suffix Array}
+The naive BWT construction is computationally expensive, taking \( \mathcal{O}(m^2) \) time. However, the BWT is deeply connected to the Suffix Array, allowing it to be computed in linear time \( \mathcal{O}(m) \).
+
+Since the termination character \verb|$| appears only once in the string, the lexicographical sorting of the cyclic rotations is functionally identical to the lexicographical sorting of the suffixes. Consequently, the \( i \)-th row of the Burrows-Wheeler Matrix corresponds directly to the \( i \)-th suffix in the Suffix Array. 
+
+This relationship allows us to extract the BWT directly from the Suffix Array:
+\[ BWT[i] = T[SA[i] - 1] \]
+\textit{Exception:} If \( SA[i] == 0 \), then the suffix is the entire string, and the preceding character mathematically wraps around to the termination symbol \verb|$|.
+
+\begin{minted}{python}
+# [pseudocode]
+def generate_BWT_from_SA(T, SA):
+    BWT = []
+    # Iterate through the Suffix Array indices
+    for i in range(len(SA)):
+        if SA[i] == 0:
+            # Wrap-around case: the character preceding the full string is $
+            BWT.append('$')
+        else:
+            # The BWT character is the one immediately preceding the suffix
+            BWT.append(T[SA[i] - 1])
+    return BWT
+\end{minted}
+
+This algorithm loops through the Suffix Array, accessing the character immediately preceding the start of each sorted suffix. This elegant reduction avoids building the massive Burrows-Wheeler Matrix entirely.
+
+\section{The FM Index}
+
+While the BWT is highly compressible, its primary value in bioinformatics lies in enabling lightning-fast string searches using the \textbf{FM Index} (Ferragina \& Manzini, 2000).
+
+\begin{important}
+    \textbf{FM Index:} A self-indexing data structure combining the Burrows-Wheeler Transform, a sampled (checkpointed) Suffix Array, and additional auxiliary arrays. It allows for exact string matching in time proportional strictly to the length of the query string, independently of the reference genome size.
+\end{important}
+
+\subsection{Memory Optimization via Checkpointing}
+If we stored the entire Suffix Array for the human genome alongside the BWT, it would require roughly \( 4 \text{ bytes} \times 3 \text{ billion} \approx 12 \text{ GB} \) of RAM. To shrink this footprint, the FM Index utilizes a checkpointing strategy.
+
+Instead of storing the full Suffix Array, the FM Index stores only a \textit{selective} Suffix Array, keeping the position value only for every \( k \)-th character of the original text. 
+\begin{itemize}
+    \item When a search queries a matching character in the BWT, the algorithm checks if that position's original index is stored in the selective Suffix Array.
+    \item If the index is missing, the algorithm utilizes the \textit{LF Mapping} (Last-to-First mapping, to be detailed in subsequent lectures) to iteratively ``hop'' backward through the sequence.
+    \item Because a checkpoint is stored every \( k \) positions, the algorithm is guaranteed to find a known reference coordinate in at most \( k - 1 \) hops.
+\end{itemize}
+
+\sta By storing nucleotides using 2 bits each (packing 4 nucleotides per byte) and sampling the Suffix Array, the FM index dramatically compresses the human genome down to roughly 1.5 GB in RAM. This is a massive improvement over the $>60$ GB footprint of a standard suffix tree, making it the bedrock of modern alignment tools.

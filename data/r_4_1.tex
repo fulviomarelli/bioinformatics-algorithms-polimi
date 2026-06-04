@@ -1,0 +1,317 @@
+
+\newcommand{\sta}{\textbf{[\(\star\)] }}
+
+% Lecture Notes: Foundations of DNA Sequencing Technology and Genome Assembly — Read Mapping (Part 1)
+
+\section{Introduction to Read Mapping}
+
+Read mapping, also known as reference-based assembly or read alignment, is a fundamental bioinformatics procedure used to reconstruct the genome of an individual organism when a reference genome for that species already exists. Unlike \textit{de novo} assembly, which constructs a genome from scratch using overlapping reads (e.g., via de Bruijn graphs), read mapping takes newly sequenced fragments (reads) and aligns them to the known reference genome to determine their original genomic position.
+
+\begin{important}
+    \textbf{Read Mapping (Reference-Based Assembly)}: The computational process of aligning short sequence reads to a known reference genome to identify the origin of each read. Its primary goal is typically to find genetic differences (variants) between the sequenced individual and the reference genome.
+\end{important}
+
+While \textit{de novo} assembly is extremely computationally demanding and often error-prone (resulting in gaps and fragmented sequences), reference-based assembly leverages existing genomic knowledge to guide the alignment. This approach is not only computationally simpler but also directly highlights deviations from the reference, which are often the biological features of interest.
+
+\subsection{Applications of Read Mapping}
+
+Read mapping is the foundational step for numerous downstream bioinformatics and clinical applications:
+
+\begin{itemize}
+    \item \textbf{Variant Calling}: The computational identification of high-quality mutations from sequencing data. We map reads to see where they differ from the reference.
+    \item \textbf{Medical Diagnostics}: Used extensively to identify mutations responsible for disease.
+    \begin{itemize}
+        \item \textbf{Germline mutations}: Mutations inherited and present in all cells of the body (e.g., hereditary disorders). By mapping an affected patient's genome against the reference and comparing it to healthy family members, we can trace disease-causing mutations.
+        \item \textbf{Somatic mutations}: Mutations that occur after fertilization and are present only in a subset of cells (e.g., in tumor tissues). Comparing read mappings from a patient's normal tissue versus their tumor tissue reveals these somatic changes.
+    \end{itemize}
+    \item \textbf{Precision and Personalized Medicine}: Tailoring medical treatment to individual genetic profiles. For instance, identifying specific mutations in a patient's lung cancer to determine if a particular targeted therapy will be effective.
+    \item \textbf{Agricultural Breeding Programs}: Characterizing genetic variation in plants and animals to breed for specific traits, such as heat resistance or improved crop yield.
+    \item \textbf{Non-DNA Sequencing Applications}: 
+    \begin{itemize}
+        \item \textbf{RNA-seq}: Measuring gene expression by mapping RNA transcripts back to the genome to count how actively genes are being transcribed.
+        \item \textbf{ChIP-seq}: Identifying DNA binding sites for transcription factors or analyzing epigenetic marks (like DNA methylation or histone modifications).
+    \end{itemize}
+\end{itemize}
+
+\sta Note: While clinical Next-Generation Sequencing (NGS) is highly effective for rare genetic diseases and oncology, it is currently less directly actionable for common complex diseases, which usually result from tiny contributions across many individual genes combined with environmental factors.
+
+\subsection{The Importance of High Coverage}
+
+When aligning reads to a reference genome, we must distinguish between true biological mutations and sequencing artifacts. 
+
+% [IMAGE: Read alignment in the IGV (Integrative Genomics Viewer) Browser showing multiple overlapping short reads mapped to a reference sequence. Variations from the reference are highlighted in color. High coverage regions allow distinguishing true mutations (present in many reads) from sequencing errors (present in only one read).]
+
+\textbf{Example:}
+Consider a region where a reference genome has a "T", but mapped reads show a mix of sequences. If 40 reads map to a location, and 20 show an "A" while 20 show a "T", this strongly indicates a true heterozygous mutation. However, if only 1 out of 40 reads shows a "C", it is almost certainly a sequencing error. Without sufficient sequencing coverage (depth), variant calling algorithms cannot assign high-confidence probabilities to potential mutations.
+
+\section{The Read Alignment Problem and Naive Approaches}
+
+Given millions of short NGS reads, we must find where each read best aligns to a massive reference genome (e.g., the human genome has $G > 3 \times 10^9$ bases). We will initially assume we are looking for \textbf{perfect matches} to simplify the string search problem, though real algorithms must ultimately account for mismatches and indels.
+
+\subsection{Why Not Use Local Sequence Alignment?}
+
+Our first instinct might be to use a traditional sequence alignment algorithm like Smith-Waterman. 
+
+\begin{itemize}
+    \item \textbf{Complexity}: The Smith-Waterman algorithm has a runtime complexity of \(\mathcal{O}(L \cdot G)\), where \(L\) is the length of the read and \(G\) is the length of the genome.
+    \item \textbf{Scale Issue}: If \(L = 200\) and \(G = 3 \times 10^9\), a single read requires computing hundreds of billions of matrix cells.
+    \item \textbf{Total Runtime}: For \(\ell\) total reads (often in the hundreds of millions), the total complexity is \(\mathcal{O}(\ell \cdot L \cdot G)\). 
+\end{itemize}
+
+This matrix-based approach is computationally impossible for modern NGS datasets. We need faster search algorithms based on preprocessing the text (the genome) to build a \textbf{substring index}. 
+
+\sta Intuition: Think of searching for a person in a massive database. You wouldn't scan millions of names sequentially from the start. Instead, you build an index (e.g., alphabetical sorting) so you can jump directly to the names starting with the correct letter. 
+
+\subsection{Naive String Search (Sliding Window)}
+
+The simplest string search algorithm slides the pattern (read) across the genome one position at a time, extending the match letter by letter until a mismatch occurs.
+
+\textbf{Example:}
+Our genome is \(T = \text{bananasavannah}\). Our search read is \(P = \text{nas}\).
+1. Match against `ban`: Mismatch at first letter (`n` vs `b`).
+2. Match against `ana`: Mismatch at first letter (`n` vs `a`).
+3. Match against `nan`: Match `n`, match `a`, mismatch at third letter (`s` vs `n`).
+4. Continue until position 5: Match `n`, match `a`, match `s`. Perfect match found!
+
+This approach still has a runtime of \(\mathcal{O}(G \cdot \ell \cdot L)\) for \(\ell\) reads. While perfectly fine for a single short query, the combined length of all reads \(\ell \cdot L\) (total sequenced bases, often denoted \(n_b\)) is much larger than \(G\). 
+
+\section{Tries and Pattern Matching}
+
+To improve our search, we can organize our collection of reads into a data structure called a \textbf{trie}.
+
+\begin{important}
+    \textbf{Trie}: A multi-way tree structure designed for storing a collection of strings over an alphabet \(\Sigma\). It allows fast pattern matching by spelling out strings along paths from the root.
+\end{important}
+
+Properties of a trie:
+\begin{itemize}
+    \item Each edge is labeled with exactly one character \(c \in \Sigma\).
+    \item Any node has at most one outgoing edge labeled with a specific character \(c\) (i.e., maximum \(|\Sigma|\) outgoing edges per node).
+    \item Each string contained in the trie is uniquely spelled out along a single path starting at the root and ending at a leaf node.
+\end{itemize}
+
+\subsection{The Termination Character (\(\$\))}
+
+When constructing tries (and later suffix trees), we append a special termination character, typically \(\$\), to the end of every string.
+
+\begin{important}
+    \textbf{Termination Character (\(\$\))}: A unique symbol not present in the standard alphabet (e.g., not A, C, G, or T) used to explicitly mark the end of a string in a tree structure. 
+\end{important}
+
+\sta The \(\$\) symbol enforces a strict lexicographic rule (similar to dictionaries) and ensures that \textbf{no string or suffix can be considered a prefix of any other suffix}.
+For example, without \(\$\), if we insert the words "an" and "anna" into a trie, "an" would just end on an internal node along the path to "anna", making it difficult to explicitly identify "an" as an independent search word. By appending \(\$\), we branch off to an explicit leaf node (\texttt{a $\rightarrow$ n $\rightarrow$ \$}), ensuring a one-to-one correspondence between every key and a unique path from the root to a leaf.
+
+\subsection{Using a Trie of Reads to Scan the Genome}
+
+Instead of sliding millions of individual reads across the genome, we can combine all reads into a single trie. Then, we slide the \textit{entire trie} along the genome once.
+
+1. Construct a trie containing all \(\ell\) reads.
+2. For each position in the genome, start at the trie root and follow the edges matching the genome's characters.
+3. If you reach a \(\$\) leaf, you have found a perfect match for one of the reads at that genome position.
+
+\textbf{Complexity Analysis}:
+\begin{itemize}
+    \item \textbf{Search Time}: We scan the genome once. At each genome position, the maximum depth we can descend in the trie is the maximum read length \(L'\). Thus, matching takes \(\mathcal{O}(L' \cdot G)\). This is a massive improvement over \(\mathcal{O}(\ell \cdot L \cdot G)\).
+    \item \textbf{Construction Time}: Inserting all bases into the trie takes \(\mathcal{O}(n_b)\) time, where \(n_b\) is the total number of sequenced bases.
+    \item \textbf{Memory Space}: The memory required to store a trie of all reads is proportional to the total length of the reads \(\mathcal{O}(n_b)\).
+\end{itemize}
+
+\textbf{The Problem}: While the runtime is significantly better, the memory requirement is enormous. Storing billions of reads in a trie will exhaust available RAM. We need to flip the paradigm: instead of preprocessing the reads, we should \textbf{preprocess the reference genome}.
+
+\section{Suffix Tries}
+
+Instead of putting all reads into a trie, we can take our reference genome \(T\), generate all possible suffixes of \(T\), and insert them into a trie. This creates a \textbf{Suffix Trie}.
+
+\begin{important}
+    \textbf{Suffix Trie}: A trie constructed from all suffixes of a single string \(T\). Every path from the root to a leaf represents exactly one suffix of \(T\).
+\end{important}
+
+% [IMAGE: Suffix trie for the string MISSISSIPPI$. A tree branching from a single root node. Each path down the tree spells out a suffix, e.g., M-I-S-S-I-S-S-I-P-P-I-$, I-S-S-I-S-S-I-P-P-I-$, etc. There are 12 leaf nodes (including the empty suffix $).]
+
+\subsection{Why Index Suffixes?}
+
+The profound power of the Suffix Trie stems from one fundamental property:
+\sta \textbf{Every substring of \(T\) is a prefix of some suffix of \(T\).}
+
+Therefore, if a read \(P\) maps perfectly to the genome \(T\), it must be a prefix of the suffix that starts at that exact alignment position. To search for any read \(P\), we simply start at the root of the Suffix Trie and follow the characters of \(P\). 
+\begin{itemize}
+    \item If we can trace the entire read \(P\) without falling off the tree, the read exists in the genome.
+    \item The number of times \(P\) occurs in the genome is exactly equal to the number of leaf nodes in the subtree rooted at the end of the search path.
+\end{itemize}
+
+\textbf{Example:}
+Search for the pattern "SI" in a Suffix Trie of "MISSISSIPPI\$".
+1. Start at root, follow 'S'.
+2. Follow 'I'. The pattern "SI" is valid.
+3. The node at the end of "SI" has two branches extending below it. Eventually, these lead to two distinct leaf nodes (one corresponding to the suffix starting at position 3, the other at position 6).
+4. Therefore, "SI" appears exactly twice in the genome.
+
+\subsection{Suffix Trie Algorithms}
+
+\begin{minted}{python}
+# [pseudocode]
+def SuffixTrie(T):
+    T += "$"
+    root = Node()
+    for i in range(1, length(T) + 1):
+        n = root
+        for c in T[i:]:
+            if c not in n.edges:
+                n.edges[c] = Node()
+            n = n.edges[c]
+    return root
+\end{minted}
+
+\textbf{Explanation:} This naive algorithm constructs a suffix trie. First, we append the termination character `$` to the target text. We iterate over every possible starting index `i` to isolate each suffix. For each suffix, we traverse the characters, descending from the root node. If an edge for the current character doesn't exist at the current node, we create a new node and link it. We then move to that node and continue.
+
+\begin{enumerate}
+    \item Initialize the text by appending the termination character.
+    \item Set up an empty root node.
+    \item Loop through every possible starting position to generate all suffixes.
+    \item For each character in the current suffix, traverse the tree.
+    \item If a path doesn't exist, build a new edge and node.
+\end{enumerate}
+
+\begin{minted}{python}
+# [pseudocode]
+def followPath(T, S):
+    root = SuffixTrie(T)
+    n = root
+    for c in S:
+        if c in n.edges:
+            n = n.edges[c]
+        else:
+            return NULL # not found
+    return n
+
+def hasSubstring(T, S):
+    n = followPath(T, S)
+    if n != NULL:
+        return TRUE
+    return FALSE
+\end{minted}
+
+\textbf{Explanation:} To search for a pattern `S` within our text `T`, we use `followPath` to walk down the suffix trie character by character. If at any point the next character in `S` is missing from the current node's outgoing edges, the pattern does not exist in the text, and we return `NULL`. If we complete the string `S`, we return the final node. `hasSubstring` simply wraps this search, returning a boolean indicating if the path successfully matched.
+
+\subsection{Size Complexity of a Suffix Trie}
+
+How many nodes does a suffix trie require for a genome of length \(m\)?
+\begin{itemize}
+    \item \textbf{Best Case}: A string of repeating characters, e.g., \(T = \text{aaaa\$}\). The trie degenerates into a single straight line with \(m\) "a" nodes branching off directly to "\$" leaf nodes. Total nodes: \(\mathcal{O}(m)\).
+    \item \textbf{Worst Case}: A highly complex string where paths do not overlap efficiently. The height of the tree is \(m+1\) and the maximum width is \(m\). Total nodes grow quadratically: \(\mathcal{O}(m^2)\).
+\end{itemize}
+
+For a reference genome like humans (\(m = 3 \times 10^9\)), a Suffix Trie requires memory proportional to \((3 \times 10^9)^2\), which is physically impossible to store. We must find a way to compress it.
+
+\section{Suffix Trees}
+
+To reduce the massive space complexity of the Suffix Trie, we compact it into a \textbf{Suffix Tree}.
+
+\begin{important}
+    \textbf{Suffix Tree}: A compacted version of a Suffix Trie where any non-branching path (a sequence of nodes where each has only one child) is collapsed into a single edge. The single character labels are concatenated into a string label.
+\end{important}
+
+% [IMAGE: Suffix tree for MISSISSIPPI$. Compared to the Suffix Trie, long unbranching paths (like "SSIPPI$") are merged into a single edge. Every internal node now has at least two outgoing children.]
+
+\subsection{Properties of a Suffix Tree}
+\begin{itemize}
+    \item \textbf{Leaves}: There are still exactly \(m\) leaf nodes (one for each suffix).
+    \item \textbf{Internal Nodes}: Because every internal node now has at least two children, the number of internal nodes is strictly less than the number of leaves (specifically \(\le m-1\)).
+    \item \textbf{Total Nodes}: \(\le 2m\) nodes. The number of nodes and edges is now linear \(\mathcal{O}(m)\).
+    \item \textbf{Label Depth vs Node Depth}: In a trie, a node at depth 3 represents a string of length 3. In a suffix tree, node depth (number of edges traversed) is decoupled from label depth (the sum of the string lengths along those edges).
+\end{itemize}
+
+\subsection{Memory Optimization for Edge Labels}
+
+While the number of nodes is linear, the \textit{text labels} on the edges can still sum up to \(\mathcal{O}(m^2)\) characters. 
+\sta To achieve true \(\mathcal{O}(m)\) space, we \textbf{do not explicitly store the string labels on the edges}. 
+Instead, because every edge label is simply a substring of the original genome \(T\), we represent the label using just two integers: 
+1. \textbf{Offset}: The starting index of the substring in \(T\).
+2. \textbf{Length}: The number of characters.
+
+Replacing strings with \((offset, length)\) pointers reduces the memory of every edge to \(\mathcal{O}(1)\). This allows the entire Suffix Tree to fit in \(\mathcal{O}(m)\) space.
+We additionally store the global starting position of the suffix in the leaf nodes. This allows us to instantly map a read's genomic coordinate: once we search a read and arrive at a node, we check the descendant leaves to see exactly where in the genome this sequence originated.
+
+\subsection{Building a Suffix Tree}
+
+The naive approach (building a Suffix Trie and then compacting it) takes \(\mathcal{O}(m^2)\) time and space.
+Fortunately, the \textbf{Ukkonen algorithm (1995)} provides an online, linear-time \(\mathcal{O}(m)\) method to construct a Suffix Tree. 
+
+\sta The intuition behind Ukkonen's algorithm relies on repeated patterns: a shorter suffix is inherently the trailing portion of a longer suffix. As the algorithm builds the tree, it reuses suffix links and implicit nodes to avoid redundant work, keeping construction strictly linear in both time and space.
+
+\subsection{Generalized Suffix Trees}
+
+Genomes often consist of multiple distinct strings (e.g., multiple chromosomes). We can combine them into a single \textbf{Generalized Suffix Tree}.
+\begin{itemize}
+    \item We use different, unique termination characters for each string (e.g., \(\$\) for Chr1, \(\#\) for Chr2).
+    \item Leaf nodes store two integers: the ID of the source string, and the suffix offset within that string.
+    \item This enables rapid identification of where a read maps across the entire chromosomal landscape.
+\end{itemize}
+
+\section{Suffix Arrays}
+
+Although Suffix Trees achieve \(\mathcal{O}(m)\) memory, the constant factors are still high. Practical implementations require roughly 12.5 to 20 bytes per node. For a 3 billion base pair genome, this means 40 to 60 GB of RAM—which is unwieldy for standard desktop architectures. 
+
+To solve this, we move to a more memory-efficient data structure: the \textbf{Suffix Array}.
+
+\begin{important}
+    \textbf{Suffix Array}: A simple array containing the starting indices of all suffixes of a string \(T\), sorted in lexicographical (alphabetical) order.
+\end{important}
+
+A suffix array requires only 4 bytes per character (an array of integers), vastly reducing the memory footprint compared to a tree with pointers.
+
+\subsection{Constructing a Suffix Array (Naive)}
+
+1. Generate all suffixes from the input string \(T = \text{MISSISSIPPI\$}\).
+2. Record the starting position of each suffix.
+3. Sort the suffixes lexicographically. The \(\$\) terminator is ordered before all alphabet letters.
+4. Keep only the sorted integer positions.
+
+\begin{table}[ht]
+    \centering
+    \caption{Lexicographically sorted suffixes for MISSISSIPPI\$}
+    \begin{tabularx}{\textwidth}{l X}
+        \toprule
+        \textbf{Start Index} & \textbf{Suffix} \\
+        \midrule
+        11 & \$ \\
+        10 & I\$ \\
+        7 & IPPI\$ \\
+        4 & ISSIPPI\$ \\
+        1 & ISSISSIPPI\$ \\
+        0 & MISSISSIPPI\$ \\
+        9 & PI\$ \\
+        8 & PPI\$ \\
+        6 & SIPPI\$ \\
+        3 & SISSIPPI\$ \\
+        5 & SSIPPI\$ \\
+        2 & SSISSIPPI\$ \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsection{Searching a Suffix Array}
+
+Because the suffixes are lexicographically sorted, any search pattern (which is a prefix of a suffix) will appear in a contiguous block within the array.
+\begin{enumerate}
+    \item Perform a \textbf{Binary Search} on the Suffix Array to find the search query (e.g., "ISSI").
+    \item Because the array is sorted, matching suffixes will cluster together.
+    \item Once the first match is found, scan up and down the array until a mismatch occurs to find all occurrences of the pattern.
+\end{enumerate}
+
+\subsection{Longest Repeated Substring Problem}
+
+In a Suffix Array, repeated substrings naturally sort adjacent to one another. To find the longest repeated substring, we simply compare adjacent entries in the sorted array and find the pair with the \textbf{longest common prefix}. This reduces the complexity of finding repeats from \(\mathcal{O}(D \cdot N^2)\) to \(\mathcal{O}(D \cdot N)\), where \(D\) is the length of the longest match and \(N\) is the string length.
+
+\subsection{Manber and Myers Algorithm}
+
+The naive string-sorting algorithm is computationally slow (\(\mathcal{O}(m^2 \log m)\)). The \textbf{Manber and Myers algorithm (1990)} builds a suffix array in \(\mathcal{O}(n \log n)\) time.
+
+The algorithm cleverly sorts the suffixes in iterative phases by exploiting information from previous sorts:
+\begin{itemize}
+    \item \textbf{Initialization}: Perform a radix sort on just the first character of all suffixes (\(2^0\)).
+    \item \textbf{Phase 1}: Use the sorted first characters to easily sort the first two characters (\(2^1\)).
+    \item \textbf{Phase \(i\)}: Given an array sorted on the first \(2^{i-1}\) characters, create an array sorted on the first \(2^i\) characters.
+\end{itemize}
+
+By continually doubling the length of the prefix being sorted (1, 2, 4, 8, 16...), we rapidly converge on a fully sorted suffix array. When sorting an 8-mer, we don't need to physically compare 8 characters; we simply look at the relative ranks of the two constituent 4-mers, which were already computed and stored in the previous iteration.

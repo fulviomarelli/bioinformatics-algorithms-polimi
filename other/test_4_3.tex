@@ -1,0 +1,197 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{minted}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newenvironment{important}{%
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Important Concept]
+}{%
+    \end{tcolorbox}
+}
+
+\newcommand{\sta}{\textbf{\color{red}$\star$ }}
+
+\begin{document}
+% Lecture Notes: Foundations of DNA Sequencing Technology, Genome Assembly, and Read Mapping
+
+\section{Genome Assembly and De Bruijn Graphs}
+Genome assembly using short-read sequencing data requires us to find overlaps between millions of reads to reconstruct the original reference string. Attempting to directly calculate overlaps of nearly the entire read length (e.g., requiring 199 bases of overlap for 200-base reads) is impractical because it would require an extremely deep, perfect sequencing coverage. Instead, we decompose the reads into smaller, uniform fragments called $k$-mers and use graph theory to assemble them.
+
+\subsection{Constructing De Bruijn Graphs}
+\begin{important}
+    \textbf{De Bruijn Graph}: A directed graph built from an input sequence or set of reads, where edges represent observed $k$-mers, and nodes represent the $(k-1)$-mer prefixes and suffixes of those $k$-mers.
+\end{important}
+
+To construct the graph, we extract all $k$-mers from the input reads. For every $k$-mer, we create a directed edge starting from its prefix (the first $k-1$ characters) and pointing to its suffix (the last $k-1$ characters). 
+If multiple edges share the same $(k-1)$-mer node, we merge identical nodes while preserving all edges. This directly models the overlaps: if two reads share a $(k-1)$-mer, their paths will intersect at that exact node in the graph. 
+
+\textbf{Example:} Constructing a De Bruijn graph edge.
+If $k=3$ and our read contains the sequence \texttt{GTC}, the $k$-mer \texttt{GTC} becomes an edge connecting the $(k-1)$-mer nodes \texttt{GT} and \texttt{TC}. This indicates that after \texttt{GT}, adding a \texttt{C} yields \texttt{GTC}.
+
+Often, the resulting graph contains unambiguous linear paths (sections of nodes where each node has exactly one incoming and one outgoing edge). We can \textbf{compress} the De Bruijn graph by merging these sequential nodes and simply extending the string sequence they represent, reducing computational complexity without altering the path logic.
+
+\subsection{Eulerian Paths vs. Hamiltonian Paths}
+Once the De Bruijn graph is constructed, genome reconstruction is mathematically equivalent to finding a path through the graph that accurately represents the original DNA sequence.
+
+\begin{important}
+    \textbf{Hamiltonian Path}: A path that visits every \textit{node} in the graph exactly once. \\
+    \textbf{Eulerian Path}: A path that visits every \textit{edge} in the graph exactly once.
+\end{important}
+
+\sta By defining $k$-mers as edges rather than nodes, we transform the assembly problem from finding a Hamiltonian path (which is NP-complete and computationally intractable for millions of nodes) to finding an Eulerian path (which can be solved in linear time $O(|E|)$).
+
+The conditions for the existence of Eulerian paths and cycles in a directed De Bruijn graph depend purely on the degrees of the vertices (indegree and outdegree):
+\begin{itemize}
+    \item \textbf{Eulerian Cycle}: Exists if and only if every node has strictly equal indegree and outdegree ($indegree - outdegree = 0$).
+    \item \textbf{Eulerian Path}: Exists if all nodes have equal indegree and outdegree, \textit{except} for exactly two nodes:
+    \begin{itemize}
+        \item The \textbf{start node}: Must have $outdegree = indegree + 1$.
+        \item The \textbf{end node}: Must have $indegree = outdegree + 1$.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Hierholzer's Algorithm}
+To efficiently extract the Eulerian path from our directed De Bruijn graph, we use Hierholzer's Algorithm, which scales linearly with the number of edges.
+
+The algorithm uses a backtracking approach with two Last-In-First-Out (LIFO) stacks: a temporary path stack and a final result stack.
+\begin{enumerate}
+    \item Verify the graph satisfies the Eulerian path condition and locate the starting vertex (the one with an extra outgoing edge).
+    \item Push the starting vertex onto the temporary stack.
+    \item While the temporary stack is not empty, look at the node $U$ currently on top of it.
+    \item Check if $U$ has any unvisited outgoing edges:
+    \begin{itemize}
+        \item \textbf{If yes}: Randomly traverse one of the unvisited outgoing edges to reach node $X$. Push $X$ onto the temporary stack and mark the edge $U \to X$ as visited.
+        \item \textbf{If no}: Pop $U$ from the temporary stack and push it onto the final path stack.
+    \end{itemize}
+    \item When the temporary stack is empty, popping elements sequentially from the final path stack yields the correct Eulerian path.
+\end{enumerate}
+
+\subsection{Practical Challenges in Assembly}
+While the graph theory is elegant, real sequencing data introduces complexities:
+\begin{itemize}
+    \item \textbf{Choosing $k$}: If $k$ is too small, $k$-mers aren't unique, collapsing the graph into tangled, irresolvable loops. If $k$ is too large, the required read overlap is too strict, resulting in fragmented subgraphs (unconnected contigs).
+    \item \textbf{Memory Consumption}: Storing billions of $k$-mers requires high memory. This is partially mitigated using a 2-bit encoding scheme (e.g., A=00, C=01, G=10, T=11), fitting four nucleotides into a single byte.
+    \item \textbf{Repetitive Regions}: Long biological repeats (e.g., \texttt{CATCATCAT...}) merge into a single node with massive edge counts, obfuscating the true length of the repeat.
+    \item \textbf{Sequencing Errors}: A single incorrect base in a read generates up to $k$ erroneous $k$-mers. In the De Bruijn graph, these appear as "tips" (short, low-coverage branches that quickly dead-end). We typically prune low-frequency $k$-mers before assembly.
+\end{itemize}
+
+\section{The Burrows-Wheeler Transform and FM Index}
+Mapping reads to a reference genome involves searching for millions of short sequences (reads) inside a massive 3-billion-character text. Naive substring searches are far too slow. Instead, modern aligners rely on the Burrows-Wheeler Transform coupled with the FM Index.
+
+\subsection{The Burrows-Wheeler Transform (BWT)}
+\begin{important}
+    \textbf{Burrows-Wheeler Transform (BWT)}: A reversible string permutation created by appending a lexicographically minimum end-character (\texttt{\$}), generating all cyclic rotations of the string, sorting those rotations lexicographically, and extracting the last column.
+\end{important}
+
+The matrix formed by the sorted rotations is called the Burrows-Wheeler Matrix. We denote the first column as $F$ and the last column as $L$. The $L$ column \textit{is} the BWT.
+
+% [IMAGE: A Burrows-Wheeler matrix showing a target word (like 'abracadabra$') with all its cyclic rotations sorted lexicographically, highlighting the first column (F) and the last column (L) to demonstrate the LF mapping property.]
+
+\sta \textbf{Property: LF Mapping} \\
+The relative ordering of identical characters in the First ($F$) column and the Last ($L$) column is exactly the same. The first 'A' in the $F$ column originates from the exact same position in the original string as the first 'A' in the $L$ column.
+
+\subsection{T-Ranking vs. B-Ranking}
+To track the mapping between columns, we define rankings:
+\begin{itemize}
+    \item \textbf{T-Ranking}: Tracks the occurrence index of a character in the \textit{original} string. (e.g., $A_0, A_1$).
+    \item \textbf{B-Ranking}: Tracks the occurrence index of a character based strictly on a top-to-bottom scan of the BWT ($L$ column). We use B-Ranking because it requires no knowledge of the original string's layout.
+\end{itemize}
+
+\subsection{Reversing the BWT}
+Because the matrix is formed by cyclic rotations, the character in the $L$ column always immediately precedes the character in the same row of the $F$ column in the original string. 
+To reconstruct the original string backward:
+\begin{enumerate}
+    \item Locate the end character \texttt{\$} in the $F$ column.
+    \item Read the character in the same row of the $L$ column; this is the last character of the original string.
+    \item Calculate its B-rank in the $L$ column to find its exact matching row in the $F$ column.
+    \item Repeat the process, jumping from $F \to L \to F$, appending characters to the front of our reconstructed string until we reach \texttt{\$} again.
+\end{enumerate}
+
+\subsection{The FM Index}
+Storing the entire Burrows-Wheeler matrix is impossible for a genome. The \textbf{FM Index} is an extremely compact data structure that allows fast substring searches by explicitly storing only:
+1. The \textbf{L Column} (the BWT string): Because identical characters group together after sorting, this string is highly compressible via Run-Length Encoding.
+2. The \textbf{F Column Counts}: We do not store the $F$ column. Because it is perfectly sorted alphabetically, we only need an array of 5 integers representing the cumulative counts of each symbol (\texttt{\$}, A, C, G, T).
+
+\textbf{Example:} Using Cumulative Counts for the F Column.
+If we know there is 1 \texttt{\$}, 5 A's, and 2 B's, we instantly know that the 'C's start at index 8. We do not need to read through the A's and B's.
+
+\section{Read Mapping Algorithms (BWA)}
+The Burrows-Wheeler Aligner (BWA) utilizes the BWT and FM Index to align reads against the reference genome. It implements exact and inexact backward searches.
+
+\subsection{Suffix Array Intervals}
+Every substring in the text corresponds to a prefix of some suffix. Since suffixes are lexicographically sorted in a Suffix Array (SA), all occurrences of a substring $W$ appear contiguously.
+
+\begin{important}
+    \textbf{Suffix Array Interval}: A substring $W$ is represented by the continuous interval $[\underline{R}(W), \overline{R}(W)]$ in the Suffix Array. These bounds do not refer directly to genomic coordinates, but to index boundaries in the suffix array containing the coordinate references.
+\end{important}
+
+\subsection{BWA Exact Matching}
+BWA searches for exact matches by iterating backward through the search pattern $W = W[0 \dots m-1]$. At each step $k$, it updates the Suffix Array interval bounds using two precalculated arrays.
+
+The precalculations are:
+\begin{itemize}
+    \item $C(a)$: The number of characters in the reference genome $T$ that are lexicographically strictly smaller than $a$.
+    \item $Occ(a, i)$: The number of occurrences of character $a$ in the BWT up to index $i$ ($BWT[0 \dots i]$).
+\end{itemize}
+
+Given $W_k = a_k W_{k+1}$ (the suffix of the pattern starting at $k$), the interval updates as follows:
+\begin{align}
+    \underline{R}(W_k) &= C(a_k) + Occ(a_k, \underline{R}(W_{k+1}) - 1) + 1 \label{eq:lower_bound} \\
+    \overline{R}(W_k) &= C(a_k) + Occ(a_k, \overline{R}(W_{k+1})) \label{eq:upper_bound}
+\end{align}
+
+If at any point $\underline{R} > \overline{R}$, the substring does not exist in the reference.
+
+\subsection{Inexact Matching and Prefix Tries}
+Sequencing errors and single nucleotide variants (SNVs) dictate that read mappers must support \textbf{inexact matching}. Given a search pattern $W$ of length $m$ and text $T$ of length $n$, we want to find all positions $p$ where the text substring $T^p$ matches $W$ with a maximum allowed distance $d_{max}$ (e.g., Hamming or Edit distance).
+
+A brute-force approach conceptualizes the text as a \textbf{Prefix Trie}. 
+\begin{important}
+    \textbf{Prefix Trie}: A tree representing all prefixes of a string. The prefix trie of $T$ is identical to the suffix trie of the reverse of $T$. A path from the root to a leaf gives the reverse of a prefix.
+\end{important}
+
+To find an inexact match, we perform a Depth-First Search (DFS) on the Prefix Trie starting with the last character of the search pattern, branching out and accumulating a mismatch penalty. If the penalty exceeds $d_{max}$, the branch is pruned. 
+
+\subsection{BWA Inexact Search Algorithm}
+To drastically optimize the DFS, BWA precalculates a lower-bound heuristic array $D(i)$, tracking the minimum number of mismatches required to match $W[0 \dots i]$. This ensures that branches destined to fail are pruned much earlier in the tree.
+
+\begin{minted}{python}
+# [pseudocode]
+Algorithm 2 CalculateD(W)
+1: z = 0
+2: j = 0
+3: for i = 0 to |W|-1 do
+4:     if W[j..i] is not a substring of T:
+5:         z = z + 1
+6:         j = i + 1
+7:     end if
+8:     D[i] = z
+9: end for
+10: return D
+\end{minted}
+
+The `CalculateD(W)` function builds a lower-bound mismatch table $D$. It scans the search word $W$, and every time the current expanding substring $W[j \dots i]$ is no longer found in the text $T$, it forces a mismatch increment ($z$) and resets the search anchor ($j$). By referencing array $D$ during the actual recursive backward search, BWA immediately aborts paths where the accumulated mismatch cost plus the minimal future required mismatches exceeds $d_{max}$.
+
+The actual search is implemented recursively:
+\begin{minted}{text}
+# [pseudocode]
+Algorithm 3 InexRecur(W, i, z, k, l)
+1: if z < 0 then
+2:     return empty set
+3: end if
+4: if i < 0 then
+5:     return {[k, l]} // i.e., an SA interval
+6: end if
+
+\end{minted}
+% [OCR ERROR: The remainder of Algorithm 3 is highly corrupted in the source text, repeatedly listing "1 1 1 10". The logic loops over all nucleotides (A,C,G,T) to find a match and decrement the mismatch budget z accordingly.]
+
+The recursive algorithm `InexRecur` traverses the search pattern backward (from $i = |W|-1$ down to $0$). It takes the current suffix array interval bounds $[k, l]$ and the remaining allowed error budget $z$. At each step, it loops over all possible preceding nucleotides (A, C, G, T) to update the $[k, l]$ interval bounds utilizing the exact match formulas \eqref{eq:lower_bound} and \eqref{eq:upper_bound}. If the chosen nucleotide mismatches the actual nucleotide at $W[i]$, the budget $z$ is decremented. If the updated interval is valid ($\underline{R} \leq \overline{R}$) and the budget constraint holds, the recursion continues. When $i < 0$, the algorithm has successfully matched the entire read and returns the current SA interval as a set of valid mapping coordinates.
+
+\end{document}
