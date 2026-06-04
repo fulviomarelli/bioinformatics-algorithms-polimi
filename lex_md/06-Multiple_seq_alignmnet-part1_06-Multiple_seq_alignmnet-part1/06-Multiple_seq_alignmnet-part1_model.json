@@ -1,0 +1,11212 @@
+[
+  [
+    {
+      "index": 0,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        270,
+        138,
+        392,
+        297
+      ],
+      "polygon": [
+        [
+          270,
+          144
+        ],
+        [
+          270,
+          236
+        ],
+        [
+          270,
+          277
+        ],
+        [
+          270,
+          287
+        ],
+        [
+          275,
+          296
+        ],
+        [
+          387,
+          296
+        ],
+        [
+          391,
+          292
+        ],
+        [
+          391,
+          194
+        ],
+        [
+          391,
+          153
+        ],
+        [
+          391,
+          138
+        ],
+        [
+          275,
+          138
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "POLITECNICO\nMILANO 1863",
+      "bbox_2d": [
+        401,
+        170,
+        675,
+        268
+      ],
+      "polygon": [
+        [
+          401,
+          170
+        ],
+        [
+          401,
+          234
+        ],
+        [
+          401,
+          253
+        ],
+        [
+          401,
+          267
+        ],
+        [
+          674,
+          267
+        ],
+        [
+          674,
+          170
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "doc_title",
+      "content": "Bioinformatics Algorithms",
+      "bbox_2d": [
+        295,
+        388,
+        703,
+        440
+      ],
+      "polygon": [
+        [
+          295,
+          388
+        ],
+        [
+          295,
+          439
+        ],
+        [
+          702,
+          439
+        ],
+        [
+          702,
+          388
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Multiple sequence alignment (part 1)",
+      "bbox_2d": [
+        294,
+        455,
+        703,
+        496
+      ],
+      "polygon": [
+        [
+          294,
+          455
+        ],
+        [
+          294,
+          494
+        ],
+        [
+          702,
+          494
+        ],
+        [
+          702,
+          455
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "Rosario M. Piro (based on slides by Giulio Pavesi)",
+      "bbox_2d": [
+        310,
+        582,
+        687,
+        666
+      ],
+      "polygon": [
+        [
+          310,
+          587
+        ],
+        [
+          310,
+          665
+        ],
+        [
+          686,
+          665
+        ],
+        [
+          686,
+          587
+        ],
+        [
+          631,
+          582
+        ],
+        [
+          315,
+          582
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Dipartimento di Elettronica, Informazione e Bioingegneria (DEIB)\nPolitecnico di Milano",
+      "bbox_2d": [
+        250,
+        718,
+        752,
+        777
+      ],
+      "polygon": [
+        [
+          250,
+          718
+        ],
+        [
+          250,
+          776
+        ],
+        [
+          751,
+          776
+        ],
+        [
+          751,
+          718
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Evolutionary trees",
+      "bbox_2d": [
+        20,
+        35,
+        309,
+        83
+      ],
+      "polygon": [
+        [
+          20,
+          35
+        ],
+        [
+          20,
+          82
+        ],
+        [
+          308,
+          82
+        ],
+        [
+          308,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Evolution is an important application of computational approaches",
+      "bbox_2d": [
+        21,
+        126,
+        750,
+        167
+      ],
+      "polygon": [
+        [
+          21,
+          132
+        ],
+        [
+          27,
+          166
+        ],
+        [
+          749,
+          166
+        ],
+        [
+          744,
+          126
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Many interesting algorithms have been developed to study evolutionary processes",
+      "bbox_2d": [
+        50,
+        591,
+        446,
+        719
+      ],
+      "polygon": [
+        [
+          50,
+          591
+        ],
+        [
+          50,
+          718
+        ],
+        [
+          445,
+          718
+        ],
+        [
+          445,
+          591
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- We will concentrate on one specific class of algorithms which extends our previous topics",
+      "bbox_2d": [
+        50,
+        743,
+        470,
+        870
+      ],
+      "polygon": [
+        [
+          50,
+          743
+        ],
+        [
+          50,
+          869
+        ],
+        [
+          469,
+          869
+        ],
+        [
+          469,
+          743
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        537,
+        240,
+        958,
+        719
+      ],
+      "polygon": [
+        [
+          537,
+          240
+        ],
+        [
+          537,
+          539
+        ],
+        [
+          548,
+          714
+        ],
+        [
+          957,
+          718
+        ],
+        [
+          957,
+          256
+        ],
+        [
+          942,
+          240
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "vision_footnote",
+      "content": "Charles Darwin's coneptualization of evolution as a \"tree of life\"",
+      "bbox_2d": [
+        572,
+        787,
+        912,
+        869
+      ],
+      "polygon": [
+        [
+          572,
+          792
+        ],
+        [
+          572,
+          810
+        ],
+        [
+          577,
+          867
+        ],
+        [
+          911,
+          867
+        ],
+        [
+          911,
+          792
+        ],
+        [
+          907,
+          787
+        ],
+        [
+          874,
+          787
+        ],
+        [
+          597,
+          787
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Evolutionary trees",
+      "bbox_2d": [
+        20,
+        34,
+        310,
+        83
+      ],
+      "polygon": [
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          82
+        ],
+        [
+          309,
+          82
+        ],
+        [
+          309,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        29,
+        91,
+        622,
+        894
+      ],
+      "polygon": [
+        [
+          29,
+          116
+        ],
+        [
+          29,
+          888
+        ],
+        [
+          621,
+          883
+        ],
+        [
+          621,
+          91
+        ],
+        [
+          286,
+          91
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "vision_footnote",
+      "content": "(Evolutionary tree of Madagascan reptiles based on similarities in the cytochrome oxidase subunit I (COI) gene; from: Nagy et al, 2012)",
+      "bbox_2d": [
+        24,
+        920,
+        767,
+        944
+      ],
+      "polygon": [
+        [
+          24,
+          920
+        ],
+        [
+          24,
+          943
+        ],
+        [
+          766,
+          943
+        ],
+        [
+          766,
+          920
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Evolutionary trees",
+      "bbox_2d": [
+        19,
+        35,
+        309,
+        83
+      ],
+      "polygon": [
+        [
+          19,
+          35
+        ],
+        [
+          19,
+          82
+        ],
+        [
+          308,
+          82
+        ],
+        [
+          308,
+          41
+        ],
+        [
+          303,
+          35
+        ],
+        [
+          294,
+          35
+        ],
+        [
+          288,
+          35
+        ],
+        [
+          254,
+          35
+        ],
+        [
+          229,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        28,
+        231,
+        964,
+        682
+      ],
+      "polygon": [
+        [
+          39,
+          251
+        ],
+        [
+          34,
+          671
+        ],
+        [
+          958,
+          681
+        ],
+        [
+          963,
+          231
+        ],
+        [
+          49,
+          231
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "figure_title",
+      "content": "All the major and many of the minor living branches of life are shown on this diagram, but only a few of those that have game extinct are shown. Example: *Dionaea* - extinct.",
+      "bbox_2d": [
+        251,
+        682,
+        814,
+        698
+      ],
+      "polygon": [
+        [
+          251,
+          697
+        ],
+        [
+          749,
+          697
+        ],
+        [
+          753,
+          682
+        ],
+        [
+          251,
+          682
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "figure_title",
+      "content": "(from: https://www.evogeneao.com/en/explore/tree-of-life-explorer;see there for an interactive version!)",
+      "bbox_2d": [
+        134,
+        735,
+        863,
+        757
+      ],
+      "polygon": [
+        [
+          134,
+          735
+        ],
+        [
+          134,
+          756
+        ],
+        [
+          862,
+          756
+        ],
+        [
+          862,
+          735
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Evolutionary trees",
+      "bbox_2d": [
+        21,
+        35,
+        309,
+        83
+      ],
+      "polygon": [
+        [
+          21,
+          35
+        ],
+        [
+          21,
+          58
+        ],
+        [
+          21,
+          78
+        ],
+        [
+          308,
+          82
+        ],
+        [
+          308,
+          35
+        ],
+        [
+          254,
+          35
+        ],
+        [
+          244,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "SARS-CoV-2 Evolutionary Tree Data as of March 15, 2022",
+      "bbox_2d": [
+        24,
+        108,
+        243,
+        162
+      ],
+      "polygon": [
+        [
+          24,
+          108
+        ],
+        [
+          24,
+          161
+        ],
+        [
+          237,
+          161
+        ],
+        [
+          242,
+          157
+        ],
+        [
+          242,
+          108
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        154,
+        112,
+        974,
+        876
+      ],
+      "polygon": [
+        [
+          154,
+          178
+        ],
+        [
+          154,
+          391
+        ],
+        [
+          154,
+          552
+        ],
+        [
+          154,
+          830
+        ],
+        [
+          210,
+          851
+        ],
+        [
+          210,
+          866
+        ],
+        [
+          305,
+          875
+        ],
+        [
+          973,
+          866
+        ],
+        [
+          973,
+          112
+        ],
+        [
+          269,
+          112
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "vision_footnote",
+      "content": "Visualization: Jonathan Gilmour, Pandemic Tracking Collective @pandemictrack\nSource: Nextstreet, visualization adaptation from the work of Dr. Erma Hodrock",
+      "bbox_2d": [
+        23,
+        829,
+        365,
+        879
+      ],
+      "polygon": [
+        [
+          23,
+          829
+        ],
+        [
+          23,
+          878
+        ],
+        [
+          364,
+          878
+        ],
+        [
+          364,
+          829
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "figure_title",
+      "content": "(from: https://www.rockefellerfoundation.org/)",
+      "bbox_2d": [
+        319,
+        907,
+        679,
+        931
+      ],
+      "polygon": [
+        [
+          319,
+          907
+        ],
+        [
+          319,
+          929
+        ],
+        [
+          678,
+          929
+        ],
+        [
+          678,
+          912
+        ],
+        [
+          378,
+          907
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Multiple sequence alignment (MSA)",
+      "bbox_2d": [
+        19,
+        35,
+        584,
+        87
+      ],
+      "polygon": [
+        [
+          19,
+          35
+        ],
+        [
+          19,
+          85
+        ],
+        [
+          583,
+          85
+        ],
+        [
+          583,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "So far, we have learned only about pair-wise sequence comparison:",
+      "bbox_2d": [
+        105,
+        162,
+        852,
+        201
+      ],
+      "polygon": [
+        [
+          105,
+          162
+        ],
+        [
+          105,
+          199
+        ],
+        [
+          851,
+          199
+        ],
+        [
+          851,
+          162
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- Global alignment of two sequences",
+      "bbox_2d": [
+        131,
+        218,
+        550,
+        255
+      ],
+      "polygon": [
+        [
+          131,
+          218
+        ],
+        [
+          131,
+          253
+        ],
+        [
+          549,
+          253
+        ],
+        [
+          549,
+          218
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- Local alignment of two sequences",
+      "bbox_2d": [
+        132,
+        273,
+        538,
+        310
+      ],
+      "polygon": [
+        [
+          132,
+          273
+        ],
+        [
+          132,
+          309
+        ],
+        [
+          537,
+          309
+        ],
+        [
+          537,
+          273
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- Mapping of a single read to the reference genome (even if we do this millions of times, we always map only one read at a time!)",
+      "bbox_2d": [
+        132,
+        326,
+        871,
+        411
+      ],
+      "polygon": [
+        [
+          132,
+          332
+        ],
+        [
+          132,
+          410
+        ],
+        [
+          870,
+          410
+        ],
+        [
+          870,
+          332
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "But for many applications (especially in the field of evolutionary genetics/genomics) it is usefull to align multiple sequences (>2) to each other at the same time ...",
+      "bbox_2d": [
+        104,
+        425,
+        893,
+        554
+      ],
+      "polygon": [
+        [
+          104,
+          425
+        ],
+        [
+          104,
+          552
+        ],
+        [
+          892,
+          548
+        ],
+        [
+          892,
+          431
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- We want to compare more than two sequences at the same time, that is, we want to align more than two sequences (\"multiple sequence alignment\", MSA)",
+      "bbox_2d": [
+        50,
+        630,
+        973,
+        714
+      ],
+      "polygon": [
+        [
+          50,
+          630
+        ],
+        [
+          50,
+          712
+        ],
+        [
+          972,
+          712
+        ],
+        [
+          972,
+          630
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- Ideally, the comparison/alignment should be simultaneous; we want to analyze a single alignment containing all sequences, not the list of all possible pairwise alignments",
+      "bbox_2d": [
+        50,
+        728,
+        974,
+        855
+      ],
+      "polygon": [
+        [
+          50,
+          728
+        ],
+        [
+          50,
+          854
+        ],
+        [
+          973,
+          845
+        ],
+        [
+          973,
+          728
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "From two to many",
+      "bbox_2d": [
+        20,
+        35,
+        307,
+        87
+      ],
+      "polygon": [
+        [
+          20,
+          35
+        ],
+        [
+          20,
+          85
+        ],
+        [
+          306,
+          85
+        ],
+        [
+          306,
+          41
+        ],
+        [
+          243,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Sequences may share a common evolutionary history (a common ancestor)",
+      "bbox_2d": [
+        50,
+        125,
+        453,
+        244
+      ],
+      "polygon": [
+        [
+          50,
+          125
+        ],
+        [
+          50,
+          243
+        ],
+        [
+          452,
+          243
+        ],
+        [
+          452,
+          125
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "The more similar two sequences, the closer in time is their common ancestor",
+      "bbox_2d": [
+        107,
+        248,
+        471,
+        362
+      ],
+      "polygon": [
+        [
+          107,
+          248
+        ],
+        [
+          107,
+          361
+        ],
+        [
+          470,
+          361
+        ],
+        [
+          470,
+          248
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "\"Parsimony\" for evolutionary changes:",
+      "bbox_2d": [
+        51,
+        367,
+        390,
+        445
+      ],
+      "polygon": [
+        [
+          51,
+          367
+        ],
+        [
+          51,
+          444
+        ],
+        [
+          389,
+          444
+        ],
+        [
+          389,
+          367
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "Match: nothing changed during evolution",
+      "bbox_2d": [
+        106,
+        451,
+        447,
+        525
+      ],
+      "polygon": [
+        [
+          106,
+          456
+        ],
+        [
+          106,
+          523
+        ],
+        [
+          446,
+          523
+        ],
+        [
+          446,
+          451
+        ],
+        [
+          112,
+          451
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Mismatch: one of the two sequences changed with respect to the ancestor sequence",
+      "bbox_2d": [
+        106,
+        530,
+        488,
+        646
+      ],
+      "polygon": [
+        [
+          106,
+          535
+        ],
+        [
+          106,
+          636
+        ],
+        [
+          106,
+          645
+        ],
+        [
+          487,
+          645
+        ],
+        [
+          487,
+          535
+        ],
+        [
+          482,
+          530
+        ],
+        [
+          452,
+          530
+        ],
+        [
+          111,
+          530
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- Gap: insertion or a deletion with respect to the ancestor sequence",
+      "bbox_2d": [
+        106,
+        652,
+        468,
+        730
+      ],
+      "polygon": [
+        [
+          106,
+          657
+        ],
+        [
+          106,
+          728
+        ],
+        [
+          467,
+          728
+        ],
+        [
+          467,
+          657
+        ],
+        [
+          443,
+          652
+        ],
+        [
+          407,
+          652
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "In this particular example: the final \"consensus\" (most frequent letters) is exactly (the sound) of the common ancestor word ...",
+      "bbox_2d": [
+        49,
+        773,
+        488,
+        943
+      ],
+      "polygon": [
+        [
+          49,
+          773
+        ],
+        [
+          49,
+          941
+        ],
+        [
+          487,
+          937
+        ],
+        [
+          487,
+          773
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "paragraph_title",
+      "content": "Pair-wise alignment:",
+      "bbox_2d": [
+        509,
+        125,
+        738,
+        164
+      ],
+      "polygon": [
+        [
+          509,
+          125
+        ],
+        [
+          509,
+          162
+        ],
+        [
+          737,
+          162
+        ],
+        [
+          737,
+          125
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "S U G A R -\nS U C - R E",
+      "bbox_2d": [
+        614,
+        170,
+        804,
+        251
+      ],
+      "polygon": [
+        [
+          614,
+          170
+        ],
+        [
+          614,
+          250
+        ],
+        [
+          803,
+          250
+        ],
+        [
+          803,
+          170
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "Multiple sequence alignment:",
+      "bbox_2d": [
+        508,
+        300,
+        838,
+        341
+      ],
+      "polygon": [
+        [
+          508,
+          300
+        ],
+        [
+          508,
+          339
+        ],
+        [
+          837,
+          339
+        ],
+        [
+          837,
+          300
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "Consensus:",
+      "bbox_2d": [
+        526,
+        607,
+        664,
+        645
+      ],
+      "polygon": [
+        [
+          526,
+          612
+        ],
+        [
+          526,
+          644
+        ],
+        [
+          663,
+          644
+        ],
+        [
+          663,
+          612
+        ],
+        [
+          634,
+          607
+        ],
+        [
+          551,
+          607
+        ],
+        [
+          535,
+          607
+        ],
+        [
+          531,
+          607
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} - S U G A R - \\\\ - S U C - R E \\\\ - S A K A R I \\\\ - Z U K E R - \\\\ A Z U C A R - \\\\ - Z U K E R O \\\\ - S U K A R - \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        685,
+        343,
+        921,
+        645
+      ],
+      "polygon": [
+        [
+          685,
+          343
+        ],
+        [
+          685,
+          644
+        ],
+        [
+          920,
+          644
+        ],
+        [
+          920,
+          343
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "From two to many",
+      "bbox_2d": [
+        20,
+        34,
+        307,
+        87
+      ],
+      "polygon": [
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          85
+        ],
+        [
+          306,
+          85
+        ],
+        [
+          306,
+          39
+        ],
+        [
+          272,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Multiple sequence alignments can give us much more information, and a more \"general\" view of what the relationships among all our sequences are",
+      "bbox_2d": [
+        49,
+        125,
+        479,
+        326
+      ],
+      "polygon": [
+        [
+          49,
+          125
+        ],
+        [
+          49,
+          325
+        ],
+        [
+          478,
+          325
+        ],
+        [
+          478,
+          125
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- Permit to clarify \"ambiguous\" cases resulting from pairwise comparisons",
+      "bbox_2d": [
+        107,
+        345,
+        486,
+        462
+      ],
+      "polygon": [
+        [
+          107,
+          345
+        ],
+        [
+          107,
+          461
+        ],
+        [
+          485,
+          457
+        ],
+        [
+          485,
+          345
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Depending our mismatch and gap penalty weights, the pairwise-alignment of \"SUGAR\" and \"SUCRE\" can change",
+      "bbox_2d": [
+        108,
+        476,
+        473,
+        634
+      ],
+      "polygon": [
+        [
+          108,
+          476
+        ],
+        [
+          108,
+          633
+        ],
+        [
+          472,
+          633
+        ],
+        [
+          472,
+          476
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "But the other sequences can help us to clarify the most \"correct\" choice (correct from a \"biological\"/ evolutionary point of view)",
+      "bbox_2d": [
+        107,
+        645,
+        476,
+        806
+      ],
+      "polygon": [
+        [
+          107,
+          650
+        ],
+        [
+          107,
+          665
+        ],
+        [
+          107,
+          671
+        ],
+        [
+          107,
+          697
+        ],
+        [
+          107,
+          805
+        ],
+        [
+          475,
+          805
+        ],
+        [
+          475,
+          645
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- That is, we can \"extrapolate\" the pairwise relations from the multipe sequence alignment",
+      "bbox_2d": [
+        108,
+        816,
+        477,
+        935
+      ],
+      "polygon": [
+        [
+          108,
+          816
+        ],
+        [
+          108,
+          933
+        ],
+        [
+          476,
+          933
+        ],
+        [
+          476,
+          816
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Pair-wise alignment (alternative 1):",
+      "bbox_2d": [
+        508,
+        124,
+        895,
+        166
+      ],
+      "polygon": [
+        [
+          508,
+          124
+        ],
+        [
+          508,
+          165
+        ],
+        [
+          894,
+          165
+        ],
+        [
+          894,
+          124
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} S U G A R - \\\\ S U C - R E \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        614,
+        171,
+        805,
+        250
+      ],
+      "polygon": [
+        [
+          614,
+          171
+        ],
+        [
+          614,
+          248
+        ],
+        [
+          804,
+          248
+        ],
+        [
+          804,
+          177
+        ],
+        [
+          799,
+          171
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "Pair-wise alignment (alternative 2):\nS U G A R\nS U C R E",
+      "bbox_2d": [
+        508,
+        257,
+        892,
+        380
+      ],
+      "polygon": [
+        [
+          508,
+          257
+        ],
+        [
+          508,
+          379
+        ],
+        [
+          891,
+          379
+        ],
+        [
+          891,
+          257
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "Multiple sequence alignment:",
+      "bbox_2d": [
+        509,
+        501,
+        837,
+        542
+      ],
+      "polygon": [
+        [
+          509,
+          501
+        ],
+        [
+          509,
+          541
+        ],
+        [
+          836,
+          541
+        ],
+        [
+          836,
+          501
+        ],
+        [
+          635,
+          501
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "Which is the best alternative?",
+      "bbox_2d": [
+        508,
+        414,
+        838,
+        455
+      ],
+      "polygon": [
+        [
+          508,
+          414
+        ],
+        [
+          508,
+          453
+        ],
+        [
+          837,
+          453
+        ],
+        [
+          837,
+          414
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "algorithm",
+      "content": "- S U G A R -\n- S U C - R E\n- S A K A R I\n- Z U K E R -\nA Z U C A R -\n- Z U K E R O\n- S U K A R -",
+      "bbox_2d": [
+        683,
+        547,
+        915,
+        846
+      ],
+      "polygon": [
+        [
+          683,
+          547
+        ],
+        [
+          683,
+          845
+        ],
+        [
+          914,
+          845
+        ],
+        [
+          914,
+          547
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "Consensus:",
+      "bbox_2d": [
+        526,
+        808,
+        663,
+        846
+      ],
+      "polygon": [
+        [
+          526,
+          808
+        ],
+        [
+          526,
+          845
+        ],
+        [
+          662,
+          845
+        ],
+        [
+          662,
+          808
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "label": "text",
+      "content": "Alternative 1 is the best because the \"R\" seems conserved over all sequences!",
+      "bbox_2d": [
+        507,
+        874,
+        957,
+        958
+      ],
+      "polygon": [
+        [
+          507,
+          874
+        ],
+        [
+          507,
+          957
+        ],
+        [
+          956,
+          957
+        ],
+        [
+          956,
+          874
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "From two to many",
+      "bbox_2d": [
+        22,
+        37,
+        306,
+        83
+      ],
+      "polygon": [
+        [
+          22,
+          37
+        ],
+        [
+          22,
+          78
+        ],
+        [
+          305,
+          82
+        ],
+        [
+          305,
+          42
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        110,
+        92,
+        887,
+        355
+      ],
+      "polygon": [
+        [
+          110,
+          92
+        ],
+        [
+          110,
+          354
+        ],
+        [
+          886,
+          354
+        ],
+        [
+          886,
+          92
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "figure_title",
+      "content": "C",
+      "bbox_2d": [
+        108,
+        374,
+        123,
+        395
+      ],
+      "polygon": [
+        [
+          108,
+          374
+        ],
+        [
+          108,
+          394
+        ],
+        [
+          122,
+          394
+        ],
+        [
+          122,
+          374
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        167,
+        376,
+        829,
+        910
+      ],
+      "polygon": [
+        [
+          173,
+          382
+        ],
+        [
+          167,
+          908
+        ],
+        [
+          828,
+          899
+        ],
+        [
+          823,
+          382
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "vision_footnote",
+      "content": "(from Banerjee et al., 2020)",
+      "bbox_2d": [
+        421,
+        935,
+        576,
+        957
+      ],
+      "polygon": [
+        [
+          421,
+          935
+        ],
+        [
+          421,
+          948
+        ],
+        [
+          427,
+          956
+        ],
+        [
+          575,
+          956
+        ],
+        [
+          575,
+          935
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "From two to many",
+      "bbox_2d": [
+        21,
+        35,
+        306,
+        85
+      ],
+      "polygon": [
+        [
+          21,
+          35
+        ],
+        [
+          21,
+          84
+        ],
+        [
+          305,
+          84
+        ],
+        [
+          305,
+          41
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Evolutionary relationship:",
+      "bbox_2d": [
+        24,
+        92,
+        305,
+        130
+      ],
+      "polygon": [
+        [
+          24,
+          92
+        ],
+        [
+          24,
+          129
+        ],
+        [
+          304,
+          129
+        ],
+        [
+          304,
+          92
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Consensus\nIdentity\n\n1. En_B_anynana\n2. En_B_anynana\n3. Inv_like_B_anynana\n4. En_M_chasmon\n5. En_P_rapepe\n6. En_P_xuthus\n7. En_P_xuthus\n8. En_P_xylostella\n9. En_P_xylostella\n10. En_H_melopemone\n11. Inv_H_melopemone\n12. Inv_like_H_melopemone\n13. En_I_joinna\n14. En_V_cardui\n15. En_V_cardui\n16. En_B_mori\n16. En_B_mori\n17. En_P_rapepe\n18. En_P_rapepe",
+      "bbox_2d": [
+        28,
+        145,
+        142,
+        461
+      ],
+      "polygon": [
+        [
+          28,
+          145
+        ],
+        [
+          28,
+          460
+        ],
+        [
+          141,
+          460
+        ],
+        [
+          141,
+          145
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        211,
+        142,
+        976,
+        461
+      ],
+      "polygon": [
+        [
+          211,
+          142
+        ],
+        [
+          211,
+          460
+        ],
+        [
+          975,
+          456
+        ],
+        [
+          975,
+          142
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "vision_footnote",
+      "content": "(from Banerjee et al., 2020)",
+      "bbox_2d": [
+        421,
+        497,
+        577,
+        521
+      ],
+      "polygon": [
+        [
+          421,
+          497
+        ],
+        [
+          421,
+          519
+        ],
+        [
+          576,
+          519
+        ],
+        [
+          576,
+          502
+        ],
+        [
+          541,
+          497
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Useful also for comparison of sequences within one species:",
+      "bbox_2d": [
+        21,
+        542,
+        691,
+        582
+      ],
+      "polygon": [
+        [
+          21,
+          547
+        ],
+        [
+          27,
+          580
+        ],
+        [
+          690,
+          580
+        ],
+        [
+          690,
+          542
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        119,
+        599,
+        876,
+        899
+      ],
+      "polygon": [
+        [
+          119,
+          615
+        ],
+        [
+          119,
+          898
+        ],
+        [
+          875,
+          898
+        ],
+        [
+          875,
+          599
+        ],
+        [
+          159,
+          599
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "vision_footnote",
+      "content": "(Sequence alignment of ArgR binding sites; from Lu et al., 1999)",
+      "bbox_2d": [
+        320,
+        923,
+        678,
+        948
+      ],
+      "polygon": [
+        [
+          320,
+          923
+        ],
+        [
+          320,
+          947
+        ],
+        [
+          677,
+          947
+        ],
+        [
+          677,
+          923
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "text",
+      "content": "A multiple sequence alignment (MSA), sometimes \"multiple alignment\", of k strings $ S_{1}, S_{2}, \\dots S_{k} $ over an alphabet $ \\Sigma $ is a set of k strings with gaps (\"-\"):",
+      "bbox_2d": [
+        20,
+        186,
+        935,
+        271
+      ],
+      "polygon": [
+        [
+          20,
+          191
+        ],
+        [
+          20,
+          269
+        ],
+        [
+          934,
+          269
+        ],
+        [
+          934,
+          186
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "$ S_{1}^{\\prime}, S_{2}^{\\prime}, \\dots S_{k}^{\\prime} $ over the alphabet $ \\Sigma^{\\prime}=\\Sigma \\cup \\{-\\} $ where",
+      "bbox_2d": [
+        23,
+        272,
+        603,
+        317
+      ],
+      "polygon": [
+        [
+          602,
+          277
+        ],
+        [
+          23,
+          277
+        ],
+        [
+          23,
+          316
+        ],
+        [
+          602,
+          316
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "1 $ | S_{1}^{\\prime} | = | S_{2}^{\\prime} | = \\dots = | S_{k}^{\\prime} | $ , i.e., after alignment all sequences have the same length",
+      "bbox_2d": [
+        35,
+        326,
+        968,
+        373
+      ],
+      "polygon": [
+        [
+          35,
+          326
+        ],
+        [
+          35,
+          371
+        ],
+        [
+          967,
+          371
+        ],
+        [
+          967,
+          332
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "$ \\forall i \\in(1\\dots k), S_{i}^{\\prime} $ is obtained from $ S_{i} $ with the insertion of gaps",
+      "bbox_2d": [
+        36,
+        382,
+        757,
+        427
+      ],
+      "polygon": [
+        [
+          36,
+          387
+        ],
+        [
+          36,
+          425
+        ],
+        [
+          756,
+          425
+        ],
+        [
+          756,
+          387
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "The alignment $A$ is written with the $S_{i}'$ strings one over the others, in any order: $ ^{1} $",
+      "bbox_2d": [
+        21,
+        481,
+        907,
+        525
+      ],
+      "polygon": [
+        [
+          21,
+          486
+        ],
+        [
+          21,
+          523
+        ],
+        [
+          906,
+          519
+        ],
+        [
+          906,
+          481
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} A C. B C D B \\\\ . C A D B. D. \\\\ A C A. B C D. \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        390,
+        556,
+        527,
+        670
+      ],
+      "polygon": [
+        [
+          390,
+          556
+        ],
+        [
+          390,
+          669
+        ],
+        [
+          526,
+          669
+        ],
+        [
+          526,
+          556
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Matrix 3 rows 8 columns",
+      "bbox_2d": [
+        625,
+        572,
+        830,
+        665
+      ],
+      "polygon": [
+        [
+          625,
+          578
+        ],
+        [
+          625,
+          664
+        ],
+        [
+          829,
+          664
+        ],
+        [
+          829,
+          572
+        ],
+        [
+          631,
+          572
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "figure_title",
+      "content": "Figure 4.1: A multiple alignment of ACBCDB, CADBD and ACABCD.",
+      "bbox_2d": [
+        165,
+        691,
+        758,
+        726
+      ],
+      "polygon": [
+        [
+          165,
+          697
+        ],
+        [
+          165,
+          724
+        ],
+        [
+          757,
+          724
+        ],
+        [
+          757,
+          691
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Multiple alignment scores: Sum of Pairs",
+      "bbox_2d": [
+        18,
+        33,
+        651,
+        87
+      ],
+      "polygon": [
+        [
+          18,
+          33
+        ],
+        [
+          18,
+          85
+        ],
+        [
+          650,
+          85
+        ],
+        [
+          650,
+          33
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- The possible ways to align k strings depend on where we place gaps (this actually holds also for k=2)",
+      "bbox_2d": [
+        49,
+        134,
+        476,
+        264
+      ],
+      "polygon": [
+        [
+          49,
+          134
+        ],
+        [
+          49,
+          263
+        ],
+        [
+          475,
+          263
+        ],
+        [
+          475,
+          134
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- Like for k=2, we might choose a formalization where we have a \"score\" that has to be optimized or a \"distance\" to be minimized",
+      "bbox_2d": [
+        49,
+        308,
+        464,
+        481
+      ],
+      "polygon": [
+        [
+          49,
+          308
+        ],
+        [
+          49,
+          480
+        ],
+        [
+          463,
+          480
+        ],
+        [
+          463,
+          308
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- As we saw, a multiple alignment implicitly induces a pairwise alignment for every pair $ S_{i}, S_{j} $",
+      "bbox_2d": [
+        49,
+        526,
+        438,
+        658
+      ],
+      "polygon": [
+        [
+          49,
+          526
+        ],
+        [
+          49,
+          653
+        ],
+        [
+          437,
+          657
+        ],
+        [
+          437,
+          531
+        ],
+        [
+          432,
+          526
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- We can use the substitution matrix we employed for pairwise alignment, and compute the pairwise alignment score a $ ( S_{i}, S_{j} ) $ for every pair $ S_{i}, S_{j} $",
+      "bbox_2d": [
+        49,
+        699,
+        482,
+        876
+      ],
+      "polygon": [
+        [
+          49,
+          699
+        ],
+        [
+          49,
+          875
+        ],
+        [
+          481,
+          875
+        ],
+        [
+          481,
+          699
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} - S U G A R - \\\\ - S U C - R E \\\\ - S A K A R I \\\\ - Z U K E R - \\\\ A Z U C A R - \\\\ - Z U K E R O \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        655,
+        129,
+        880,
+        386
+      ],
+      "polygon": [
+        [
+          655,
+          129
+        ],
+        [
+          655,
+          384
+        ],
+        [
+          879,
+          384
+        ],
+        [
+          879,
+          129
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- We compute the \"Sum of Pairs (SP) score\" as the sum of the alignment scores of every possible pair:",
+      "bbox_2d": [
+        537,
+        444,
+        969,
+        574
+      ],
+      "polygon": [
+        [
+          537,
+          444
+        ],
+        [
+          537,
+          568
+        ],
+        [
+          968,
+          572
+        ],
+        [
+          968,
+          444
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\nS P = \\sum_ {i = 1} ^ {k - 1} \\sum_ {j = i + 1} ^ {k} a \\left(S _ {i}, S _ {j}\\right)\n$$",
+      "bbox_2d": [
+        637,
+        608,
+        900,
+        715
+      ],
+      "polygon": [
+        [
+          637,
+          608
+        ],
+        [
+          637,
+          714
+        ],
+        [
+          899,
+          714
+        ],
+        [
+          899,
+          608
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- Goal: find the multiple alignment that maximizes this score! This is an optimization (maximization) problem",
+      "bbox_2d": [
+        537,
+        751,
+        976,
+        927
+      ],
+      "polygon": [
+        [
+          537,
+          751
+        ],
+        [
+          537,
+          925
+        ],
+        [
+          975,
+          921
+        ],
+        [
+          975,
+          751
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Multiple alignment scores: Sum of Pairs",
+      "bbox_2d": [
+        18,
+        33,
+        651,
+        87
+      ],
+      "polygon": [
+        [
+          18,
+          33
+        ],
+        [
+          18,
+          85
+        ],
+        [
+          650,
+          85
+        ],
+        [
+          650,
+          33
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- The SP-score is essentially a generalization to k strings of the principle we applied to 2 strings",
+      "bbox_2d": [
+        50,
+        145,
+        440,
+        277
+      ],
+      "polygon": [
+        [
+          50,
+          145
+        ],
+        [
+          50,
+          276
+        ],
+        [
+          439,
+          276
+        ],
+        [
+          439,
+          145
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- But it has another fundamental property: like for k=2, the optimal solution can be found by dynamic programming!",
+      "bbox_2d": [
+        50,
+        291,
+        482,
+        465
+      ],
+      "polygon": [
+        [
+          50,
+          291
+        ],
+        [
+          50,
+          464
+        ],
+        [
+          481,
+          464
+        ],
+        [
+          481,
+          291
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- The idea:",
+      "bbox_2d": [
+        49,
+        474,
+        189,
+        513
+      ],
+      "polygon": [
+        [
+          49,
+          474
+        ],
+        [
+          49,
+          511
+        ],
+        [
+          188,
+          511
+        ],
+        [
+          188,
+          474
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "For $k = 2$, we use a two-dimensional structure (a matrix)",
+      "bbox_2d": [
+        107,
+        525,
+        421,
+        642
+      ],
+      "polygon": [
+        [
+          107,
+          525
+        ],
+        [
+          107,
+          637
+        ],
+        [
+          113,
+          641
+        ],
+        [
+          420,
+          641
+        ],
+        [
+          420,
+          530
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- For $k = 3$, we use a three-dimensional structure (a cube)",
+      "bbox_2d": [
+        107,
+        648,
+        437,
+        764
+      ],
+      "polygon": [
+        [
+          107,
+          648
+        ],
+        [
+          107,
+          677
+        ],
+        [
+          107,
+          705
+        ],
+        [
+          107,
+          763
+        ],
+        [
+          436,
+          763
+        ],
+        [
+          436,
+          653
+        ],
+        [
+          432,
+          648
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "For $k > 3$ , we use a $k$-dimensional structure (a hypercube = hyperlattice)",
+      "bbox_2d": [
+        107,
+        769,
+        481,
+        890
+      ],
+      "polygon": [
+        [
+          107,
+          769
+        ],
+        [
+          107,
+          789
+        ],
+        [
+          107,
+          794
+        ],
+        [
+          107,
+          888
+        ],
+        [
+          480,
+          888
+        ],
+        [
+          480,
+          769
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} - S U G A R - \\\\ - S U C - R E \\\\ - S A K A R I \\\\ - Z U K E R - \\\\ A Z U C A R - \\\\ - Z U K E R O \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        656,
+        140,
+        880,
+        400
+      ],
+      "polygon": [
+        [
+          656,
+          140
+        ],
+        [
+          656,
+          399
+        ],
+        [
+          879,
+          399
+        ],
+        [
+          879,
+          140
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "display_formula",
+      "content": "$$\nS P = \\sum_ {i = 1} ^ {k - 1} \\sum_ {j = i + 1} ^ {k} a \\left(S _ {i}, S _ {j}\\right)\n$$",
+      "bbox_2d": [
+        610,
+        453,
+        873,
+        559
+      ],
+      "polygon": [
+        [
+          610,
+          453
+        ],
+        [
+          610,
+          558
+        ],
+        [
+          872,
+          558
+        ],
+        [
+          872,
+          453
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "- But the principle is the same as for k=2: for filling a cell we look at the values in the neighboring cells",
+      "bbox_2d": [
+        536,
+        591,
+        968,
+        720
+      ],
+      "polygon": [
+        [
+          536,
+          596
+        ],
+        [
+          536,
+          719
+        ],
+        [
+          967,
+          719
+        ],
+        [
+          967,
+          701
+        ],
+        [
+          967,
+          690
+        ],
+        [
+          967,
+          596
+        ],
+        [
+          962,
+          591
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "- The last cell in the structure (maximum index in each dimension) will then contain the score of the optimal (global) multiple alignment!",
+      "bbox_2d": [
+        537,
+        735,
+        964,
+        910
+      ],
+      "polygon": [
+        [
+          537,
+          735
+        ],
+        [
+          537,
+          908
+        ],
+        [
+          963,
+          908
+        ],
+        [
+          963,
+          740
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Neighboring cells",
+      "bbox_2d": [
+        19,
+        34,
+        298,
+        87
+      ],
+      "polygon": [
+        [
+          19,
+          34
+        ],
+        [
+          19,
+          85
+        ],
+        [
+          297,
+          85
+        ],
+        [
+          297,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "How many neighboring cells do we have?",
+      "bbox_2d": [
+        22,
+        264,
+        483,
+        304
+      ],
+      "polygon": [
+        [
+          22,
+          264
+        ],
+        [
+          22,
+          302
+        ],
+        [
+          482,
+          302
+        ],
+        [
+          482,
+          264
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- For k=2, we have 3 neighbors",
+      "bbox_2d": [
+        48,
+        355,
+        431,
+        394
+      ],
+      "polygon": [
+        [
+          48,
+          355
+        ],
+        [
+          48,
+          392
+        ],
+        [
+          430,
+          392
+        ],
+        [
+          430,
+          355
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- For k=3, we have 7 neighbors:",
+      "bbox_2d": [
+        49,
+        402,
+        438,
+        440
+      ],
+      "polygon": [
+        [
+          49,
+          407
+        ],
+        [
+          49,
+          439
+        ],
+        [
+          437,
+          439
+        ],
+        [
+          437,
+          407
+        ],
+        [
+          432,
+          402
+        ],
+        [
+          393,
+          402
+        ],
+        [
+          363,
+          402
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        165,
+        451,
+        406,
+        667
+      ],
+      "polygon": [
+        [
+          405,
+          451
+        ],
+        [
+          165,
+          456
+        ],
+        [
+          165,
+          666
+        ],
+        [
+          405,
+          666
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- For k, we have $ 2^{k}-1 $ neighbors!",
+      "bbox_2d": [
+        49,
+        690,
+        444,
+        731
+      ],
+      "polygon": [
+        [
+          49,
+          690
+        ],
+        [
+          49,
+          730
+        ],
+        [
+          443,
+          730
+        ],
+        [
+          443,
+          690
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Example: align \"VSNS\", \"AS\" and \"SNA\"",
+      "bbox_2d": [
+        629,
+        276,
+        856,
+        301
+      ],
+      "polygon": [
+        [
+          629,
+          276
+        ],
+        [
+          629,
+          300
+        ],
+        [
+          855,
+          300
+        ],
+        [
+          855,
+          276
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "chart",
+      "content": null,
+      "bbox_2d": [
+        529,
+        320,
+        955,
+        600
+      ],
+      "polygon": [
+        [
+          529,
+          320
+        ],
+        [
+          529,
+          599
+        ],
+        [
+          954,
+          599
+        ],
+        [
+          954,
+          320
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "figure_title",
+      "content": "(after G. Fullen, 1996)",
+      "bbox_2d": [
+        680,
+        624,
+        805,
+        646
+      ],
+      "polygon": [
+        [
+          680,
+          624
+        ],
+        [
+          680,
+          645
+        ],
+        [
+          804,
+          645
+        ],
+        [
+          804,
+          624
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "text",
+      "content": "Example: align \"VSNS\", \"AS\" and \"SNA\"",
+      "bbox_2d": [
+        384,
+        179,
+        614,
+        205
+      ],
+      "polygon": [
+        [
+          384,
+          179
+        ],
+        [
+          384,
+          203
+        ],
+        [
+          613,
+          203
+        ],
+        [
+          613,
+          179
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "chart",
+      "content": null,
+      "bbox_2d": [
+        24,
+        224,
+        604,
+        808
+      ],
+      "polygon": [
+        [
+          35,
+          224
+        ],
+        [
+          24,
+          354
+        ],
+        [
+          24,
+          802
+        ],
+        [
+          603,
+          797
+        ],
+        [
+          603,
+          224
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "figure_title",
+      "content": "(after G. Fullen, 1996)",
+      "bbox_2d": [
+        435,
+        837,
+        563,
+        861
+      ],
+      "polygon": [
+        [
+          435,
+          837
+        ],
+        [
+          435,
+          859
+        ],
+        [
+          562,
+          859
+        ],
+        [
+          562,
+          837
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} V S N - S \\\\ - S N A - \\\\ - - - A S \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        715,
+        351,
+        970,
+        592
+      ],
+      "polygon": [
+        [
+          715,
+          351
+        ],
+        [
+          715,
+          587
+        ],
+        [
+          969,
+          591
+        ],
+        [
+          969,
+          357
+        ],
+        [
+          949,
+          351
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Neighboring cells and scoring",
+      "bbox_2d": [
+        16,
+        33,
+        492,
+        85
+      ],
+      "polygon": [
+        [
+          16,
+          33
+        ],
+        [
+          22,
+          84
+        ],
+        [
+          491,
+          84
+        ],
+        [
+          491,
+          33
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Example for k=3:",
+      "bbox_2d": [
+        21,
+        92,
+        237,
+        130
+      ],
+      "polygon": [
+        [
+          21,
+          92
+        ],
+        [
+          21,
+          129
+        ],
+        [
+          236,
+          129
+        ],
+        [
+          236,
+          92
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Computing a Node on Hyperlattice",
+      "bbox_2d": [
+        23,
+        152,
+        669,
+        218
+      ],
+      "polygon": [
+        [
+          23,
+          157
+        ],
+        [
+          23,
+          216
+        ],
+        [
+          668,
+          212
+        ],
+        [
+          668,
+          157
+        ],
+        [
+          638,
+          152
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        47,
+        261,
+        488,
+        855
+      ],
+      "polygon": [
+        [
+          47,
+          261
+        ],
+        [
+          53,
+          854
+        ],
+        [
+          487,
+          854
+        ],
+        [
+          482,
+          267
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        536,
+        178,
+        877,
+        929
+      ],
+      "polygon": [
+        [
+          551,
+          234
+        ],
+        [
+          536,
+          250
+        ],
+        [
+          536,
+          928
+        ],
+        [
+          876,
+          928
+        ],
+        [
+          876,
+          178
+        ],
+        [
+          675,
+          178
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Neighboring cells and scoring",
+      "bbox_2d": [
+        16,
+        33,
+        494,
+        87
+      ],
+      "polygon": [
+        [
+          16,
+          33
+        ],
+        [
+          16,
+          59
+        ],
+        [
+          16,
+          85
+        ],
+        [
+          493,
+          85
+        ],
+        [
+          493,
+          33
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Computing a Node on Hyperlattice",
+      "bbox_2d": [
+        495,
+        95,
+        859,
+        134
+      ],
+      "polygon": [
+        [
+          495,
+          95
+        ],
+        [
+          495,
+          133
+        ],
+        [
+          858,
+          133
+        ],
+        [
+          858,
+          100
+        ],
+        [
+          853,
+          95
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        508,
+        156,
+        755,
+        489
+      ],
+      "polygon": [
+        [
+          508,
+          161
+        ],
+        [
+          508,
+          408
+        ],
+        [
+          514,
+          488
+        ],
+        [
+          754,
+          484
+        ],
+        [
+          754,
+          156
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "display_formula",
+      "content": "$$\ns \\binom {N V} {N S} = \\max  \\left\\{ \\begin{array}{l l} s \\binom {N} {N} + \\delta \\binom {V S} {A} \\\\ s \\binom {N V} {N -} + \\delta \\binom {- S A} {A} \\\\ s \\binom {N - N S} {N -} + \\delta \\binom {V - A} {A} \\\\ s \\binom {N - N A} {N -} + \\delta \\binom {V S} {A} \\end{array} \\right.\n$$",
+      "bbox_2d": [
+        781,
+        112,
+        974,
+        526
+      ],
+      "polygon": [
+        [
+          786,
+          157
+        ],
+        [
+          781,
+          283
+        ],
+        [
+          781,
+          505
+        ],
+        [
+          786,
+          525
+        ],
+        [
+          973,
+          525
+        ],
+        [
+          973,
+          167
+        ],
+        [
+          964,
+          112
+        ],
+        [
+          866,
+          112
+        ],
+        [
+          811,
+          142
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "display_formula",
+      "content": "$$\ns _ {i, j, k} = \\max \\left\\{ \\begin{array}{l l} s _ {i - 1, j - 1, k - 1} + \\delta \\left(v _ {i}, w _ {j}, u _ {k}\\right) & \\text {c u b e d i a g o n a l :} \\\\ s _ {i - 1, j - 1, k} + \\delta \\left(v _ {i}, w _ {j}, \\_ \\right) & \\text {n o i n d e l s} \\\\ s _ {i - 1, j - 1, k - 1} + \\delta \\left(v _ {i}, \\_ , u _ {k}\\right) & \\text {f a c e d i a g o n a l :} \\\\ s _ {i - 1, j - 1, k - 1} + \\delta \\left(\\_ , w _ {j}, u _ {k}\\right) & \\text {o n e i n d e l} \\\\ s _ {i - 1, j, k} + \\delta \\left(v _ {i}, \\_ , \\_ \\right) & \\text {e d g e d i a g o n a l :} \\\\ s _ {i, j - 1, k} + \\delta \\left(\\_ , w _ {j}, \\_ \\right) & \\text {t w o i n d e l s} \\\\ s _ {i, j, k - 1} + \\delta \\left(\\_ , \\_ , u _ {k}\\right) & \\end{array} \\right.\n$$",
+      "bbox_2d": [
+        27,
+        555,
+        596,
+        859
+      ],
+      "polygon": [
+        [
+          27,
+          555
+        ],
+        [
+          27,
+          858
+        ],
+        [
+          595,
+          854
+        ],
+        [
+          595,
+          555
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "$ \\delta ( x, y, z ) $ is an entry in the 3D scoring matrix",
+      "bbox_2d": [
+        26,
+        911,
+        577,
+        955
+      ],
+      "polygon": [
+        [
+          26,
+          916
+        ],
+        [
+          26,
+          953
+        ],
+        [
+          576,
+          953
+        ],
+        [
+          576,
+          911
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Neighboring cells and scoring",
+      "bbox_2d": [
+        18,
+        34,
+        493,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          492,
+          84
+        ],
+        [
+          492,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Each step is one column in the alignment, so we can compute the corresponding $ \\delta ( x,y,z) $ as follows:",
+      "bbox_2d": [
+        21,
+        92,
+        912,
+        178
+      ],
+      "polygon": [
+        [
+          21,
+          92
+        ],
+        [
+          27,
+          177
+        ],
+        [
+          911,
+          173
+        ],
+        [
+          911,
+          92
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Column Score",
+      "bbox_2d": [
+        39,
+        228,
+        171,
+        268
+      ],
+      "polygon": [
+        [
+          39,
+          228
+        ],
+        [
+          39,
+          267
+        ],
+        [
+          170,
+          267
+        ],
+        [
+          170,
+          228
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "display_formula",
+      "content": "$$\nS \\left(A _ {i}\\right) = \\sum_ {j = 1} ^ {N} \\sum_ {k > j} s \\left(a _ {i} ^ {(j)}, a _ {i} ^ {(k)}\\right)\n$$",
+      "bbox_2d": [
+        179,
+        208,
+        373,
+        287
+      ],
+      "polygon": [
+        [
+          179,
+          208
+        ],
+        [
+          179,
+          285
+        ],
+        [
+          372,
+          285
+        ],
+        [
+          372,
+          208
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "display_formula",
+      "content": "$$\nS \\left(A _ {i}\\right) = \\sum_ {j = 1} ^ {N} \\sum_ {k > j} s \\left(a _ {i} ^ {(j)}, a _ {i} ^ {(k)}\\right)\n$$",
+      "bbox_2d": [
+        524,
+        211,
+        866,
+        292
+      ],
+      "polygon": [
+        [
+          524,
+          211
+        ],
+        [
+          524,
+          291
+        ],
+        [
+          865,
+          291
+        ],
+        [
+          865,
+          211
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} A ^ {(1)} \\mathrm {A} - \\mathrm {C T C C A T} \\\\ A ^ {(2)} \\mathrm {A} - \\mathrm {G T C C} - \\mathrm {T} \\\\ A ^ {(3)} \\mathrm {A C G T C A - T} \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        161,
+        316,
+        414,
+        452
+      ],
+      "polygon": [
+        [
+          166,
+          316
+        ],
+        [
+          161,
+          362
+        ],
+        [
+          161,
+          421
+        ],
+        [
+          161,
+          451
+        ],
+        [
+          413,
+          451
+        ],
+        [
+          413,
+          321
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} \\mathrm {A - C T C C A T} \\\\ \\mathrm {A - G T C C - T} \\\\ \\mathrm {A C G T C A - T} \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        690,
+        322,
+        908,
+        461
+      ],
+      "polygon": [
+        [
+          690,
+          322
+        ],
+        [
+          690,
+          460
+        ],
+        [
+          902,
+          460
+        ],
+        [
+          907,
+          456
+        ],
+        [
+          907,
+          447
+        ],
+        [
+          907,
+          410
+        ],
+        [
+          907,
+          328
+        ],
+        [
+          902,
+          322
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} \\text {C o l u n n S c o r e} (3) = s (C, G) + s (C, G) + s (G, G) \\\\ = M a t c h + 2 \\cdot M i s m a t c h \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        118,
+        488,
+        469,
+        558
+      ],
+      "polygon": [
+        [
+          118,
+          488
+        ],
+        [
+          118,
+          556
+        ],
+        [
+          468,
+          556
+        ],
+        [
+          468,
+          488
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "(one match and two mismatches in column 3)",
+      "bbox_2d": [
+        127,
+        588,
+        384,
+        615
+      ],
+      "polygon": [
+        [
+          127,
+          588
+        ],
+        [
+          127,
+          613
+        ],
+        [
+          383,
+          613
+        ],
+        [
+          383,
+          588
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{l} \\text {C o l u n n S c o r e} (3) = s (A, -) + s (A, -) + s (-, -) \\\\ = s (-, -) + 2 \\cdot G a p P e n a l t y \\\\ = 2 \\cdot G a p P e n a l t y \\\\ \\end{array}\n$$",
+      "bbox_2d": [
+        614,
+        492,
+        955,
+        605
+      ],
+      "polygon": [
+        [
+          614,
+          492
+        ],
+        [
+          614,
+          604
+        ],
+        [
+          954,
+          604
+        ],
+        [
+          954,
+          497
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "(two gaps in column 7)",
+      "bbox_2d": [
+        676,
+        633,
+        808,
+        660
+      ],
+      "polygon": [
+        [
+          676,
+          633
+        ],
+        [
+          676,
+          658
+        ],
+        [
+          807,
+          658
+        ],
+        [
+          807,
+          633
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "What we need:",
+      "bbox_2d": [
+        21,
+        701,
+        195,
+        736
+      ],
+      "polygon": [
+        [
+          21,
+          701
+        ],
+        [
+          21,
+          726
+        ],
+        [
+          26,
+          735
+        ],
+        [
+          194,
+          735
+        ],
+        [
+          194,
+          701
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "- 2D scoring matrix $ s(x,y) $ for alignment matches (sequence match or mismatch)\n- $ \\delta(x,y,z) $ can be computed from this, e.g., $ \\delta(C,G,G)=s(C,G)+s(C,G)+s(G,G) $",
+      "bbox_2d": [
+        49,
+        743,
+        956,
+        825
+      ],
+      "polygon": [
+        [
+          49,
+          743
+        ],
+        [
+          49,
+          824
+        ],
+        [
+          955,
+          824
+        ],
+        [
+          955,
+          743
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "label": "text",
+      "content": "- Gap penalty",
+      "bbox_2d": [
+        48,
+        830,
+        220,
+        867
+      ],
+      "polygon": [
+        [
+          48,
+          830
+        ],
+        [
+          48,
+          866
+        ],
+        [
+          219,
+          866
+        ],
+        [
+          219,
+          830
+        ]
+      ]
+    },
+    {
+      "index": 14,
+      "label": "text",
+      "content": "- We set $ s(-,-)=0 $ , because aligning two gaps has little meaning from a biological point of view (it neither improves nor worsens the alignment)!",
+      "bbox_2d": [
+        48,
+        871,
+        884,
+        957
+      ],
+      "polygon": [
+        [
+          48,
+          876
+        ],
+        [
+          48,
+          952
+        ],
+        [
+          883,
+          956
+        ],
+        [
+          883,
+          876
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Space and time complexity of the approach",
+      "bbox_2d": [
+        18,
+        34,
+        707,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          706,
+          84
+        ],
+        [
+          706,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "We have $k$ strings as input, suppose for sake of simplicity that all strings have the same length $n$, i.e., $|S_{i}| = n \\quad \\forall i \\in (1\\dots k)$",
+      "bbox_2d": [
+        21,
+        92,
+        916,
+        175
+      ],
+      "polygon": [
+        [
+          21,
+          92
+        ],
+        [
+          21,
+          174
+        ],
+        [
+          915,
+          174
+        ],
+        [
+          915,
+          92
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- The data structure we fill has $(n + 1)^{k}$ cells $ \\Rightarrow $ space complexity is $ O(n^{k}) $",
+      "bbox_2d": [
+        49,
+        186,
+        898,
+        231
+      ],
+      "polygon": [
+        [
+          49,
+          191
+        ],
+        [
+          49,
+          230
+        ],
+        [
+          897,
+          230
+        ],
+        [
+          897,
+          186
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- For filling each cell we compare $2^{k} - 1$ scores $ \\Rightarrow $ time complexity is $ O(2^{k} n^{k}) $",
+      "bbox_2d": [
+        50,
+        240,
+        935,
+        283
+      ],
+      "polygon": [
+        [
+          50,
+          246
+        ],
+        [
+          50,
+          281
+        ],
+        [
+          934,
+          281
+        ],
+        [
+          934,
+          240
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- All in all space/time is exponential in the number of strings to be aligned ...",
+      "bbox_2d": [
+        49,
+        297,
+        903,
+        337
+      ],
+      "polygon": [
+        [
+          49,
+          297
+        ],
+        [
+          49,
+          335
+        ],
+        [
+          902,
+          335
+        ],
+        [
+          902,
+          297
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- Important note: $k$ is not a constant here—it is an input value!—therefore ...",
+      "bbox_2d": [
+        49,
+        350,
+        897,
+        390
+      ],
+      "polygon": [
+        [
+          49,
+          350
+        ],
+        [
+          49,
+          388
+        ],
+        [
+          896,
+          388
+        ],
+        [
+          896,
+          350
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "... the multiple sequence alignment problem is NP-hard!",
+      "bbox_2d": [
+        24,
+        448,
+        643,
+        488
+      ],
+      "polygon": [
+        [
+          24,
+          448
+        ],
+        [
+          24,
+          486
+        ],
+        [
+          642,
+          486
+        ],
+        [
+          642,
+          448
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- NP hardness = \"non-deterministic polynomial-time\" hardness",
+      "bbox_2d": [
+        48,
+        502,
+        749,
+        541
+      ],
+      "polygon": [
+        [
+          48,
+          502
+        ],
+        [
+          48,
+          539
+        ],
+        [
+          748,
+          539
+        ],
+        [
+          748,
+          502
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- It cannot be solved in polynomial time (unless P=NP ...)",
+      "bbox_2d": [
+        49,
+        555,
+        690,
+        593
+      ],
+      "polygon": [
+        [
+          49,
+          555
+        ],
+        [
+          49,
+          592
+        ],
+        [
+          689,
+          592
+        ],
+        [
+          689,
+          555
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "In practice, it is considered to be \"unfeasible\" to align more than 4 sequences with dynamic programming",
+      "bbox_2d": [
+        49,
+        605,
+        973,
+        686
+      ],
+      "polygon": [
+        [
+          49,
+          605
+        ],
+        [
+          49,
+          685
+        ],
+        [
+          972,
+          685
+        ],
+        [
+          972,
+          605
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "- Improvements in dynamic programming make it feasible to align up to 6 sequences (but the problem remains NP-hard)",
+      "bbox_2d": [
+        107,
+        695,
+        953,
+        771
+      ],
+      "polygon": [
+        [
+          107,
+          701
+        ],
+        [
+          107,
+          769
+        ],
+        [
+          952,
+          769
+        ],
+        [
+          952,
+          695
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "And, it also remains NP-hard if we change the scoring function, for every \"reasonable\" scoring function which is not trivial",
+      "bbox_2d": [
+        49,
+        783,
+        875,
+        861
+      ],
+      "polygon": [
+        [
+          49,
+          783
+        ],
+        [
+          49,
+          859
+        ],
+        [
+          875,
+          859
+        ],
+        [
+          875,
+          783
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "Intuitively, the problem arises from the k in $ O(2^{k} n^{k}) $",
+      "bbox_2d": [
+        105,
+        870,
+        647,
+        908
+      ],
+      "polygon": [
+        [
+          646,
+          870
+        ],
+        [
+          105,
+          875
+        ],
+        [
+          105,
+          907
+        ],
+        [
+          646,
+          907
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "label": "text",
+      "content": "It has been proven to be NP-hard for basically every scoring function employed",
+      "bbox_2d": [
+        105,
+        912,
+        914,
+        948
+      ],
+      "polygon": [
+        [
+          105,
+          912
+        ],
+        [
+          111,
+          947
+        ],
+        [
+          913,
+          947
+        ],
+        [
+          913,
+          912
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Dealing with NP-hard problems",
+      "bbox_2d": [
+        20,
+        34,
+        515,
+        85
+      ],
+      "polygon": [
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          84
+        ],
+        [
+          514,
+          84
+        ],
+        [
+          514,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "(Note: the following is not an exhaustive discussion of NP-hardness and approximate solutions!)",
+      "bbox_2d": [
+        21,
+        128,
+        959,
+        210
+      ],
+      "polygon": [
+        [
+          21,
+          128
+        ],
+        [
+          21,
+          208
+        ],
+        [
+          958,
+          208
+        ],
+        [
+          958,
+          128
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- When we have to face an NP-hard problem, in an \"applicative\" field (that is, it comes from the formalization of a problem), we have to find a way to solve it anyway; that is, we need to find a way to efficiently align $ k>4 $ (or $ k>6 $) sequences",
+      "bbox_2d": [
+        51,
+        271,
+        965,
+        398
+      ],
+      "polygon": [
+        [
+          51,
+          271
+        ],
+        [
+          51,
+          396
+        ],
+        [
+          964,
+          396
+        ],
+        [
+          959,
+          271
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- Different possibilities:",
+      "bbox_2d": [
+        50,
+        410,
+        318,
+        445
+      ],
+      "polygon": [
+        [
+          50,
+          410
+        ],
+        [
+          50,
+          444
+        ],
+        [
+          317,
+          444
+        ],
+        [
+          317,
+          410
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- Change the formalization in order to solve it in polynomial time, hoping that the formalization still captures the \"right solution\" for the problem",
+      "bbox_2d": [
+        106,
+        458,
+        929,
+        533
+      ],
+      "polygon": [
+        [
+          106,
+          458
+        ],
+        [
+          106,
+          531
+        ],
+        [
+          928,
+          531
+        ],
+        [
+          928,
+          458
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- Explore the space of possible solutions (which is exponential in size), considering only a reasonable polynomial subset of them, hoping that it contains the optimal one",
+      "bbox_2d": [
+        106,
+        541,
+        953,
+        652
+      ],
+      "polygon": [
+        [
+          106,
+          546
+        ],
+        [
+          106,
+          650
+        ],
+        [
+          952,
+          650
+        ],
+        [
+          947,
+          541
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- Design a polynomial time/space algorithm, based on some heuristic, hoping that it will find the optimal solution (or another one very close to it) for most of the \"typical\" instances that will be provided as input",
+      "bbox_2d": [
+        107,
+        661,
+        963,
+        775
+      ],
+      "polygon": [
+        [
+          107,
+          666
+        ],
+        [
+          113,
+          773
+        ],
+        [
+          962,
+          773
+        ],
+        [
+          962,
+          661
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- Design a polynomial time/space algorithm, based on some heuristic, proving that for every possible input the solution will not be too far (within certain limits) from the optimal one (that is, design an approximation algorithm!)",
+      "bbox_2d": [
+        107,
+        781,
+        966,
+        899
+      ],
+      "polygon": [
+        [
+          107,
+          787
+        ],
+        [
+          107,
+          898
+        ],
+        [
+          965,
+          898
+        ],
+        [
+          965,
+          781
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Dealing with NP-hard problems",
+      "bbox_2d": [
+        20,
+        34,
+        516,
+        85
+      ],
+      "polygon": [
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          84
+        ],
+        [
+          515,
+          84
+        ],
+        [
+          515,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "paragraph_title",
+      "content": "Approximability:",
+      "bbox_2d": [
+        23,
+        121,
+        223,
+        161
+      ],
+      "polygon": [
+        [
+          23,
+          121
+        ],
+        [
+          23,
+          160
+        ],
+        [
+          222,
+          160
+        ],
+        [
+          222,
+          126
+        ],
+        [
+          217,
+          121
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- Suppose that we design a polynomial time algorithm for an NP-hard maximization problem",
+      "bbox_2d": [
+        49,
+        175,
+        973,
+        259
+      ],
+      "polygon": [
+        [
+          49,
+          175
+        ],
+        [
+          49,
+          257
+        ],
+        [
+          972,
+          248
+        ],
+        [
+          972,
+          175
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- For an instance I of the problem, let $ A(I) $ be the value/score of the solution found by our algorithm",
+      "bbox_2d": [
+        50,
+        275,
+        963,
+        358
+      ],
+      "polygon": [
+        [
+          50,
+          275
+        ],
+        [
+          50,
+          357
+        ],
+        [
+          962,
+          357
+        ],
+        [
+          962,
+          275
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- Let $ M(I) $ the optimal (maximum) value for instance $ I $",
+      "bbox_2d": [
+        49,
+        373,
+        653,
+        415
+      ],
+      "polygon": [
+        [
+          49,
+          373
+        ],
+        [
+          49,
+          414
+        ],
+        [
+          652,
+          414
+        ],
+        [
+          652,
+          373
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- If we can prove that there is a constant value $ \\varepsilon\\in(0,1] $ such that for every instance I, we have",
+      "bbox_2d": [
+        49,
+        427,
+        921,
+        510
+      ],
+      "polygon": [
+        [
+          49,
+          432
+        ],
+        [
+          49,
+          509
+        ],
+        [
+          920,
+          509
+        ],
+        [
+          920,
+          427
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "display_formula",
+      "content": "$$\n\\frac {A (I)}{M (I)} \\geq \\varepsilon\n$$",
+      "bbox_2d": [
+        472,
+        506,
+        583,
+        599
+      ],
+      "polygon": [
+        [
+          472,
+          522
+        ],
+        [
+          472,
+          535
+        ],
+        [
+          472,
+          541
+        ],
+        [
+          472,
+          550
+        ],
+        [
+          472,
+          555
+        ],
+        [
+          472,
+          597
+        ],
+        [
+          582,
+          597
+        ],
+        [
+          582,
+          511
+        ],
+        [
+          496,
+          506
+        ],
+        [
+          482,
+          506
+        ],
+        [
+          477,
+          511
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "then we have designed a \"performance guaranteed\" approximation algorithm for the problem",
+      "bbox_2d": [
+        76,
+        617,
+        973,
+        695
+      ],
+      "polygon": [
+        [
+          76,
+          617
+        ],
+        [
+          76,
+          694
+        ],
+        [
+          972,
+          694
+        ],
+        [
+          972,
+          617
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "Of course we exclude the trivial case $ \\varepsilon=0 $ and want $ \\varepsilon $ to be as close as possible to 1!",
+      "bbox_2d": [
+        105,
+        707,
+        974,
+        742
+      ],
+      "polygon": [
+        [
+          105,
+          707
+        ],
+        [
+          105,
+          740
+        ],
+        [
+          973,
+          740
+        ],
+        [
+          973,
+          707
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "In our case: can we design a polynomial-time algorithm that for each set of k strings to be aligned (each specific set constitutes an instance I) guarantees that the obtained alignment score $ A(I) $ is sufficiently close to the maximum $ M(I) $ obtained when computing the correpsonding full hypercube?",
+      "bbox_2d": [
+        105,
+        748,
+        971,
+        904
+      ],
+      "polygon": [
+        [
+          105,
+          748
+        ],
+        [
+          105,
+          903
+        ],
+        [
+          970,
+          899
+        ],
+        [
+          970,
+          748
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Dealing with NP-hard problems",
+      "bbox_2d": [
+        20,
+        34,
+        516,
+        84
+      ],
+      "polygon": [
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          83
+        ],
+        [
+          515,
+          83
+        ],
+        [
+          515,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "paragraph_title",
+      "content": "Approximability:",
+      "bbox_2d": [
+        23,
+        244,
+        222,
+        283
+      ],
+      "polygon": [
+        [
+          23,
+          244
+        ],
+        [
+          23,
+          281
+        ],
+        [
+          221,
+          281
+        ],
+        [
+          221,
+          244
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "\"Approximability\" of NP-hard problems has received a lot of attention starting from the late 1990's",
+      "bbox_2d": [
+        50,
+        300,
+        974,
+        379
+      ],
+      "polygon": [
+        [
+          50,
+          300
+        ],
+        [
+          50,
+          378
+        ],
+        [
+          973,
+          374
+        ],
+        [
+          973,
+          300
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Different classes of approximability have been defined for NP-hard problems; these classes tell us how \"close\" we can get to the optimal solution of the problem, in polynomial time",
+      "bbox_2d": [
+        50,
+        395,
+        921,
+        515
+      ],
+      "polygon": [
+        [
+          50,
+          395
+        ],
+        [
+          50,
+          514
+        ],
+        [
+          920,
+          514
+        ],
+        [
+          920,
+          395
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "For some classes, we can prove that \"the closer we get\" the \"more time\" (polynomial anyway) we need—that is, we can get as close as we want",
+      "bbox_2d": [
+        106,
+        523,
+        966,
+        600
+      ],
+      "polygon": [
+        [
+          106,
+          523
+        ],
+        [
+          106,
+          599
+        ],
+        [
+          965,
+          599
+        ],
+        [
+          965,
+          523
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- For some classes the bigger is the size of the problem, the farther is our approximate solution",
+      "bbox_2d": [
+        106,
+        605,
+        973,
+        679
+      ],
+      "polygon": [
+        [
+          106,
+          611
+        ],
+        [
+          106,
+          678
+        ],
+        [
+          972,
+          674
+        ],
+        [
+          972,
+          605
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "For some classes we cannot even find an approximation algorithm ...",
+      "bbox_2d": [
+        106,
+        685,
+        814,
+        722
+      ],
+      "polygon": [
+        [
+          106,
+          690
+        ],
+        [
+          112,
+          720
+        ],
+        [
+          813,
+          720
+        ],
+        [
+          813,
+          685
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Back to multiple sequence alignment",
+      "bbox_2d": [
+        19,
+        34,
+        604,
+        85
+      ],
+      "polygon": [
+        [
+          19,
+          34
+        ],
+        [
+          19,
+          84
+        ],
+        [
+          603,
+          84
+        ],
+        [
+          603,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "How can we design a polynomial-time algorithm for the multiple sequence alignment problem?",
+      "bbox_2d": [
+        21,
+        203,
+        950,
+        287
+      ],
+      "polygon": [
+        [
+          21,
+          203
+        ],
+        [
+          21,
+          285
+        ],
+        [
+          949,
+          285
+        ],
+        [
+          949,
+          203
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- We know how to compute a pairwise alignment",
+      "bbox_2d": [
+        48,
+        302,
+        599,
+        342
+      ],
+      "polygon": [
+        [
+          48,
+          302
+        ],
+        [
+          48,
+          341
+        ],
+        [
+          598,
+          341
+        ],
+        [
+          598,
+          302
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- We could try to build the multiple alignment as a series of consecutive pairwise alignments",
+      "bbox_2d": [
+        50,
+        357,
+        973,
+        440
+      ],
+      "polygon": [
+        [
+          50,
+          362
+        ],
+        [
+          50,
+          439
+        ],
+        [
+          967,
+          439
+        ],
+        [
+          972,
+          424
+        ],
+        [
+          967,
+          357
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- If we think about the definition, what makes different solutions differ from one another is where we decide to put gaps in the original strings",
+      "bbox_2d": [
+        50,
+        456,
+        921,
+        541
+      ],
+      "polygon": [
+        [
+          50,
+          461
+        ],
+        [
+          50,
+          539
+        ],
+        [
+          920,
+          539
+        ],
+        [
+          915,
+          456
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Thus, if at some step we put the gap in the wrong place, we miss the optimal solution",
+      "bbox_2d": [
+        49,
+        555,
+        921,
+        637
+      ],
+      "polygon": [
+        [
+          49,
+          555
+        ],
+        [
+          49,
+          636
+        ],
+        [
+          920,
+          636
+        ],
+        [
+          920,
+          555
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Heuristic: intuitively, the more similar the input sequences are, the less gaps we have to place during their alignment, the less likely we are to put a gap in the wrong position!",
+      "bbox_2d": [
+        50,
+        654,
+        952,
+        781
+      ],
+      "polygon": [
+        [
+          50,
+          654
+        ],
+        [
+          50,
+          780
+        ],
+        [
+          951,
+          780
+        ],
+        [
+          951,
+          654
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "The center star algorithm",
+      "bbox_2d": [
+        18,
+        34,
+        422,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          421,
+          84
+        ],
+        [
+          421,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Input: k strings $ S_{1}, S_{2}, \\dots S_{k} $",
+      "bbox_2d": [
+        21,
+        138,
+        340,
+        178
+      ],
+      "polygon": [
+        [
+          21,
+          138
+        ],
+        [
+          21,
+          177
+        ],
+        [
+          339,
+          177
+        ],
+        [
+          339,
+          138
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Procedure:",
+      "bbox_2d": [
+        22,
+        227,
+        151,
+        264
+      ],
+      "polygon": [
+        [
+          22,
+          227
+        ],
+        [
+          22,
+          263
+        ],
+        [
+          150,
+          263
+        ],
+        [
+          150,
+          227
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Compute the pairwise alignment of every pair of input strings",
+      "bbox_2d": [
+        38,
+        279,
+        749,
+        318
+      ],
+      "polygon": [
+        [
+          38,
+          279
+        ],
+        [
+          38,
+          317
+        ],
+        [
+          748,
+          317
+        ],
+        [
+          748,
+          279
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "Let $a(S_{i}, S_{j})$ be the score of the alignment of strings $S_{i}$ and $S_{j}$",
+      "bbox_2d": [
+        103,
+        326,
+        750,
+        365
+      ],
+      "polygon": [
+        [
+          103,
+          326
+        ],
+        [
+          103,
+          363
+        ],
+        [
+          749,
+          363
+        ],
+        [
+          749,
+          332
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- Let $SP(S_{i}) = \\sum_{i \\neq j} a(S_{i}, S_{j})$ be the total pairwise alignment score of $S_{i}$ with all other strings",
+      "bbox_2d": [
+        105,
+        367,
+        963,
+        444
+      ],
+      "polygon": [
+        [
+          105,
+          367
+        ],
+        [
+          105,
+          443
+        ],
+        [
+          962,
+          443
+        ],
+        [
+          962,
+          367
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Choose $ S_{c} $ to be",
+      "bbox_2d": [
+        38,
+        460,
+        268,
+        500
+      ],
+      "polygon": [
+        [
+          38,
+          460
+        ],
+        [
+          38,
+          498
+        ],
+        [
+          267,
+          498
+        ],
+        [
+          267,
+          460
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\nS _ {c} = \\operatorname {a r g m a x} _ {S _ {i}} S P \\left(S _ {i}\\right)\n$$",
+      "bbox_2d": [
+        397,
+        503,
+        652,
+        547
+      ],
+      "polygon": [
+        [
+          397,
+          503
+        ],
+        [
+          397,
+          546
+        ],
+        [
+          412,
+          546
+        ],
+        [
+          433,
+          546
+        ],
+        [
+          651,
+          546
+        ],
+        [
+          651,
+          503
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- This is simply the string with the highest SP, i.e., the string which is globally \"more similar\" to the other strings of the set",
+      "bbox_2d": [
+        106,
+        616,
+        907,
+        693
+      ],
+      "polygon": [
+        [
+          106,
+          616
+        ],
+        [
+          112,
+          691
+        ],
+        [
+          906,
+          687
+        ],
+        [
+          906,
+          616
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "We call this string the \"center of the star\"",
+      "bbox_2d": [
+        106,
+        698,
+        540,
+        734
+      ],
+      "polygon": [
+        [
+          106,
+          698
+        ],
+        [
+          106,
+          732
+        ],
+        [
+          539,
+          732
+        ],
+        [
+          539,
+          698
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "The multiple alignment is built by starting with $ S_{c} $ and iteratively, i.e., one by one, adding the other strings as they were aligned to $ S_{c} $ in step 1 (i.e., simply using their pairwise alignment with $ S_{c} $)!",
+      "bbox_2d": [
+        40,
+        750,
+        958,
+        879
+      ],
+      "polygon": [
+        [
+          40,
+          750
+        ],
+        [
+          40,
+          878
+        ],
+        [
+          957,
+          874
+        ],
+        [
+          957,
+          750
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "The center star algorithm: example",
+      "bbox_2d": [
+        18,
+        33,
+        578,
+        87
+      ],
+      "polygon": [
+        [
+          18,
+          33
+        ],
+        [
+          18,
+          85
+        ],
+        [
+          577,
+          85
+        ],
+        [
+          577,
+          33
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        96,
+        103,
+        875,
+        660
+      ],
+      "polygon": [
+        [
+          96,
+          113
+        ],
+        [
+          96,
+          415
+        ],
+        [
+          96,
+          634
+        ],
+        [
+          141,
+          658
+        ],
+        [
+          875,
+          658
+        ],
+        [
+          875,
+          128
+        ],
+        [
+          700,
+          103
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- We compute all pairwise alignments",
+      "bbox_2d": [
+        48,
+        711,
+        479,
+        756
+      ],
+      "polygon": [
+        [
+          48,
+          711
+        ],
+        [
+          48,
+          755
+        ],
+        [
+          478,
+          755
+        ],
+        [
+          478,
+          716
+        ],
+        [
+          473,
+          711
+        ],
+        [
+          444,
+          711
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- $ S_{2} $ is our \"center\" of the star",
+      "bbox_2d": [
+        48,
+        772,
+        390,
+        813
+      ],
+      "polygon": [
+        [
+          48,
+          772
+        ],
+        [
+          48,
+          812
+        ],
+        [
+          389,
+          812
+        ],
+        [
+          389,
+          777
+        ],
+        [
+          128,
+          772
+        ],
+        [
+          88,
+          772
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "E.g., for match=1, mismatch=-1 and gap=-1 we get $ SP ( S_{2} )=3 $",
+      "bbox_2d": [
+        107,
+        832,
+        451,
+        912
+      ],
+      "polygon": [
+        [
+          107,
+          832
+        ],
+        [
+          107,
+          907
+        ],
+        [
+          113,
+          911
+        ],
+        [
+          450,
+          911
+        ],
+        [
+          450,
+          832
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- The multiple alignment is built by adding all other strings according to their pairwise alignment with $ S_{2} $",
+      "bbox_2d": [
+        536,
+        712,
+        962,
+        835
+      ],
+      "polygon": [
+        [
+          536,
+          712
+        ],
+        [
+          536,
+          834
+        ],
+        [
+          961,
+          834
+        ],
+        [
+          961,
+          712
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- The order in which they are added is thus not important",
+      "bbox_2d": [
+        592,
+        843,
+        963,
+        924
+      ],
+      "polygon": [
+        [
+          592,
+          899
+        ],
+        [
+          592,
+          923
+        ],
+        [
+          962,
+          923
+        ],
+        [
+          962,
+          843
+        ],
+        [
+          597,
+          843
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "The center star algorithm: example",
+      "bbox_2d": [
+        18,
+        34,
+        576,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          575,
+          84
+        ],
+        [
+          575,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Step-by-step example (by Sushmita Roy, 2013)",
+      "bbox_2d": [
+        23,
+        117,
+        543,
+        160
+      ],
+      "polygon": [
+        [
+          23,
+          117
+        ],
+        [
+          23,
+          158
+        ],
+        [
+          542,
+          158
+        ],
+        [
+          542,
+          117
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        26,
+        191,
+        480,
+        548
+      ],
+      "polygon": [
+        [
+          26,
+          191
+        ],
+        [
+          26,
+          414
+        ],
+        [
+          26,
+          547
+        ],
+        [
+          479,
+          547
+        ],
+        [
+          479,
+          191
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Final alignment:",
+      "bbox_2d": [
+        23,
+        661,
+        205,
+        701
+      ],
+      "polygon": [
+        [
+          23,
+          661
+        ],
+        [
+          23,
+          699
+        ],
+        [
+          204,
+          699
+        ],
+        [
+          204,
+          666
+        ],
+        [
+          199,
+          661
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        40,
+        711,
+        264,
+        921
+      ],
+      "polygon": [
+        [
+          40,
+          711
+        ],
+        [
+          40,
+          920
+        ],
+        [
+          263,
+          920
+        ],
+        [
+          263,
+          711
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- merging pairwise alignments",
+      "bbox_2d": [
+        509,
+        190,
+        759,
+        222
+      ],
+      "polygon": [
+        [
+          509,
+          190
+        ],
+        [
+          509,
+          220
+        ],
+        [
+          758,
+          220
+        ],
+        [
+          758,
+          190
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "present pair",
+      "bbox_2d": [
+        604,
+        244,
+        682,
+        271
+      ],
+      "polygon": [
+        [
+          604,
+          244
+        ],
+        [
+          604,
+          269
+        ],
+        [
+          681,
+          269
+        ],
+        [
+          681,
+          244
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "Current multiple alignment",
+      "bbox_2d": [
+        796,
+        243,
+        960,
+        271
+      ],
+      "polygon": [
+        [
+          796,
+          243
+        ],
+        [
+          796,
+          269
+        ],
+        [
+          959,
+          269
+        ],
+        [
+          959,
+          243
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "1. ATGGCCATT\nATTGCCATT",
+      "bbox_2d": [
+        537,
+        300,
+        715,
+        359
+      ],
+      "polygon": [
+        [
+          537,
+          305
+        ],
+        [
+          537,
+          358
+        ],
+        [
+          714,
+          358
+        ],
+        [
+          714,
+          300
+        ],
+        [
+          578,
+          300
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "ATTGCCATT\nATGGCCATT",
+      "bbox_2d": [
+        810,
+        301,
+        921,
+        359
+      ],
+      "polygon": [
+        [
+          810,
+          301
+        ],
+        [
+          810,
+          358
+        ],
+        [
+          920,
+          358
+        ],
+        [
+          920,
+          301
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "2. ATC-CAATTTT ATTGCCATT--",
+      "bbox_2d": [
+        538,
+        414,
+        738,
+        473
+      ],
+      "polygon": [
+        [
+          538,
+          429
+        ],
+        [
+          538,
+          472
+        ],
+        [
+          737,
+          472
+        ],
+        [
+          737,
+          414
+        ],
+        [
+          559,
+          414
+        ],
+        [
+          544,
+          419
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "ATTGCCATT--  \nATGGCCATT--  \nATC-CAATTTT",
+      "bbox_2d": [
+        811,
+        415,
+        943,
+        502
+      ],
+      "polygon": [
+        [
+          811,
+          415
+        ],
+        [
+          811,
+          501
+        ],
+        [
+          942,
+          501
+        ],
+        [
+          942,
+          415
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "present pair Current multiple alignment",
+      "bbox_2d": [
+        611,
+        558,
+        953,
+        583
+      ],
+      "polygon": [
+        [
+          611,
+          558
+        ],
+        [
+          611,
+          582
+        ],
+        [
+          952,
+          582
+        ],
+        [
+          952,
+          558
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "label": "table",
+      "content": "<table><tr><td rowspan=\"4\">3.</td><td>ATCTTC-TT</td><td>ATTGCCATT--</td></tr><tr><td>ATTGCCATT</td><td>ATGGCCATT--</td></tr><tr><td></td><td>ATC-CAATTTT</td></tr><tr><td></td><td>ATCTTC-TT--</td></tr></table>",
+      "bbox_2d": [
+        555,
+        612,
+        935,
+        726
+      ],
+      "polygon": [
+        [
+          555,
+          617
+        ],
+        [
+          555,
+          720
+        ],
+        [
+          561,
+          724
+        ],
+        [
+          934,
+          724
+        ],
+        [
+          934,
+          612
+        ],
+        [
+          561,
+          612
+        ]
+      ]
+    },
+    {
+      "index": 14,
+      "label": "text",
+      "content": "4. ATTGCCGATT ATTGCC-ATT",
+      "bbox_2d": [
+        553,
+        765,
+        726,
+        821
+      ],
+      "polygon": [
+        [
+          553,
+          776
+        ],
+        [
+          553,
+          820
+        ],
+        [
+          725,
+          820
+        ],
+        [
+          725,
+          765
+        ],
+        [
+          600,
+          765
+        ],
+        [
+          559,
+          771
+        ]
+      ]
+    },
+    {
+      "index": 15,
+      "label": "text",
+      "content": "shift entire columns when incorporating a gap",
+      "bbox_2d": [
+        538,
+        875,
+        731,
+        935
+      ],
+      "polygon": [
+        [
+          538,
+          875
+        ],
+        [
+          538,
+          933
+        ],
+        [
+          730,
+          933
+        ],
+        [
+          730,
+          880
+        ],
+        [
+          710,
+          875
+        ]
+      ]
+    },
+    {
+      "index": 16,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        801,
+        755,
+        963,
+        945
+      ],
+      "polygon": [
+        [
+          801,
+          760
+        ],
+        [
+          801,
+          809
+        ],
+        [
+          801,
+          816
+        ],
+        [
+          801,
+          940
+        ],
+        [
+          811,
+          944
+        ],
+        [
+          958,
+          944
+        ],
+        [
+          962,
+          920
+        ],
+        [
+          962,
+          760
+        ],
+        [
+          958,
+          755
+        ],
+        [
+          806,
+          755
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "The center star algorithm: example",
+      "bbox_2d": [
+        18,
+        34,
+        577,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          576,
+          84
+        ],
+        [
+          576,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Does it really not depend on the order? Switch steps 2 and 3 ...",
+      "bbox_2d": [
+        21,
+        119,
+        720,
+        158
+      ],
+      "polygon": [
+        [
+          21,
+          119
+        ],
+        [
+          27,
+          157
+        ],
+        [
+          719,
+          157
+        ],
+        [
+          719,
+          119
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        28,
+        197,
+        481,
+        551
+      ],
+      "polygon": [
+        [
+          28,
+          197
+        ],
+        [
+          28,
+          550
+        ],
+        [
+          480,
+          550
+        ],
+        [
+          480,
+          197
+        ],
+        [
+          300,
+          202
+        ],
+        [
+          289,
+          206
+        ],
+        [
+          284,
+          197
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Final alignment:",
+      "bbox_2d": [
+        22,
+        661,
+        205,
+        701
+      ],
+      "polygon": [
+        [
+          22,
+          661
+        ],
+        [
+          22,
+          699
+        ],
+        [
+          204,
+          699
+        ],
+        [
+          204,
+          661
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "Pair",
+      "bbox_2d": [
+        581,
+        238,
+        613,
+        264
+      ],
+      "polygon": [
+        [
+          581,
+          238
+        ],
+        [
+          581,
+          263
+        ],
+        [
+          612,
+          263
+        ],
+        [
+          612,
+          238
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        40,
+        711,
+        265,
+        921
+      ],
+      "polygon": [
+        [
+          40,
+          711
+        ],
+        [
+          40,
+          920
+        ],
+        [
+          264,
+          920
+        ],
+        [
+          264,
+          711
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "ATTGCCATT\nATGGCCATT\nATCTTC-TT",
+      "bbox_2d": [
+        784,
+        380,
+        901,
+        474
+      ],
+      "polygon": [
+        [
+          784,
+          380
+        ],
+        [
+          784,
+          473
+        ],
+        [
+          900,
+          473
+        ],
+        [
+          900,
+          380
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "1. ATGGCCATT\nATTGCCATT",
+      "bbox_2d": [
+        514,
+        280,
+        681,
+        342
+      ],
+      "polygon": [
+        [
+          514,
+          285
+        ],
+        [
+          514,
+          341
+        ],
+        [
+          680,
+          341
+        ],
+        [
+          680,
+          280
+        ],
+        [
+          530,
+          280
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "ATTGCCATT--\nATGGCCATT--\nATCTTC-TT--\nATC-CAATTTT",
+      "bbox_2d": [
+        783,
+        505,
+        925,
+        632
+      ],
+      "polygon": [
+        [
+          783,
+          505
+        ],
+        [
+          783,
+          630
+        ],
+        [
+          924,
+          630
+        ],
+        [
+          924,
+          505
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "3. ATCTTC-TT\nATTGCCATT",
+      "bbox_2d": [
+        515,
+        379,
+        681,
+        441
+      ],
+      "polygon": [
+        [
+          515,
+          384
+        ],
+        [
+          515,
+          440
+        ],
+        [
+          680,
+          440
+        ],
+        [
+          680,
+          379
+        ],
+        [
+          541,
+          379
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "Current multiple alignment",
+      "bbox_2d": [
+        784,
+        238,
+        958,
+        265
+      ],
+      "polygon": [
+        [
+          784,
+          238
+        ],
+        [
+          784,
+          264
+        ],
+        [
+          957,
+          264
+        ],
+        [
+          957,
+          238
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "ATTGCCATT\nATGGCCATT",
+      "bbox_2d": [
+        784,
+        281,
+        901,
+        342
+      ],
+      "polygon": [
+        [
+          784,
+          281
+        ],
+        [
+          784,
+          341
+        ],
+        [
+          900,
+          341
+        ],
+        [
+          900,
+          281
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "2. ATC-CAATTTT\nATTGCCATT--",
+      "bbox_2d": [
+        514,
+        515,
+        705,
+        578
+      ],
+      "polygon": [
+        [
+          514,
+          521
+        ],
+        [
+          514,
+          576
+        ],
+        [
+          704,
+          576
+        ],
+        [
+          704,
+          515
+        ],
+        [
+          555,
+          515
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "label": "text",
+      "content": "4. ATTGCCGATT\nATTGCC-ATT",
+      "bbox_2d": [
+        525,
+        720,
+        689,
+        788
+      ],
+      "polygon": [
+        [
+          525,
+          720
+        ],
+        [
+          525,
+          787
+        ],
+        [
+          688,
+          787
+        ],
+        [
+          688,
+          720
+        ]
+      ]
+    },
+    {
+      "index": 14,
+      "label": "text",
+      "content": "ATTGCC-ATT--  \nATGGCC-ATT--  \nATCTTC--TT--  \nATC-CA-ATTTT  \nATTGCCGATT--",
+      "bbox_2d": [
+        790,
+        702,
+        958,
+        875
+      ],
+      "polygon": [
+        [
+          790,
+          707
+        ],
+        [
+          790,
+          874
+        ],
+        [
+          957,
+          874
+        ],
+        [
+          957,
+          707
+        ],
+        [
+          953,
+          702
+        ],
+        [
+          944,
+          702
+        ],
+        [
+          923,
+          702
+        ],
+        [
+          855,
+          702
+        ],
+        [
+          849,
+          702
+        ],
+        [
+          795,
+          702
+        ]
+      ]
+    },
+    {
+      "index": 15,
+      "label": "text",
+      "content": "(No! Sequences align in the same way ...)",
+      "bbox_2d": [
+        509,
+        895,
+        928,
+        935
+      ],
+      "polygon": [
+        [
+          509,
+          895
+        ],
+        [
+          509,
+          933
+        ],
+        [
+          927,
+          933
+        ],
+        [
+          927,
+          895
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "The center star algorithm: complexity",
+      "bbox_2d": [
+        18,
+        34,
+        612,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          611,
+          84
+        ],
+        [
+          611,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Let us for simplicity assume we have k strings of equal length n",
+      "bbox_2d": [
+        21,
+        107,
+        723,
+        148
+      ],
+      "polygon": [
+        [
+          722,
+          112
+        ],
+        [
+          21,
+          112
+        ],
+        [
+          21,
+          142
+        ],
+        [
+          722,
+          146
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Space and time complexity:",
+      "bbox_2d": [
+        22,
+        194,
+        332,
+        234
+      ],
+      "polygon": [
+        [
+          22,
+          194
+        ],
+        [
+          22,
+          232
+        ],
+        [
+          331,
+          232
+        ],
+        [
+          331,
+          194
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- Step 1: pairwise alignment",
+      "bbox_2d": [
+        49,
+        246,
+        377,
+        285
+      ],
+      "polygon": [
+        [
+          49,
+          246
+        ],
+        [
+          49,
+          284
+        ],
+        [
+          376,
+          284
+        ],
+        [
+          376,
+          246
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "We produce $ k(k-1)/2=O(k^{2}) $ pairwise alignments",
+      "bbox_2d": [
+        106,
+        293,
+        669,
+        333
+      ],
+      "polygon": [
+        [
+          106,
+          293
+        ],
+        [
+          106,
+          328
+        ],
+        [
+          668,
+          332
+        ],
+        [
+          668,
+          293
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Each alignment takes $ O(n^{2}) $ time and space (filling the 2D scoring matrix!)",
+      "bbox_2d": [
+        107,
+        335,
+        871,
+        373
+      ],
+      "polygon": [
+        [
+          107,
+          341
+        ],
+        [
+          107,
+          371
+        ],
+        [
+          870,
+          371
+        ],
+        [
+          870,
+          335
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "The overall complexity of the first step is thus $ O(k^{2} n^{2}) $ time and space, as opposed to $ O(n^{k}) $ space and $ O(2^{k} n^{k}) $ time for using a hypercube to perform the optimal multiple sequence alignment ...",
+      "bbox_2d": [
+        105,
+        376,
+        957,
+        492
+      ],
+      "polygon": [
+        [
+          105,
+          382
+        ],
+        [
+          105,
+          490
+        ],
+        [
+          956,
+          490
+        ],
+        [
+          956,
+          376
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "In practice, we have additional advantages:",
+      "bbox_2d": [
+        106,
+        493,
+        564,
+        527
+      ],
+      "polygon": [
+        [
+          106,
+          493
+        ],
+        [
+          106,
+          502
+        ],
+        [
+          106,
+          522
+        ],
+        [
+          112,
+          526
+        ],
+        [
+          563,
+          526
+        ],
+        [
+          563,
+          493
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "* Actually, if we compute the pairwise alignments sequentially, we only need $ O(n^{2}) $ space (we can discard the matrix after each pairwise alignment)",
+      "bbox_2d": [
+        159,
+        535,
+        959,
+        603
+      ],
+      "polygon": [
+        [
+          159,
+          535
+        ],
+        [
+          159,
+          601
+        ],
+        [
+          958,
+          601
+        ],
+        [
+          958,
+          535
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "* If we perform the $ k(k-1)/2 $ alignments in parallel, then we only need $ O(n^{2}) $ wall clock time (but of course more computing power/processor cores)",
+      "bbox_2d": [
+        159,
+        604,
+        958,
+        674
+      ],
+      "polygon": [
+        [
+          159,
+          609
+        ],
+        [
+          159,
+          673
+        ],
+        [
+          957,
+          673
+        ],
+        [
+          957,
+          604
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "paragraph_title",
+      "content": "- Steps 2 and 3: Choosing the center string and building the final alignment takes $ O(nk) $ time",
+      "bbox_2d": [
+        49,
+        742,
+        953,
+        826
+      ],
+      "polygon": [
+        [
+          49,
+          742
+        ],
+        [
+          49,
+          825
+        ],
+        [
+          952,
+          825
+        ],
+        [
+          952,
+          742
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "- Hence, the overall time/space complexity is $ O \\left( k^{2} n^{2} \\right) $",
+      "bbox_2d": [
+        48,
+        880,
+        654,
+        925
+      ],
+      "polygon": [
+        [
+          653,
+          880
+        ],
+        [
+          48,
+          886
+        ],
+        [
+          48,
+          924
+        ],
+        [
+          653,
+          924
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "The center star algorithm: approximation",
+      "bbox_2d": [
+        18,
+        35,
+        666,
+        83
+      ],
+      "polygon": [
+        [
+          18,
+          35
+        ],
+        [
+          18,
+          82
+        ],
+        [
+          665,
+          82
+        ],
+        [
+          665,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- With this algorithm, we do not actually compare all the strings to one another",
+      "bbox_2d": [
+        47,
+        95,
+        931,
+        132
+      ],
+      "polygon": [
+        [
+          47,
+          95
+        ],
+        [
+          47,
+          130
+        ],
+        [
+          930,
+          130
+        ],
+        [
+          930,
+          95
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- We just compare all the strings to the center, hoping that the pairwise alignment of each of them would also be found in the optimal multiple alignment",
+      "bbox_2d": [
+        49,
+        134,
+        955,
+        214
+      ],
+      "polygon": [
+        [
+          49,
+          134
+        ],
+        [
+          49,
+          212
+        ],
+        [
+          954,
+          212
+        ],
+        [
+          954,
+          134
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Essentially, we hope that in the optimal alignment the gaps would be placed in the same positions where we place them in the pairwise alignments with the center",
+      "bbox_2d": [
+        106,
+        218,
+        945,
+        294
+      ],
+      "polygon": [
+        [
+          106,
+          218
+        ],
+        [
+          106,
+          293
+        ],
+        [
+          944,
+          293
+        ],
+        [
+          944,
+          218
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "How accurate is this approximation?",
+      "bbox_2d": [
+        21,
+        306,
+        426,
+        345
+      ],
+      "polygon": [
+        [
+          425,
+          306
+        ],
+        [
+          401,
+          306
+        ],
+        [
+          385,
+          306
+        ],
+        [
+          351,
+          306
+        ],
+        [
+          331,
+          306
+        ],
+        [
+          21,
+          312
+        ],
+        [
+          21,
+          321
+        ],
+        [
+          21,
+          330
+        ],
+        [
+          21,
+          343
+        ],
+        [
+          425,
+          343
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- We can re-formalize the problem: instead of maximizing the overall similarity (sum of pairs), we can minimize the overall distance (sum of distances)",
+      "bbox_2d": [
+        49,
+        351,
+        915,
+        436
+      ],
+      "polygon": [
+        [
+          49,
+          357
+        ],
+        [
+          49,
+          435
+        ],
+        [
+          914,
+          435
+        ],
+        [
+          914,
+          357
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- If the triangle inequality holds (for the edit distance it does!),",
+      "bbox_2d": [
+        48,
+        440,
+        737,
+        480
+      ],
+      "polygon": [
+        [
+          48,
+          440
+        ],
+        [
+          48,
+          478
+        ],
+        [
+          736,
+          478
+        ],
+        [
+          736,
+          440
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\nz \\leq x + y\n$$",
+      "bbox_2d": [
+        381,
+        481,
+        671,
+        563
+      ],
+      "polygon": [
+        [
+          381,
+          486
+        ],
+        [
+          381,
+          552
+        ],
+        [
+          387,
+          558
+        ],
+        [
+          432,
+          558
+        ],
+        [
+          670,
+          562
+        ],
+        [
+          670,
+          486
+        ],
+        [
+          476,
+          481
+        ],
+        [
+          387,
+          481
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "then we can prove that it is an approximation algorithm with $ \\varepsilon=2 $ . That is, the ratio between the overall distance found by the algorithm and the \"minimum\" (optimal) overall distance is always equal to or lower than 2!",
+      "bbox_2d": [
+        70,
+        571,
+        939,
+        697
+      ],
+      "polygon": [
+        [
+          70,
+          695
+        ],
+        [
+          938,
+          695
+        ],
+        [
+          938,
+          571
+        ],
+        [
+          76,
+          571
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "Thus, in the worst case, the alignment found by the \"center star\" algorithm has an overall distance between the sequences (the function to be optimized) which is (at worst) twice the optimal overall distance. It can be lower (3/2, 6/5, etc) but never higher (5/2, 7/3, etc)!",
+      "bbox_2d": [
+        48,
+        702,
+        974,
+        873
+      ],
+      "polygon": [
+        [
+          48,
+          707
+        ],
+        [
+          48,
+          867
+        ],
+        [
+          59,
+          871
+        ],
+        [
+          973,
+          867
+        ],
+        [
+          973,
+          707
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "Can we produce more \"biologically relevant\" alignments, regardless of the approximation?",
+      "bbox_2d": [
+        21,
+        890,
+        833,
+        969
+      ],
+      "polygon": [
+        [
+          21,
+          895
+        ],
+        [
+          21,
+          968
+        ],
+        [
+          832,
+          958
+        ],
+        [
+          832,
+          890
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Some biological reasoning",
+      "bbox_2d": [
+        18,
+        34,
+        442,
+        85
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          84
+        ],
+        [
+          441,
+          84
+        ],
+        [
+          441,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- The assumption is that our sequences have a common evolutionary history",
+      "bbox_2d": [
+        48,
+        96,
+        903,
+        133
+      ],
+      "polygon": [
+        [
+          48,
+          96
+        ],
+        [
+          48,
+          132
+        ],
+        [
+          902,
+          132
+        ],
+        [
+          897,
+          96
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- Remember Darwin's \"tree of life\" for species?",
+      "bbox_2d": [
+        49,
+        140,
+        579,
+        177
+      ],
+      "polygon": [
+        [
+          49,
+          140
+        ],
+        [
+          49,
+          175
+        ],
+        [
+          578,
+          175
+        ],
+        [
+          578,
+          140
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "At the sequence level, imagine we can trace the evolutionary history of DNA (or protein) sequences with their \"ancestor tree\"—in molecular evolution this is called a \"phylogenetic tree\".",
+      "bbox_2d": [
+        69,
+        185,
+        973,
+        312
+      ],
+      "polygon": [
+        [
+          69,
+          310
+        ],
+        [
+          972,
+          306
+        ],
+        [
+          972,
+          185
+        ],
+        [
+          75,
+          185
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "That is, assume we know the true history among different alternatives like these:",
+      "bbox_2d": [
+        77,
+        316,
+        963,
+        355
+      ],
+      "polygon": [
+        [
+          77,
+          351
+        ],
+        [
+          962,
+          354
+        ],
+        [
+          962,
+          316
+        ],
+        [
+          83,
+          316
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        172,
+        378,
+        469,
+        620
+      ],
+      "polygon": [
+        [
+          172,
+          378
+        ],
+        [
+          172,
+          619
+        ],
+        [
+          468,
+          619
+        ],
+        [
+          468,
+          378
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        564,
+        376,
+        872,
+        630
+      ],
+      "polygon": [
+        [
+          564,
+          382
+        ],
+        [
+          564,
+          625
+        ],
+        [
+          871,
+          629
+        ],
+        [
+          871,
+          382
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- Suppose the evolutionary history is the one shown to the left",
+      "bbox_2d": [
+        48,
+        661,
+        746,
+        699
+      ],
+      "polygon": [
+        [
+          48,
+          661
+        ],
+        [
+          48,
+          698
+        ],
+        [
+          745,
+          698
+        ],
+        [
+          745,
+          661
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- The idea is to keep aligning pairs of sequences, but instead of choosing a \"center\" string we follow the evolutionary history, going back in time",
+      "bbox_2d": [
+        48,
+        703,
+        888,
+        779
+      ],
+      "polygon": [
+        [
+          48,
+          703
+        ],
+        [
+          48,
+          777
+        ],
+        [
+          887,
+          773
+        ],
+        [
+          887,
+          703
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "- That is, we start by aligning the strings that are \"closest relatives\", then we move back on the tree. In this example:",
+      "bbox_2d": [
+        106,
+        781,
+        928,
+        849
+      ],
+      "polygon": [
+        [
+          106,
+          787
+        ],
+        [
+          106,
+          847
+        ],
+        [
+          927,
+          847
+        ],
+        [
+          922,
+          781
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "1 We align S1 with S2",
+      "bbox_2d": [
+        150,
+        851,
+        373,
+        884
+      ],
+      "polygon": [
+        [
+          150,
+          851
+        ],
+        [
+          150,
+          883
+        ],
+        [
+          372,
+          883
+        ],
+        [
+          372,
+          857
+        ],
+        [
+          194,
+          851
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "2 We align S3 with S4",
+      "bbox_2d": [
+        150,
+        887,
+        373,
+        919
+      ],
+      "polygon": [
+        [
+          150,
+          887
+        ],
+        [
+          150,
+          917
+        ],
+        [
+          372,
+          917
+        ],
+        [
+          372,
+          887
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "We somehow \"merge\" the alignment of (S1,S2) with the alignment of (S3,S4)",
+      "bbox_2d": [
+        149,
+        923,
+        867,
+        956
+      ],
+      "polygon": [
+        [
+          149,
+          923
+        ],
+        [
+          149,
+          955
+        ],
+        [
+          866,
+          955
+        ],
+        [
+          866,
+          923
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Some biological reasoning",
+      "bbox_2d": [
+        18,
+        34,
+        442,
+        84
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          83
+        ],
+        [
+          441,
+          83
+        ],
+        [
+          441,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- The assumption is that our sequences have a common evolutionary history",
+      "bbox_2d": [
+        48,
+        95,
+        903,
+        132
+      ],
+      "polygon": [
+        [
+          48,
+          95
+        ],
+        [
+          48,
+          130
+        ],
+        [
+          902,
+          130
+        ],
+        [
+          902,
+          95
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- Remember Darwin's \"tree of life\" for species?",
+      "bbox_2d": [
+        49,
+        140,
+        580,
+        175
+      ],
+      "polygon": [
+        [
+          49,
+          140
+        ],
+        [
+          49,
+          174
+        ],
+        [
+          579,
+          174
+        ],
+        [
+          579,
+          140
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "At the sequence level, imagine we can trace the evolutionary history of DNA (or protein) sequences with their \"ancestor tree\"—in molecular evolution this is called a \"phylogenetic tree\".",
+      "bbox_2d": [
+        67,
+        182,
+        973,
+        309
+      ],
+      "polygon": [
+        [
+          67,
+          198
+        ],
+        [
+          67,
+          308
+        ],
+        [
+          972,
+          298
+        ],
+        [
+          972,
+          182
+        ],
+        [
+          73,
+          182
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "That is, assume we know the true history among different alternatives like these:",
+      "bbox_2d": [
+        77,
+        313,
+        963,
+        353
+      ],
+      "polygon": [
+        [
+          77,
+          313
+        ],
+        [
+          83,
+          351
+        ],
+        [
+          962,
+          351
+        ],
+        [
+          962,
+          313
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        172,
+        374,
+        470,
+        616
+      ],
+      "polygon": [
+        [
+          172,
+          374
+        ],
+        [
+          172,
+          615
+        ],
+        [
+          469,
+          615
+        ],
+        [
+          469,
+          374
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        564,
+        374,
+        871,
+        626
+      ],
+      "polygon": [
+        [
+          564,
+          374
+        ],
+        [
+          564,
+          621
+        ],
+        [
+          870,
+          625
+        ],
+        [
+          870,
+          374
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- Suppose the evolutionary history instead is the one shown to the right",
+      "bbox_2d": [
+        48,
+        656,
+        848,
+        695
+      ],
+      "polygon": [
+        [
+          48,
+          656
+        ],
+        [
+          48,
+          694
+        ],
+        [
+          847,
+          694
+        ],
+        [
+          847,
+          656
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- We again start by aligning the strings that are \"closest relatives\", then we move back on the tree.",
+      "bbox_2d": [
+        50,
+        698,
+        944,
+        772
+      ],
+      "polygon": [
+        [
+          50,
+          698
+        ],
+        [
+          50,
+          771
+        ],
+        [
+          943,
+          771
+        ],
+        [
+          943,
+          698
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "Now we would proceed as follows:",
+      "bbox_2d": [
+        106,
+        775,
+        479,
+        806
+      ],
+      "polygon": [
+        [
+          106,
+          775
+        ],
+        [
+          106,
+          805
+        ],
+        [
+          478,
+          805
+        ],
+        [
+          478,
+          775
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "1 We align S1 with S2",
+      "bbox_2d": [
+        150,
+        810,
+        374,
+        842
+      ],
+      "polygon": [
+        [
+          150,
+          810
+        ],
+        [
+          150,
+          841
+        ],
+        [
+          373,
+          841
+        ],
+        [
+          373,
+          816
+        ],
+        [
+          368,
+          810
+        ],
+        [
+          359,
+          810
+        ],
+        [
+          268,
+          810
+        ],
+        [
+          264,
+          810
+        ],
+        [
+          244,
+          810
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "label": "text",
+      "content": "2 We somehow add S3 to the alignment of (S1,S2)",
+      "bbox_2d": [
+        149,
+        846,
+        623,
+        878
+      ],
+      "polygon": [
+        [
+          149,
+          846
+        ],
+        [
+          149,
+          876
+        ],
+        [
+          622,
+          876
+        ],
+        [
+          622,
+          846
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "label": "text",
+      "content": "We somehow add S4 to the alignment of (S1,S2,S3)",
+      "bbox_2d": [
+        149,
+        880,
+        652,
+        914
+      ],
+      "polygon": [
+        [
+          149,
+          880
+        ],
+        [
+          149,
+          912
+        ],
+        [
+          651,
+          912
+        ],
+        [
+          651,
+          880
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "label": "text",
+      "content": "- How can we \"merge\" two alignments or add a string to an existing alignment?",
+      "bbox_2d": [
+        48,
+        920,
+        928,
+        958
+      ],
+      "polygon": [
+        [
+          48,
+          920
+        ],
+        [
+          48,
+          953
+        ],
+        [
+          927,
+          957
+        ],
+        [
+          927,
+          920
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Alignment profile",
+      "bbox_2d": [
+        18,
+        34,
+        290,
+        87
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          85
+        ],
+        [
+          289,
+          85
+        ],
+        [
+          289,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- One very useful way of describing a multiple alignment is to represent it it as an alignment profile",
+      "bbox_2d": [
+        49,
+        115,
+        951,
+        194
+      ],
+      "polygon": [
+        [
+          49,
+          115
+        ],
+        [
+          49,
+          193
+        ],
+        [
+          950,
+          189
+        ],
+        [
+          950,
+          115
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- For each column of the alignment, the profile represents the frequency with which we find each symbol of the alphabet (including the gap) in that column",
+      "bbox_2d": [
+        107,
+        205,
+        961,
+        281
+      ],
+      "polygon": [
+        [
+          107,
+          205
+        ],
+        [
+          107,
+          280
+        ],
+        [
+          960,
+          280
+        ],
+        [
+          960,
+          205
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "Frequencies in each column sum up to 1",
+      "bbox_2d": [
+        106,
+        287,
+        539,
+        321
+      ],
+      "polygon": [
+        [
+          106,
+          287
+        ],
+        [
+          106,
+          320
+        ],
+        [
+          538,
+          320
+        ],
+        [
+          538,
+          287
+        ],
+        [
+          519,
+          287
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "x: AC-GCGG-C",
+      "bbox_2d": [
+        25,
+        425,
+        320,
+        469
+      ],
+      "polygon": [
+        [
+          25,
+          431
+        ],
+        [
+          25,
+          468
+        ],
+        [
+          319,
+          468
+        ],
+        [
+          319,
+          425
+        ],
+        [
+          86,
+          425
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "y: AC-GC-GAG",
+      "bbox_2d": [
+        25,
+        473,
+        320,
+        519
+      ],
+      "polygon": [
+        [
+          25,
+          478
+        ],
+        [
+          25,
+          514
+        ],
+        [
+          31,
+          518
+        ],
+        [
+          319,
+          518
+        ],
+        [
+          319,
+          473
+        ],
+        [
+          66,
+          473
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "z: GCCGC-GAG",
+      "bbox_2d": [
+        28,
+        521,
+        320,
+        563
+      ],
+      "polygon": [
+        [
+          28,
+          531
+        ],
+        [
+          28,
+          562
+        ],
+        [
+          319,
+          562
+        ],
+        [
+          319,
+          521
+        ],
+        [
+          110,
+          521
+        ],
+        [
+          44,
+          526
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\n\\begin{array}{c c c c c c c c c c} A & 2 / 3 & 0 & 0 & 0 & 0 & 0 & 2 / 3 & 0 \\\\ C & 0 & 1 & 1 / 3 & 0 & 1 & 0 & 0 & 1 / 3 \\\\ G & 1 / 3 & 0 & 0 & 1 & 0 & 1 / 3 & 1 & 0 & 2 / 3 \\\\ T & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\ - & 0 & 0 & 2 / 3 & 0 & 0 & 2 / 3 & 0 & 1 / 3 & 0 \\end{array}\n$$",
+      "bbox_2d": [
+        412,
+        353,
+        968,
+        645
+      ],
+      "polygon": [
+        [
+          412,
+          353
+        ],
+        [
+          412,
+          644
+        ],
+        [
+          967,
+          644
+        ],
+        [
+          962,
+          363
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- Profiles are a way of representing an MSA in a compact manner",
+      "bbox_2d": [
+        49,
+        707,
+        806,
+        746
+      ],
+      "polygon": [
+        [
+          49,
+          707
+        ],
+        [
+          49,
+          744
+        ],
+        [
+          805,
+          744
+        ],
+        [
+          805,
+          707
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "- The drawback is that we lose the information about which sequence each character/symbol belongs to",
+      "bbox_2d": [
+        50,
+        759,
+        884,
+        837
+      ],
+      "polygon": [
+        [
+          50,
+          759
+        ],
+        [
+          50,
+          835
+        ],
+        [
+          883,
+          835
+        ],
+        [
+          883,
+          759
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "We know that the profile was built from 3 sequences and that there are two \"A\" in the first column; but we don't know in which of the 3 sequences these \"A\"s are ...",
+      "bbox_2d": [
+        107,
+        849,
+        970,
+        927
+      ],
+      "polygon": [
+        [
+          107,
+          849
+        ],
+        [
+          107,
+          925
+        ],
+        [
+          969,
+          925
+        ],
+        [
+          969,
+          849
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Weighted dynamic programming",
+      "bbox_2d": [
+        19,
+        35,
+        533,
+        85
+      ],
+      "polygon": [
+        [
+          19,
+          35
+        ],
+        [
+          19,
+          84
+        ],
+        [
+          532,
+          84
+        ],
+        [
+          532,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Can we use such this profile to align (add) a fourth sequence?",
+      "bbox_2d": [
+        23,
+        93,
+        707,
+        132
+      ],
+      "polygon": [
+        [
+          23,
+          93
+        ],
+        [
+          23,
+          130
+        ],
+        [
+          706,
+          130
+        ],
+        [
+          706,
+          93
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- We can also use a dynamic programming matrix like for a pairwise global alignment, but we replace one of the two strings by an entire profile",
+      "bbox_2d": [
+        50,
+        170,
+        476,
+        367
+      ],
+      "polygon": [
+        [
+          50,
+          170
+        ],
+        [
+          50,
+          366
+        ],
+        [
+          475,
+          366
+        ],
+        [
+          475,
+          170
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- The rows represent the string to be added",
+      "bbox_2d": [
+        107,
+        374,
+        484,
+        448
+      ],
+      "polygon": [
+        [
+          107,
+          374
+        ],
+        [
+          107,
+          447
+        ],
+        [
+          483,
+          447
+        ],
+        [
+          483,
+          374
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "But for the columns we have the profile: not single letters but for each column we have all letters of the alphabet (plus gap) and their respective frequencies in the previous alignment",
+      "bbox_2d": [
+        107,
+        455,
+        476,
+        690
+      ],
+      "polygon": [
+        [
+          113,
+          455
+        ],
+        [
+          107,
+          689
+        ],
+        [
+          475,
+          689
+        ],
+        [
+          475,
+          455
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Like for the rows, we let also the first column represent a gap",
+      "bbox_2d": [
+        107,
+        697,
+        455,
+        771
+      ],
+      "polygon": [
+        [
+          107,
+          702
+        ],
+        [
+          107,
+          715
+        ],
+        [
+          107,
+          732
+        ],
+        [
+          107,
+          769
+        ],
+        [
+          454,
+          769
+        ],
+        [
+          454,
+          702
+        ],
+        [
+          449,
+          697
+        ],
+        [
+          425,
+          697
+        ],
+        [
+          419,
+          697
+        ],
+        [
+          380,
+          697
+        ],
+        [
+          375,
+          697
+        ],
+        [
+          345,
+          697
+        ],
+        [
+          113,
+          697
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- That is, we compare a character (of the string to be added) to a column of the profile, with the frequency of each letter",
+      "bbox_2d": [
+        50,
+        779,
+        471,
+        945
+      ],
+      "polygon": [
+        [
+          50,
+          779
+        ],
+        [
+          50,
+          944
+        ],
+        [
+          465,
+          944
+        ],
+        [
+          470,
+          924
+        ],
+        [
+          470,
+          779
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "table",
+      "content": "<table border=\"1\"><tr><td>A</td><td>0</td><td>2/3</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2/3</td><td>0</td></tr><tr><td>C</td><td>0</td><td>0</td><td>1</td><td>1/3</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1/3</td></tr><tr><td>G</td><td>0</td><td>1/3</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1/3</td><td>1</td><td>0</td></tr><tr><td>T</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>-</td><td>1</td><td>0</td><td>0</td><td>2/3</td><td>0</td><td>0</td><td>2/3</td><td>0</td><td>1/3</td></tr><tr><td>-</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>A</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>G</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>G</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>A</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>",
+      "bbox_2d": [
+        518,
+        170,
+        961,
+        706
+      ],
+      "polygon": [
+        [
+          518,
+          170
+        ],
+        [
+          518,
+          690
+        ],
+        [
+          664,
+          705
+        ],
+        [
+          960,
+          705
+        ],
+        [
+          960,
+          191
+        ],
+        [
+          905,
+          175
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Weighted dynamic programming",
+      "bbox_2d": [
+        19,
+        33,
+        534,
+        88
+      ],
+      "polygon": [
+        [
+          19,
+          33
+        ],
+        [
+          19,
+          83
+        ],
+        [
+          533,
+          87
+        ],
+        [
+          533,
+          33
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "table",
+      "content": "<table border=\"1\"><tr><td>A</td><td>0</td><td>2/3</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2/3</td><td>0</td></tr><tr><td>C</td><td>0</td><td>0</td><td>1</td><td>1/3</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1/3</td></tr><tr><td>G</td><td>0</td><td>1/3</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1/3</td><td>1</td><td>0</td></tr><tr><td>T</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>-</td><td>1</td><td>0</td><td>0</td><td>2/3</td><td>0</td><td>0</td><td>2/3</td><td>0</td><td>1/3</td></tr><tr><td>-</td><td>0</td><td>-1</td><td>-2</td><td>-2.33</td><td>-3.33</td><td>-4.33</td><td>-4.66</td><td>-5.66</td><td>-6.33</td></tr><tr><td>A</td><td>-1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td>-2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td>-3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>G</td><td>-4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td>-5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>G</td><td>-6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>A</td><td>-7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>",
+      "bbox_2d": [
+        32,
+        113,
+        536,
+        712
+      ],
+      "polygon": [
+        [
+          32,
+          113
+        ],
+        [
+          32,
+          711
+        ],
+        [
+          460,
+          702
+        ],
+        [
+          535,
+          682
+        ],
+        [
+          535,
+          119
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- We fill the matrix with a \"weighted\" version of the global alignment rule",
+      "bbox_2d": [
+        49,
+        740,
+        851,
+        780
+      ],
+      "polygon": [
+        [
+          49,
+          740
+        ],
+        [
+          49,
+          779
+        ],
+        [
+          850,
+          779
+        ],
+        [
+          850,
+          740
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "The initialization of the first row is \"weighted\" too, since the profile contains gaps",
+      "bbox_2d": [
+        50,
+        792,
+        958,
+        832
+      ],
+      "polygon": [
+        [
+          50,
+          797
+        ],
+        [
+          50,
+          830
+        ],
+        [
+          957,
+          830
+        ],
+        [
+          952,
+          792
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "The gap penalty (here: -1) is weighted by the fraction of non-gap characters",
+      "bbox_2d": [
+        107,
+        842,
+        883,
+        879
+      ],
+      "polygon": [
+        [
+          107,
+          842
+        ],
+        [
+          107,
+          878
+        ],
+        [
+          882,
+          878
+        ],
+        [
+          882,
+          842
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "Example: $ 1 / 3 \\times - 1 = - 0. 3 3 $ as penalty for column four (from -2 to -2.33)",
+      "bbox_2d": [
+        106,
+        882,
+        886,
+        917
+      ],
+      "polygon": [
+        [
+          106,
+          887
+        ],
+        [
+          106,
+          916
+        ],
+        [
+          885,
+          916
+        ],
+        [
+          885,
+          882
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Weighted dynamic programming",
+      "bbox_2d": [
+        18,
+        34,
+        535,
+        87
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          85
+        ],
+        [
+          534,
+          85
+        ],
+        [
+          534,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "Computing the individual scores for the alignment matrix A:",
+      "bbox_2d": [
+        20,
+        100,
+        675,
+        140
+      ],
+      "polygon": [
+        [
+          20,
+          100
+        ],
+        [
+          20,
+          138
+        ],
+        [
+          674,
+          138
+        ],
+        [
+          674,
+          100
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Given: Profile R with frequencies $ R[c,j] $ for character c (including gap) in column j Given: String $ X=\\left(x_{1},\\dots,x_{n}\\right) $ to be aligned (in the rows of matrix A)",
+      "bbox_2d": [
+        20,
+        185,
+        926,
+        272
+      ],
+      "polygon": [
+        [
+          20,
+          190
+        ],
+        [
+          20,
+          271
+        ],
+        [
+          925,
+          271
+        ],
+        [
+          925,
+          185
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "table",
+      "content": "<table border=\"1\"><tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><td>A</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr><td>C</td><td>0</td><td>0.75</td><td>0.25</td><td>0.5</td></tr><tr><td>G</td><td>0</td><td>0</td><td>0.75</td><td>0</td></tr><tr><td>T</td><td>0</td><td>0.25</td><td>0</td><td>0</td></tr><tr><td>-</td><td>0</td><td>0</td><td>0</td><td>0.5</td></tr></table>",
+      "bbox_2d": [
+        44,
+        294,
+        239,
+        580
+      ],
+      "polygon": [
+        [
+          50,
+          294
+        ],
+        [
+          55,
+          314
+        ],
+        [
+          65,
+          341
+        ],
+        [
+          44,
+          370
+        ],
+        [
+          44,
+          579
+        ],
+        [
+          233,
+          579
+        ],
+        [
+          238,
+          514
+        ],
+        [
+          238,
+          500
+        ],
+        [
+          238,
+          440
+        ],
+        [
+          238,
+          310
+        ],
+        [
+          233,
+          294
+        ],
+        [
+          219,
+          294
+        ],
+        [
+          203,
+          294
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "table",
+      "content": "<table><tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><td>0</td><td>0.25</td><td>0</td><td>0</td><td>0.75</td></tr><tr><td>0</td><td>0</td><td>0.25</td><td>0.25</td><td>0.25</td></tr><tr><td>0.75</td><td>0</td><td>0</td><td>0.5</td><td>0</td></tr><tr><td>0.25</td><td>0.75</td><td>0</td><td>0.25</td><td>0</td></tr><tr><td>0</td><td>0</td><td>0.75</td><td>0</td><td>0</td></tr></table>",
+      "bbox_2d": [
+        256,
+        373,
+        408,
+        579
+      ],
+      "polygon": [
+        [
+          256,
+          373
+        ],
+        [
+          256,
+          443
+        ],
+        [
+          256,
+          453
+        ],
+        [
+          256,
+          578
+        ],
+        [
+          407,
+          578
+        ],
+        [
+          407,
+          373
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "ACC - AGACGA",
+      "bbox_2d": [
+        105,
+        585,
+        406,
+        628
+      ],
+      "polygon": [
+        [
+          105,
+          585
+        ],
+        [
+          105,
+          626
+        ],
+        [
+          405,
+          626
+        ],
+        [
+          405,
+          585
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Score of matching character x with column j of the profile:",
+      "bbox_2d": [
+        443,
+        396,
+        730,
+        460
+      ],
+      "polygon": [
+        [
+          443,
+          402
+        ],
+        [
+          443,
+          458
+        ],
+        [
+          729,
+          458
+        ],
+        [
+          729,
+          402
+        ],
+        [
+          689,
+          396
+        ],
+        [
+          519,
+          396
+        ],
+        [
+          507,
+          396
+        ],
+        [
+          498,
+          396
+        ],
+        [
+          474,
+          396
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "display_formula",
+      "content": "$$\nP (x, j) = \\sum_ {c \\in \\Sigma} \\sin (x, c) \\times R [ c, j ]\n$$",
+      "bbox_2d": [
+        452,
+        482,
+        732,
+        551
+      ],
+      "polygon": [
+        [
+          458,
+          482
+        ],
+        [
+          458,
+          550
+        ],
+        [
+          731,
+          550
+        ],
+        [
+          731,
+          482
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "$sim(x,c)$ is the cost of aligning x with c (including gaps), $R[c,j]$ is the frequency of char c in column j of the matrix",
+      "bbox_2d": [
+        449,
+        583,
+        960,
+        646
+      ],
+      "polygon": [
+        [
+          449,
+          583
+        ],
+        [
+          449,
+          645
+        ],
+        [
+          959,
+          645
+        ],
+        [
+          959,
+          583
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "$A[i,j] = \\max \\left\\{ \\begin{array}{ll} A[i - 1,j - 1] + P(x_i,j) & \\mathrm{align} x_i \\mathrm{to} \\mathrm{column} j \\\\ A[i - 1,j] + \\mathrm{gap} & \\mathrm{introduce} \\mathrm{gap} \\mathrm{into} \\mathrm{profile} \\\\ A[i,j - 1] + P(\"_{-}\",j) & \\mathrm{introduce} \\mathrm{gap} \\mathrm{into} x \\end{array} \\right.$",
+      "bbox_2d": [
+        83,
+        728,
+        694,
+        845
+      ],
+      "polygon": [
+        [
+          83,
+          728
+        ],
+        [
+          83,
+          843
+        ],
+        [
+          693,
+          843
+        ],
+        [
+          693,
+          728
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "label": "text",
+      "content": "Here, $sim(x,c)$ will usually be the match score, mismatch penalty or gap penalty, or alternatively the score obtained from a substitution matrix; $sim(-,-) = 0$ for two gaps",
+      "bbox_2d": [
+        20,
+        869,
+        958,
+        948
+      ],
+      "polygon": [
+        [
+          20,
+          869
+        ],
+        [
+          20,
+          947
+        ],
+        [
+          957,
+          943
+        ],
+        [
+          957,
+          869
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Weighted dynamic programming",
+      "bbox_2d": [
+        19,
+        34,
+        534,
+        88
+      ],
+      "polygon": [
+        [
+          19,
+          34
+        ],
+        [
+          19,
+          83
+        ],
+        [
+          533,
+          87
+        ],
+        [
+          533,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "table",
+      "content": "<table border=\"1\"><tr><td>A</td><td>0</td><td>2/3</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2/3</td><td>0</td></tr><tr><td>C</td><td>0</td><td>0</td><td>1</td><td>1/3</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1/3</td></tr><tr><td>G</td><td>0</td><td>1/3</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1/3</td><td>1</td><td>0</td></tr><tr><td>T</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>-</td><td>1</td><td>0</td><td>0</td><td>2/3</td><td>0</td><td>0</td><td>2/3</td><td>0</td><td>1/3</td></tr><tr><td>-</td><td>0</td><td>-1</td><td>-2</td><td>-2.33</td><td>-3.33</td><td>-4.33</td><td>-4.66</td><td>-5.66</td><td>-6.33</td></tr><tr><td>A</td><td>-1</td><td>?</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td>-2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td>-3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>G</td><td>-4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>C</td><td>-5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>G</td><td>-6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>A</td><td>-7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>",
+      "bbox_2d": [
+        31,
+        111,
+        442,
+        600
+      ],
+      "polygon": [
+        [
+          31,
+          111
+        ],
+        [
+          37,
+          599
+        ],
+        [
+          326,
+          595
+        ],
+        [
+          376,
+          584
+        ],
+        [
+          411,
+          555
+        ],
+        [
+          436,
+          500
+        ],
+        [
+          441,
+          460
+        ],
+        [
+          441,
+          116
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "display_formula",
+      "content": "$$\nP (x, j) = \\sum_ {c \\in \\Sigma} \\sin (x, c) \\times R [ c, j ]\n$$",
+      "bbox_2d": [
+        458,
+        444,
+        661,
+        496
+      ],
+      "polygon": [
+        [
+          458,
+          444
+        ],
+        [
+          458,
+          494
+        ],
+        [
+          660,
+          494
+        ],
+        [
+          660,
+          444
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "display_formula",
+      "content": "$$\nA [ i, j ] = \\max \\left\\{ \\begin{array}{l l} A [ i - 1, j - 1 ] + P \\left(x _ {i}, j\\right) & \\text {a l i g n} x _ {i} \\text {t o c o l u m n} j \\\\ A [ i - 1, j ] + \\text {g a p} & \\text {i n t r o u c e} g a p \\text {i n t o p r o f i l e} \\\\ A [ i, j - 1 ] + P \\left(\" \", j\\right) & \\text {i n t r o u c e} g a p \\text {i n t o} x \\end{array} \\right.\n$$",
+      "bbox_2d": [
+        458,
+        514,
+        908,
+        601
+      ],
+      "polygon": [
+        [
+          458,
+          514
+        ],
+        [
+          458,
+          600
+        ],
+        [
+          907,
+          600
+        ],
+        [
+          907,
+          514
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- Option 1 (diagonal): align $x_{1} = \"$ \"A\" to column $j = 1$ (having $ \\frac{2}{3} $ \"A\" and $ \\frac{1}{3} $ \"G\")\n- $ 0+P(\"A\",1)=0+\\sum_{c\\in\\Sigma}\\operatorname{sim}(\"A\",c)\\times R[c,1]=1\\times \\frac{2}{3}+(-1)\\times \\frac{1}{3}=\\frac{1}{3} $",
+      "bbox_2d": [
+        49,
+        623,
+        898,
+        722
+      ],
+      "polygon": [
+        [
+          49,
+          623
+        ],
+        [
+          49,
+          720
+        ],
+        [
+          897,
+          720
+        ],
+        [
+          897,
+          623
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- Option 2 (from top): gap in profile",
+      "bbox_2d": [
+        49,
+        730,
+        450,
+        769
+      ],
+      "polygon": [
+        [
+          49,
+          730
+        ],
+        [
+          49,
+          768
+        ],
+        [
+          449,
+          768
+        ],
+        [
+          449,
+          730
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "display_formula",
+      "content": "$$\n\\triangleright - 1 + (- 1) = - 2\n$$",
+      "bbox_2d": [
+        107,
+        779,
+        313,
+        816
+      ],
+      "polygon": [
+        [
+          107,
+          779
+        ],
+        [
+          107,
+          814
+        ],
+        [
+          312,
+          814
+        ],
+        [
+          312,
+          779
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- Option 3 (from left): gap in x",
+      "bbox_2d": [
+        49,
+        829,
+        395,
+        867
+      ],
+      "polygon": [
+        [
+          49,
+          829
+        ],
+        [
+          49,
+          866
+        ],
+        [
+          394,
+          866
+        ],
+        [
+          394,
+          829
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "display_formula",
+      "content": "$$\n- 1 + \\sum_ {c \\in \\Sigma} \\sin \\left(\" -\", c\\right) \\times R [ c, 1 ] = - 1 + (- 1) \\times \\frac {2}{3} + (- 1) \\times \\frac {1}{3} = - 2\n$$",
+      "bbox_2d": [
+        107,
+        874,
+        821,
+        920
+      ],
+      "polygon": [
+        [
+          107,
+          874
+        ],
+        [
+          107,
+          919
+        ],
+        [
+          820,
+          919
+        ],
+        [
+          820,
+          874
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "Weighted dynamic programming",
+      "bbox_2d": [
+        18,
+        34,
+        534,
+        88
+      ],
+      "polygon": [
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          87
+        ],
+        [
+          533,
+          87
+        ],
+        [
+          533,
+          34
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- By using the \"weighted\" version of the update rule, we can fill the matrix as we did in the global alignment of two strings",
+      "bbox_2d": [
+        50,
+        109,
+        974,
+        194
+      ],
+      "polygon": [
+        [
+          50,
+          109
+        ],
+        [
+          50,
+          193
+        ],
+        [
+          973,
+          189
+        ],
+        [
+          973,
+          109
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- At each step, we keep track of the cell that gave the best choice at each step (for backtracing)",
+      "bbox_2d": [
+        50,
+        207,
+        963,
+        292
+      ],
+      "polygon": [
+        [
+          50,
+          207
+        ],
+        [
+          50,
+          291
+        ],
+        [
+          962,
+          291
+        ],
+        [
+          962,
+          207
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "text",
+      "content": "- At the end, as usual, cell (n,m) will contain the value of the optimal alignment",
+      "bbox_2d": [
+        49,
+        306,
+        923,
+        346
+      ],
+      "polygon": [
+        [
+          49,
+          306
+        ],
+        [
+          49,
+          345
+        ],
+        [
+          922,
+          345
+        ],
+        [
+          922,
+          306
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "- The alignment will be build with a traceback, as in the global alignment of two strings",
+      "bbox_2d": [
+        50,
+        362,
+        927,
+        445
+      ],
+      "polygon": [
+        [
+          50,
+          367
+        ],
+        [
+          50,
+          444
+        ],
+        [
+          926,
+          444
+        ],
+        [
+          921,
+          362
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- Then, according to the resulting alignment, we update the alignment profile by adding the new string we just aligned and recomputing the new frequencies",
+      "bbox_2d": [
+        49,
+        460,
+        935,
+        546
+      ],
+      "polygon": [
+        [
+          49,
+          460
+        ],
+        [
+          49,
+          544
+        ],
+        [
+          934,
+          544
+        ],
+        [
+          934,
+          460
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "- We also save the actual alignment as output (final output if all sequences were used; otherwise input to the next step)",
+      "bbox_2d": [
+        49,
+        559,
+        941,
+        644
+      ],
+      "polygon": [
+        [
+          49,
+          559
+        ],
+        [
+          49,
+          642
+        ],
+        [
+          940,
+          642
+        ],
+        [
+          940,
+          559
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- The same principle can be applied to the alignment of two profiles!",
+      "bbox_2d": [
+        49,
+        702,
+        835,
+        742
+      ],
+      "polygon": [
+        [
+          49,
+          702
+        ],
+        [
+          49,
+          740
+        ],
+        [
+          834,
+          740
+        ],
+        [
+          834,
+          702
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "label": "text",
+      "content": "- For both rows and columns of the alignment matrix we would have a profiles instead of a string",
+      "bbox_2d": [
+        50,
+        756,
+        913,
+        841
+      ],
+      "polygon": [
+        [
+          50,
+          756
+        ],
+        [
+          50,
+          839
+        ],
+        [
+          912,
+          839
+        ],
+        [
+          912,
+          756
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "label": "text",
+      "content": "- The update of the cells can be performed with a \"double weighted\" version of the rule for global alignment",
+      "bbox_2d": [
+        49,
+        855,
+        973,
+        939
+      ],
+      "polygon": [
+        [
+          49,
+          855
+        ],
+        [
+          49,
+          937
+        ],
+        [
+          972,
+          933
+        ],
+        [
+          972,
+          855
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "\"Progressive\" multiple alignments",
+      "bbox_2d": [
+        19,
+        35,
+        548,
+        85
+      ],
+      "polygon": [
+        [
+          19,
+          35
+        ],
+        [
+          19,
+          84
+        ],
+        [
+          547,
+          84
+        ],
+        [
+          547,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "text",
+      "content": "- Algorithms of this kind are in general said to build a \"progressive\" multiple alignment",
+      "bbox_2d": [
+        50,
+        154,
+        883,
+        239
+      ],
+      "polygon": [
+        [
+          50,
+          154
+        ],
+        [
+          50,
+          238
+        ],
+        [
+          882,
+          234
+        ],
+        [
+          882,
+          154
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "- The key is having the \"guide-tree\" telling us the order of operations in which the alignment has to be built:",
+      "bbox_2d": [
+        50,
+        253,
+        948,
+        338
+      ],
+      "polygon": [
+        [
+          50,
+          253
+        ],
+        [
+          50,
+          337
+        ],
+        [
+          947,
+          337
+        ],
+        [
+          947,
+          253
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        290,
+        362,
+        489,
+        522
+      ],
+      "polygon": [
+        [
+          295,
+          362
+        ],
+        [
+          290,
+          387
+        ],
+        [
+          290,
+          521
+        ],
+        [
+          488,
+          521
+        ],
+        [
+          488,
+          362
+        ],
+        [
+          444,
+          362
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        550,
+        359,
+        757,
+        533
+      ],
+      "polygon": [
+        [
+          550,
+          359
+        ],
+        [
+          550,
+          527
+        ],
+        [
+          555,
+          531
+        ],
+        [
+          756,
+          531
+        ],
+        [
+          756,
+          359
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "text",
+      "content": "- But, what if we don't have a guide-tree?",
+      "bbox_2d": [
+        50,
+        604,
+        516,
+        642
+      ],
+      "polygon": [
+        [
+          50,
+          604
+        ],
+        [
+          50,
+          641
+        ],
+        [
+          515,
+          641
+        ],
+        [
+          515,
+          604
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Usually we don't! As a matter of fact an MSA is the starting point for inferring the evolutionary history of the sequences, so we will have an evolutionary tree that we could use for guidance only after having performed the multiple alignment ...",
+      "bbox_2d": [
+        106,
+        654,
+        946,
+        772
+      ],
+      "polygon": [
+        [
+          106,
+          654
+        ],
+        [
+          106,
+          771
+        ],
+        [
+          945,
+          771
+        ],
+        [
+          945,
+          654
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "label": "text",
+      "content": "- Idea: before proceeding with the alignments, we build the guide tree ourselves, that is, we try to predict the evolutionary history behind the sequences!",
+      "bbox_2d": [
+        50,
+        787,
+        943,
+        871
+      ],
+      "polygon": [
+        [
+          50,
+          792
+        ],
+        [
+          50,
+          870
+        ],
+        [
+          942,
+          870
+        ],
+        [
+          942,
+          792
+        ]
+      ]
+    }
+  ],
+  [
+    {
+      "index": 0,
+      "label": "paragraph_title",
+      "content": "References I",
+      "bbox_2d": [
+        20,
+        35,
+        222,
+        80
+      ],
+      "polygon": [
+        [
+          20,
+          35
+        ],
+        [
+          20,
+          79
+        ],
+        [
+          221,
+          79
+        ],
+        [
+          221,
+          35
+        ],
+        [
+          212,
+          35
+        ],
+        [
+          206,
+          35
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        32,
+        198,
+        59,
+        244
+      ],
+      "polygon": [
+        [
+          32,
+          198
+        ],
+        [
+          32,
+          243
+        ],
+        [
+          58,
+          243
+        ],
+        [
+          58,
+          198
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "label": "text",
+      "content": "Banerjee T.D. et al. (2020) Expression of Multiple engrailed Family Genes in Eyespots of Bicyclus anynana Butterflies Does Not Implicate the Duplication Events in the Evolution of This Morphological Novelty Front. Ecol. Evol. 8:227",
+      "bbox_2d": [
+        33,
+        203,
+        952,
+        419
+      ],
+      "polygon": [
+        [
+          33,
+          203
+        ],
+        [
+          33,
+          417
+        ],
+        [
+          951,
+          414
+        ],
+        [
+          951,
+          208
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        32,
+        427,
+        59,
+        473
+      ],
+      "polygon": [
+        [
+          32,
+          432
+        ],
+        [
+          32,
+          472
+        ],
+        [
+          58,
+          472
+        ],
+        [
+          58,
+          432
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "label": "text",
+      "content": "Lu C.-D. et al. (1999) The ArgR Regulatory Protein, a Helper to the Anaerobic Regulator ANR during Transcriptional Activation of the arcD Promoter in Pseudomonas aeruginosa Journal of Bacteriology 181(8):2459-2464",
+      "bbox_2d": [
+        30,
+        433,
+        946,
+        607
+      ],
+      "polygon": [
+        [
+          30,
+          433
+        ],
+        [
+          30,
+          605
+        ],
+        [
+          945,
+          605
+        ],
+        [
+          945,
+          433
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "label": "image",
+      "content": null,
+      "bbox_2d": [
+        31,
+        619,
+        59,
+        666
+      ],
+      "polygon": [
+        [
+          31,
+          619
+        ],
+        [
+          31,
+          665
+        ],
+        [
+          58,
+          665
+        ],
+        [
+          58,
+          619
+        ]
+      ]
+    },
+    {
+      "index": 6,
+      "label": "text",
+      "content": "Nagy Z.T., et al. (2012) First Large-Scale DNA Barcoding Assessment of Reptiles in the Biodiversity Hotspot of Madagascar, Based on Newly Designed COI Primers PLoS One 7(3):e34506",
+      "bbox_2d": [
+        31,
+        624,
+        914,
+        797
+      ],
+      "polygon": [
+        [
+          31,
+          624
+        ],
+        [
+          31,
+          796
+        ],
+        [
+          913,
+          796
+        ],
+        [
+          908,
+          624
+        ]
+      ]
+    }
+  ]
+]
