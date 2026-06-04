@@ -4,13 +4,13 @@
 
 \section{Introduction to Bioinformatics}
 
-Bioinformatics is an interdisciplinary field that relies on biological data and seeks to understand it through computational means. It is critical to note that while it uses computer science heavily, information science is not strictly synonymous with computer science. Rather, bioinformatics operates at the intersection of biology, informatics, chemistry, physics, mathematics, and statistics. 
+Bioinformatics is an interdisciplinary field that relies on biological data and seeks to understand it through computational means. It is critical to note that while it uses computer science heavily, information science is not strictly synonymous with computer science. Rather, bioinformatics operates at the intersection of biology, informatics, chemistry, physics, mathematics, and statistics.
 
 \begin{important}
-  \textbf{Bioinformatics}: The science of information and information flow in biological systems, specifically utilizing mathematical, statistical, and computing methods to analyze biological data (like DNA and amino acid sequences). 
+  \textbf{Bioinformatics}: The science of information and information flow in biological systems, specifically utilizing mathematical, statistical, and computing methods to analyze biological data (like DNA and amino acid sequences).
 \end{important}
 
-Bioinformatics focuses primarily on analyzing, classifying, storing, and retrieving biological information that living cells intrinsically encode and decode. 
+Bioinformatics focuses primarily on analyzing, classifying, storing, and retrieving biological information that living cells intrinsically encode and decode.
 \sta It is distinctly \textit{not} just biologically-inspired computation (such as genetic algorithms or artificial neural networks), though such computational methods can certainly be applied to solve bioinformatics problems. Most work is performed \textit{in silico} (computational simulations and analyses), using data derived from \textit{in vivo} (living organisms) or \textit{in vitro} (lab environments) sources.
 
 \section{Cellular and Molecular Basics}
@@ -21,15 +21,15 @@ To meaningfully process biological sequences, a bioinformatician must understand
 Cells are the fundamental units of life, and the location of genetic material within them differs depending on the organism's complexity:
 \begin{itemize}
     \item \textbf{Prokaryotes} (e.g., bacteria): The DNA is free-floating in the cytoplasm, usually as a single circular genome.
-    \item \textbf{Eukaryotes} (e.g., animals, plants): The DNA is packed into chromosomes and separated from the rest of the cell within a distinct organelle called the nucleus. 
+    \item \textbf{Eukaryotes} (e.g., animals, plants): The DNA is packed into chromosomes and separated from the rest of the cell within a distinct organelle called the nucleus.
 \end{itemize}
-% 1_jpg [IMAGE: Diagram contrasting typical prokaryotic and eukaryotic cell structures, highlighting the presence of the nucleus in eukaryotes.]
+\myimage{1_1/1.jpg}{Prokaryotic vs Eukaryotic cell structures.}
 
 \subsection{Biological Macromolecules}
 Cells are constructed from and regulated by various molecules, ranging from small molecules (like water and simple sugars) to large macromolecules. The most relevant macromolecules for genomic data are:
 \begin{itemize}
     \item \textbf{Proteins}: The primary building blocks and functional machines of the cell. They can serve structural roles, act as receptors on cell membranes, or function as transcription factors to regulate gene expression.
-    \item \textbf{Nucleic Acids (DNA and RNA)}: Responsible for the storage, transmission, and expression of genetic information. 
+    \item \textbf{Nucleic Acids (DNA and RNA)}: Responsible for the storage, transmission, and expression of genetic information.
 \end{itemize}
 
 \section{The Chemical Structure of DNA and RNA}
@@ -40,7 +40,7 @@ Biological sequences are ultimately chemical polymers. Both DNA (deoxyribonuclei
   \textbf{Nucleotide}: The fundamental monomer of nucleic acids, consisting of three parts: a pentose (5-carbon) sugar, one or more phosphate groups, and a nitrogen-containing base.
 \end{important}
 
-% 2_jpg [IMAGE: Chemical structure of a single nucleotide, showing the phosphate group, the pentose sugar, and the attached nitrogenous base.]
+\myimage{1_1/2.jpg}{Chemical structure of a nucleotide.}[width=0.6\textwidth]
 
 The primary difference between DNA and RNA lies in the pentose sugar: RNA utilizes ribose, while DNA utilizes deoxyribose (which lacks one oxygen atom). Furthermore, they use a slightly different set of nitrogenous bases:
 \begin{itemize}
@@ -55,14 +55,14 @@ Because of this asymmetrical chemical bonding, a single DNA strand has a clear o
 \sta By strict biological convention, DNA sequences are always read and written in the \(5' \rightarrow 3'\) direction, because this is the direction in which cellular enzymes (like DNA polymerase) synthesize them.
 
 \subsection{The Double Helix and Base Pairing}
-DNA in living cells rarely exists as a single strand; it forms a double-stranded helix. The two strands are held together by hydrogen bonds between opposing nitrogenous bases. 
+DNA in living cells rarely exists as a single strand; it forms a double-stranded helix. The two strands are held together by hydrogen bonds between opposing nitrogenous bases.
 
 Due to their chemical shapes, these bases pair in a strictly deterministic manner:
 \begin{itemize}
     \item \textbf{Adenine (A)} always pairs with \textbf{Thymine (T)}.
     \item \textbf{Cytosine (C)} always pairs with \textbf{Guanine (G)}.
 \end{itemize}
-% 3 [IMAGE: Diagram of the DNA double helix, showing the sugar-phosphate backbones running in opposite directions, with A-T and C-G base pairs connecting them in the center.]
+\myimage{1_1/3.jpg}{The DNA double helix and base pairing.}[width=0.5\textwidth]
 
 Crucially, the two strands of the double helix have an \textbf{anti-parallel orientation}. If one strand runs \(5' \rightarrow 3'\), the complementary strand runs \(3' \rightarrow 5'\) relative to it.
 
@@ -73,7 +73,7 @@ Crucially, the two strands of the double helix have an \textbf{anti-parallel ori
   \textbf{Reverse Complement}: The sequence of the opposing DNA strand, derived by replacing every base with its complement (A $\leftrightarrow$ T, C $\leftrightarrow$ G) and reversing the reading order to maintain the standard \(5' \rightarrow 3'\) representation.
 \end{important}
 
-If we record a sequence from a reference genome (often designated the "positive strand"), we do not need to store the opposing "negative strand" because it can be computationally derived. 
+If we record a sequence from a reference genome (often designated the "positive strand"), we do not need to store the opposing "negative strand" because it can be computationally derived.
 
 \textbf{Example:} Generating a Reverse Complement
 Suppose the positive strand is: \(5' \text{-AGTCAG-} 3'\).
@@ -86,17 +86,17 @@ This property is not just computationally useful; it is the physical mechanism a
 
 \section{The Central Dogma of Molecular Biology}
 
-The Central Dogma outlines how genetic information stored in DNA is transformed into functional physical traits. 
+The Central Dogma outlines how genetic information stored in DNA is transformed into functional physical traits.
 
 \begin{important}
-  \textbf{The Central Dogma}: Information flows from DNA $\rightarrow$ RNA $\rightarrow$ Protein. DNA is \textit{transcribed} into RNA, and RNA is \textit{translated} into proteins. 
+  \textbf{The Central Dogma}: Information flows from DNA $\rightarrow$ RNA $\rightarrow$ Protein. DNA is \textit{transcribed} into RNA, and RNA is \textit{translated} into proteins.
 \end{important}
 
-This is a simplified model. We now know it applies mostly to protein-coding genes, while many regions of the genome produce non-coding RNAs that have their own direct biological functions without ever becoming proteins. 
+This is a simplified model. We now know it applies mostly to protein-coding genes, while many regions of the genome produce non-coding RNAs that have their own direct biological functions without ever becoming proteins.
 
 \subsection{Transcription}
-Transcription is the process of copying a specific gene from the DNA into an RNA molecule. A protein complex called RNA polymerase opens the DNA double helix and synthesizes a single-stranded RNA copy by matching complementary bases (using Uracil instead of Thymine). 
-This process is heavily regulated by \textbf{transcription factors}: proteins that bind to specific DNA motifs (like promoters or enhancers) to turn a gene "on" or "off" depending on the cell's current needs. 
+Transcription is the process of copying a specific gene from the DNA into an RNA molecule. A protein complex called RNA polymerase opens the DNA double helix and synthesizes a single-stranded RNA copy by matching complementary bases (using Uracil instead of Thymine).
+This process is heavily regulated by \textbf{transcription factors}: proteins that bind to specific DNA motifs (like promoters or enhancers) to turn a gene "on" or "off" depending on the cell's current needs.
 
 \subsection{RNA Splicing (Eukaryotes Only)}
 In eukaryotes, transcription occurs inside the nucleus, producing a precursor messenger RNA (pre-mRNA). Before leaving the nucleus, this pre-mRNA is highly edited via \textbf{splicing}.
@@ -125,7 +125,7 @@ The genetic code translates these 64 possible codons (\(4^3\)) into 20 amino aci
 To analyze biological systems, bioinformaticians rely on sequencing data. Understanding how sequencing machines read DNA provides vital insight into the types of errors and biases present in the resulting datasets.
 
 \subsection{Sanger Sequencing}
-Developed by Fred Sanger (who won a Nobel Prize for it), this was the primary sequencing method for decades and was used to map the first human genome. 
+Developed by Fred Sanger (who won a Nobel Prize for it), this was the primary sequencing method for decades and was used to map the first human genome.
 
 \begin{important}
   \textbf{Sequencing by Synthesis}: The core paradigm of Sanger sequencing. The unknown single-stranded DNA is used as a template. As enzymes build the complementary strand, the technology identifies which bases are being inserted, effectively reading the sequence.
@@ -138,10 +138,10 @@ Developed by Fred Sanger (who won a Nobel Prize for it), this was the primary se
     \item Originally, the reaction was split into four distinct lanes (one for A, C, G, T), and radioactive markers were used. The fragments were separated by length using gel electrophoresis (shorter fragments move faster through the gel).
     \item Modern Sanger sequencing uses fluorescent dyes (e.g., A is green, T is red), allowing all four terminators to run in a single reaction. A laser reads the colors as fragments pass by, producing a sequence chromatogram.
 \end{enumerate}
-While highly accurate, Sanger sequencing is drastically limited in throughput (only ~400 kilobases per day per machine) and expensive for entire genomes. 
+While highly accurate, Sanger sequencing is drastically limited in throughput (only ~400 kilobases per day per machine) and expensive for entire genomes.
 
 \subsection{Next-Generation Sequencing (Illumina)}
-To sequence genomes cheaply and rapidly, Next-Generation Sequencing (NGS) shifted to a massively parallel approach. Illumina emerged as the dominant technology. 
+To sequence genomes cheaply and rapidly, Next-Generation Sequencing (NGS) shifted to a massively parallel approach. Illumina emerged as the dominant technology.
 
 \sta NGS provides enormous throughput but relies on extremely \textbf{short reads} (e.g., 100--500 base pairs). This necessitates powerful bioinformatic algorithms to assemble these tiny fragments back into a full reference genome or to map them onto an existing reference.
 
@@ -192,7 +192,7 @@ The Central Dogma (DNA $\rightarrow$ RNA $\rightarrow$ Protein) naturally define
 \subsection{Alternative Sequencing Applications}
 The technologies developed for DNA sequencing (like Illumina short-read sequencing) are highly versatile and can be repurposed to study other "omes".
 
-\sta \textbf{RNA-Sequencing (RNA-Seq)}: Sequencing machines can only read DNA, not RNA. To measure the transcriptome (gene expression levels), RNA must first be isolated from the cell and converted into \textbf{complementary DNA (cDNA)} using a viral enzyme called reverse transcriptase. Because cDNA can base-pair and form a double helix, it can be processed by standard DNA sequencing pipelines. 
+\sta \textbf{RNA-Sequencing (RNA-Seq)}: Sequencing machines can only read DNA, not RNA. To measure the transcriptome (gene expression levels), RNA must first be isolated from the cell and converted into \textbf{complementary DNA (cDNA)} using a viral enzyme called reverse transcriptase. Because cDNA can base-pair and form a double helix, it can be processed by standard DNA sequencing pipelines.
 
 \textbf{Example:} ChIP-Seq (Chromatin Immunoprecipitation Sequencing)
 This illustrates how DNA sequencing technology is creatively repurposed to map the exact locations where specific proteins (like transcription factors) bind to the genome.
