@@ -1,5 +1,5 @@
 
-\newcommand{\sta}{\textbf{[*] }} % Define \sta command to prevent compilation errors
+
 % Lecture Notes: Foundations of DNA Sequencing Technology and Genome Assembly
 
 \section{Introduction to Genome Assembly}
@@ -36,7 +36,7 @@ Historically, assembling sequences has been tackled in two primary ways dependin
 
 \section{Sequencing Data: Models and Intuition}
 
-To build an intuition for genome assembly, we must understand the statistical nature of shotgun sequencing. We can model an idealized whole-genome sequencing (WGS) experiment by assuming single-end reads of equal length $L$ sampled randomly across an error-free genome of size $G$ with no repeats. 
+To build an intuition for genome assembly, we must understand the statistical nature of shotgun sequencing. We can model an idealized whole-genome sequencing (WGS) experiment by assuming single-end reads of equal length $L$ sampled randomly across an error-free genome of size $G$ with no repeats.
 
 Since starting points are distributed randomly, sampling bases across the genome behaves as a random process. Because we perform this process millions of times, we can accurately model the probability of covering any specific genomic position.
 
@@ -141,16 +141,16 @@ Because infinite coverage is impossible, any real genome assembly effort will no
 
 % [IMAGE: A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.]
 
-If we cannot sequence the gaps, we cannot definitively know the order, distance, or orientation of the contigs relative to one another (unless we use paired-end scaffolds, which we will ignore for the mathematical model). 
+If we cannot sequence the gaps, we cannot definitively know the order, distance, or orientation of the contigs relative to one another (unless we use paired-end scaffolds, which we will ignore for the mathematical model).
 
 \subsection{Calculating Expected Gaps and Contigs}
-We can use the Poisson distribution to estimate assembly fragmentation. Let us consider the start positions of reads. The expected number of reads starting at any specific genomic position is $N/G$. 
+We can use the Poisson distribution to estimate assembly fragmentation. Let us consider the start positions of reads. The expected number of reads starting at any specific genomic position is $N/G$.
 
 If we examine an interval of length $L$ (one full read length), the expected number of reads starting in this interval is:
 \[
 L \times \frac{N}{G} = \lambda
 \]
-Thus, the probability that \textit{no} read starts in an interval of length $L$ is $e^{-\lambda}$. 
+Thus, the probability that \textit{no} read starts in an interval of length $L$ is $e^{-\lambda}$.
 
 A nucleotide at position $i$ falls into a gap between contigs if absolutely no read starts in the preceding interval of length $L$, i.e., the interval $[i-L+1, i]$. By linearity of expectation, the expected total number of nucleotides residing in gaps across the genome is:
 \[
@@ -159,7 +159,7 @@ G \cdot e^{-\lambda}
 Consequently, the number of nucleotides successfully included in contigs is $G \cdot (1 - e^{-\lambda})$.
 
 \subsection{Expected Number and Size of Contigs}
-How many separate contigs will we produce? Every contig has exactly one ``rightmost'' read. A read is the rightmost read of a contig if and only if no other read starts within its interval $[i, i+L-1]$. 
+How many separate contigs will we produce? Every contig has exactly one ``rightmost'' read. A read is the rightmost read of a contig if and only if no other read starts within its interval $[i, i+L-1]$.
 
 The probability of this happening for any given read is $e^{-\lambda}$. Since there are $N$ total reads, the expected number of rightmost reads—and thus the expected number of contigs—is:
 \[
@@ -209,10 +209,10 @@ To reconstruct the genome, we must find a path that visits \textit{every single 
     \textbf{Hamiltonian Path}: A path in a directed or undirected graph that visits every vertex (node) exactly once.
 \end{important}
 
-\sta The critical flaw in this approach is that the Hamiltonian path problem is NP-complete. As the number of k-mers scales into the billions, finding the path becomes computationally impossible. 
+\sta The critical flaw in this approach is that the Hamiltonian path problem is NP-complete. As the number of k-mers scales into the billions, finding the path becomes computationally impossible.
 
 \subsection{The Modern Approach: De Bruijn Graphs (DBG)}
-Instead of placing the k-mers on the nodes, the \textbf{De Bruijn graph} approach places the k-mers on the \textbf{edges}. 
+Instead of placing the k-mers on the nodes, the \textbf{De Bruijn graph} approach places the k-mers on the \textbf{edges}.
 
 \begin{important}
     \textbf{De Bruijn Graph}: A directed graph where each edge represents a k-mer from the sequencing data. The nodes representing the start and end of this edge are the $(k-1)$-mer prefix and suffix of that k-mer, respectively. Identical nodes are merged globally.
@@ -256,15 +256,15 @@ Hierholzer's algorithm finds an Eulerian path (or cycle) in linear time $O(E)$. 
 def hierholzer(graph):
     # 1. Check degree requirements for Eulerian path
     # 2. Find start_vertex (out - in == 1)
-    
+
     tpath = Stack() # Temporary path stack
     epath = Stack() # Final Eulerian path stack
-    
+
     tpath.push(start_vertex)
-    
+
     while not tpath.is_empty():
         u = tpath.top()
-        
+
         if u.has_unvisited_outgoing_edges():
             # Randomly select an unvisited edge (u, x)
             x = graph.get_random_unvisited_edge(u)
@@ -273,11 +273,11 @@ def hierholzer(graph):
         else:
             # Backtrack if dead end
             epath.push(tpath.pop())
-            
+
     return epath # Output stack represents the path from top to bottom
 \end{minted}
 
-\textbf{Code Explanation:} The algorithm maintains two stacks. It aggressively explores the graph by walking forward along unvisited edges, pushing each visited node to the temporary stack `tpath`. When it reaches a node with no available outgoing edges (a dead end), it pops that node off `tpath` and pushes it to `epath`. It then looks at the new top of `tpath` and tries to branch out again. This brilliant mechanism naturally unwinds complex branching structures. Because the true ``end'' of the graph is the only node where you get permanently stuck first, it ends up at the bottom of the `epath` stack. 
+\textbf{Code Explanation:} The algorithm maintains two stacks. It aggressively explores the graph by walking forward along unvisited edges, pushing each visited node to the temporary stack `tpath`. When it reaches a node with no available outgoing edges (a dead end), it pops that node off `tpath` and pushes it to `epath`. It then looks at the new top of `tpath` and tries to branch out again. This brilliant mechanism naturally unwinds complex branching structures. Because the true ``end'' of the graph is the only node where you get permanently stuck first, it ends up at the bottom of the `epath` stack.
 
 \textbf{Step-by-step Walkthrough:}
 \begin{enumerate}
@@ -298,13 +298,13 @@ The mathematical models we have explored assume an idealized scenario: identical
 The parameter $k$ dictates the entire structure of the De Bruijn Graph and requires a delicate balance:
 \begin{itemize}
     \item \textbf{If $k$ is too small}: The k-mers will not be unique in the genome. The graph will become massively tangled with false branch points, merging nodes that actually belong to entirely different chromosomes.
-    \item \textbf{If $k$ is too large}: We require reads to overlap by almost their entire length to share a k-mer. Since reads start at random positions, the coverage required to find such massive overlaps becomes impossibly high. Furthermore, the memory usage explodes. Storing billion-node graphs requires extensive RAM, scaling as $\mathcal{O}(n \cdot k)$. 
+    \item \textbf{If $k$ is too large}: We require reads to overlap by almost their entire length to share a k-mer. Since reads start at random positions, the coverage required to find such massive overlaps becomes impossibly high. Furthermore, the memory usage explodes. Storing billion-node graphs requires extensive RAM, scaling as $\mathcal{O}(n \cdot k)$.
 \end{itemize}
 \sta \textbf{Memory optimization}: Bioinformatics tools often store sequences using a ``two-bit'' notation (A=00, C=01, G=10, T=11) to compress storage, fitting 4 nucleotides into a single byte.
 
 \subsection{Sequencing Errors}
-Sequencing platforms occasionally misread a base. 
-\textbf{Example:} Consider a 5-mer analysis. A single base error in a sequence will contaminate exactly five different 5-mers. 
+Sequencing platforms occasionally misread a base.
+\textbf{Example:} Consider a 5-mer analysis. A single base error in a sequence will contaminate exactly five different 5-mers.
 
 Because errors are rare random events affecting a single read, these erroneous k-mers will appear in the dataset with very low frequencies (often a count of 1). By plotting the k-mer frequency distribution, algorithms can identify these low-count ``error'' k-mers (the noise peak on the far left of the distribution plot) and heuristically delete them before constructing the graph.
 

@@ -1,18 +1,8 @@
 
 
-% Lecture Notes: Bioinformatics Algorithms - Multiple Sequence Alignment
-\newcommand{\sta}{\textbf{[!] }}
-\newenvironment{important}{%
-  \vspace{1em}\noindent\begin{minipage}{\textwidth}%
-  \hrule\vspace{0.5em}%
-}{%
-  \vspace{0.5em}\hrule%
-  \end{minipage}\vspace{1em}%
-}
-
 \section{Introduction to Evolutionary Trees and Multiple Sequence Alignment}
 
-Evolutionary biology relies heavily on computational approaches to trace the shared history of organisms. While early conceptualizations of evolution, such as Charles Darwin's "tree of life," focused on morphological traits, modern bioinformatics enables us to build phylogenetic trees based on molecular data (e.g., DNA or protein sequences). 
+Evolutionary biology relies heavily on computational approaches to trace the shared history of organisms. While early conceptualizations of evolution, such as Charles Darwin's "tree of life," focused on morphological traits, modern bioinformatics enables us to build phylogenetic trees based on molecular data (e.g., DNA or protein sequences).
 
 % [IMAGE: Evolutionary tree of Madagascan reptiles showing how different species diverged based on the cytochrome oxidase subunit I (COI) gene.]
 % [IMAGE: Comprehensive Tree of Life showing major and minor living branches of life, radiating outwards from single-celled organisms to complex life forms.]
@@ -32,7 +22,7 @@ When comparing a position across sequences, parsimony implies:
 \end{itemize}
 
 \textbf{Example:} Aligning words across languages
-To illustrate, consider the word "sugar" across different languages. A pair-wise alignment between English ("SUGAR") and French ("SUCRE") might yield multiple equally scoring alternatives depending on gap penalties. 
+To illustrate, consider the word "sugar" across different languages. A pair-wise alignment between English ("SUGAR") and French ("SUCRE") might yield multiple equally scoring alternatives depending on gap penalties.
 
 Pair-wise alignment (Alternative 1):
 \begin{verbatim}
@@ -46,7 +36,7 @@ S U G A R
 S U C R E
 \end{verbatim}
 
-If gaps carry heavy penalties, Alternative 2 might win locally. However, if we align these words alongside other languages (e.g., Spanish "AZUCAR", Basque "ZUKER"), we see that the 'R' is conserved across almost all variants. 
+If gaps carry heavy penalties, Alternative 2 might win locally. However, if we align these words alongside other languages (e.g., Spanish "AZUCAR", Basque "ZUKER"), we see that the 'R' is conserved across almost all variants.
 
 Multiple Sequence Alignment Consensus:
 \begin{verbatim}
@@ -137,7 +127,7 @@ Assuming we are aligning $k$ sequences of equal length $n$:
     \item \textbf{Time Complexity}: For each cell, we must check $2^k - 1$ neighbors. $\implies O(2^k n^k)$.
 \end{itemize}
 
-Because $k$ is an input variable (not a constant), the space and time scale exponentially with the number of sequences. Consequently, the optimal multiple sequence alignment problem is \textbf{NP-hard}. In practice, it is computationally unfeasible to run the exact dynamic programming algorithm for more than 4 to 6 sequences of typical lengths. 
+Because $k$ is an input variable (not a constant), the space and time scale exponentially with the number of sequences. Consequently, the optimal multiple sequence alignment problem is \textbf{NP-hard}. In practice, it is computationally unfeasible to run the exact dynamic programming algorithm for more than 4 to 6 sequences of typical lengths.
 
 
 \section{Dealing with NP-Hard Problems}
@@ -172,7 +162,7 @@ The core heuristic: \textit{The more similar sequences are, the fewer gaps are n
 \end{enumerate}
 
 \textbf{Example:} Shifting a partial alignment
-Imagine $S_c = \text{MK}$. In previous steps, we aligned $S_1 = \text{MP}$ to $S_c$ perfectly. Now we need to merge $S_3 = \text{MSK}$. The pair-wise alignment between $S_c$ and $S_3$ indicates a gap must be placed in $S_c$ to accommodate the 'S', transforming $S_c$ locally to `M-K`. 
+Imagine $S_c = \text{MK}$. In previous steps, we aligned $S_1 = \text{MP}$ to $S_c$ perfectly. Now we need to merge $S_3 = \text{MSK}$. The pair-wise alignment between $S_c$ and $S_3$ indicates a gap must be placed in $S_c$ to accommodate the 'S', transforming $S_c$ locally to `M-K`.
 \begin{enumerate}
     \item We cannot simply insert a gap into $S_c$ and ignore $S_1$.
     \item We must insert a gap into the \textit{entire} existing partial alignment at that column index.
@@ -194,7 +184,7 @@ Imagine $S_c = \text{MK}$. In previous steps, we aligned $S_1 = \text{MP}$ to $S
 
 \section{Progressive Alignments and Alignment Profiles}
 
-While computationally bounded, Center Star neglects biological reality. It assumes all sequences radiate equally from a single "center" sequence. In reality, species evolve through hierarchical branching (a phylogenetic tree). 
+While computationally bounded, Center Star neglects biological reality. It assumes all sequences radiate equally from a single "center" sequence. In reality, species evolve through hierarchical branching (a phylogenetic tree).
 
 If S1 and S2 are close relatives (e.g., humans and chimps), and S3 and S4 are close relatives (e.g., mice and rats), it makes biological sense to first align (S1, S2), separately align (S3, S4), and then \textit{merge those two alignments}. Center Star completely ignores this topology.
 
@@ -225,7 +215,7 @@ A[i, j-1] + P(\text{`\text{-}'}, j) & \text{introduce a gap into string } X
 
 \textbf{Example:} Calculating Weighted DP Transitions
 Suppose we want to calculate cell $A$ mapping the first character of $X$, an `A`, to the first column of the profile.
-Assume column 1 of the profile contains $2/3$ `A` and $1/3$ `G`. 
+Assume column 1 of the profile contains $2/3$ `A` and $1/3$ `G`.
 Assume $\operatorname{sim}(\text{match}) = +1$, $\operatorname{sim}(\text{mismatch}) = -1$, and $\text{gap penalty} = -1$.
 \begin{enumerate}
     \item \textbf{Option 1 (Diagonal Move)}: Align `A` to column 1.
@@ -265,7 +255,7 @@ To compute the cell scores for a profile-profile alignment, we use a \textbf{dou
 
 \section{Progressive Multiple Alignment and Guide Trees}
 
-Algorithms that build a multiple sequence alignment step-by-step—either by adding sequences to a profile or by merging profiles together—are generally classified as \textbf{progressive alignment algorithms}. 
+Algorithms that build a multiple sequence alignment step-by-step—either by adding sequences to a profile or by merging profiles together—are generally classified as \textbf{progressive alignment algorithms}.
 
 To execute a progressive alignment correctly, the algorithm must know the specific order of operations. Which two sequences should be aligned first? Which sequence or sub-alignment should be merged next?
 

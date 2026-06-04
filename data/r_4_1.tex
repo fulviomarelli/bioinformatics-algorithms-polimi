@@ -1,5 +1,4 @@
 
-\newcommand{\sta}{\textbf{[\(\star\)] }}
 
 % Lecture Notes: Foundations of DNA Sequencing Technology and Genome Assembly — Read Mapping (Part 1)
 
@@ -26,7 +25,7 @@ Read mapping is the foundational step for numerous downstream bioinformatics and
     \end{itemize}
     \item \textbf{Precision and Personalized Medicine}: Tailoring medical treatment to individual genetic profiles. For instance, identifying specific mutations in a patient's lung cancer to determine if a particular targeted therapy will be effective.
     \item \textbf{Agricultural Breeding Programs}: Characterizing genetic variation in plants and animals to breed for specific traits, such as heat resistance or improved crop yield.
-    \item \textbf{Non-DNA Sequencing Applications}: 
+    \item \textbf{Non-DNA Sequencing Applications}:
     \begin{itemize}
         \item \textbf{RNA-seq}: Measuring gene expression by mapping RNA transcripts back to the genome to count how actively genes are being transcribed.
         \item \textbf{ChIP-seq}: Identifying DNA binding sites for transcription factors or analyzing epigenetic marks (like DNA methylation or histone modifications).
@@ -37,7 +36,7 @@ Read mapping is the foundational step for numerous downstream bioinformatics and
 
 \subsection{The Importance of High Coverage}
 
-When aligning reads to a reference genome, we must distinguish between true biological mutations and sequencing artifacts. 
+When aligning reads to a reference genome, we must distinguish between true biological mutations and sequencing artifacts.
 
 % [IMAGE: Read alignment in the IGV (Integrative Genomics Viewer) Browser showing multiple overlapping short reads mapped to a reference sequence. Variations from the reference are highlighted in color. High coverage regions allow distinguishing true mutations (present in many reads) from sequencing errors (present in only one read).]
 
@@ -50,17 +49,17 @@ Given millions of short NGS reads, we must find where each read best aligns to a
 
 \subsection{Why Not Use Local Sequence Alignment?}
 
-Our first instinct might be to use a traditional sequence alignment algorithm like Smith-Waterman. 
+Our first instinct might be to use a traditional sequence alignment algorithm like Smith-Waterman.
 
 \begin{itemize}
     \item \textbf{Complexity}: The Smith-Waterman algorithm has a runtime complexity of \(\mathcal{O}(L \cdot G)\), where \(L\) is the length of the read and \(G\) is the length of the genome.
     \item \textbf{Scale Issue}: If \(L = 200\) and \(G = 3 \times 10^9\), a single read requires computing hundreds of billions of matrix cells.
-    \item \textbf{Total Runtime}: For \(\ell\) total reads (often in the hundreds of millions), the total complexity is \(\mathcal{O}(\ell \cdot L \cdot G)\). 
+    \item \textbf{Total Runtime}: For \(\ell\) total reads (often in the hundreds of millions), the total complexity is \(\mathcal{O}(\ell \cdot L \cdot G)\).
 \end{itemize}
 
-This matrix-based approach is computationally impossible for modern NGS datasets. We need faster search algorithms based on preprocessing the text (the genome) to build a \textbf{substring index}. 
+This matrix-based approach is computationally impossible for modern NGS datasets. We need faster search algorithms based on preprocessing the text (the genome) to build a \textbf{substring index}.
 
-\sta Intuition: Think of searching for a person in a massive database. You wouldn't scan millions of names sequentially from the start. Instead, you build an index (e.g., alphabetical sorting) so you can jump directly to the names starting with the correct letter. 
+\sta Intuition: Think of searching for a person in a massive database. You wouldn't scan millions of names sequentially from the start. Instead, you build an index (e.g., alphabetical sorting) so you can jump directly to the names starting with the correct letter.
 
 \subsection{Naive String Search (Sliding Window)}
 
@@ -73,7 +72,7 @@ Our genome is \(T = \text{bananasavannah}\). Our search read is \(P = \text{nas}
 3. Match against `nan`: Match `n`, match `a`, mismatch at third letter (`s` vs `n`).
 4. Continue until position 5: Match `n`, match `a`, match `s`. Perfect match found!
 
-This approach still has a runtime of \(\mathcal{O}(G \cdot \ell \cdot L)\) for \(\ell\) reads. While perfectly fine for a single short query, the combined length of all reads \(\ell \cdot L\) (total sequenced bases, often denoted \(n_b\)) is much larger than \(G\). 
+This approach still has a runtime of \(\mathcal{O}(G \cdot \ell \cdot L)\) for \(\ell\) reads. While perfectly fine for a single short query, the combined length of all reads \(\ell \cdot L\) (total sequenced bases, often denoted \(n_b\)) is much larger than \(G\).
 
 \section{Tries and Pattern Matching}
 
@@ -95,7 +94,7 @@ Properties of a trie:
 When constructing tries (and later suffix trees), we append a special termination character, typically \(\$\), to the end of every string.
 
 \begin{important}
-    \textbf{Termination Character (\(\$\))}: A unique symbol not present in the standard alphabet (e.g., not A, C, G, or T) used to explicitly mark the end of a string in a tree structure. 
+    \textbf{Termination Character (\(\$\))}: A unique symbol not present in the standard alphabet (e.g., not A, C, G, or T) used to explicitly mark the end of a string in a tree structure.
 \end{important}
 
 \sta The \(\$\) symbol enforces a strict lexicographic rule (similar to dictionaries) and ensures that \textbf{no string or suffix can be considered a prefix of any other suffix}.
@@ -133,7 +132,7 @@ Instead of putting all reads into a trie, we can take our reference genome \(T\)
 The profound power of the Suffix Trie stems from one fundamental property:
 \sta \textbf{Every substring of \(T\) is a prefix of some suffix of \(T\).}
 
-Therefore, if a read \(P\) maps perfectly to the genome \(T\), it must be a prefix of the suffix that starts at that exact alignment position. To search for any read \(P\), we simply start at the root of the Suffix Trie and follow the characters of \(P\). 
+Therefore, if a read \(P\) maps perfectly to the genome \(T\), it must be a prefix of the suffix that starts at that exact alignment position. To search for any read \(P\), we simply start at the root of the Suffix Trie and follow the characters of \(P\).
 \begin{itemize}
     \item If we can trace the entire read \(P\) without falling off the tree, the read exists in the genome.
     \item The number of times \(P\) occurs in the genome is exactly equal to the number of leaf nodes in the subtree rooted at the end of the search path.
@@ -162,7 +161,7 @@ def SuffixTrie(T):
     return root
 \end{minted}
 
-\textbf{Explanation:} This naive algorithm constructs a suffix trie. First, we append the termination character `$` to the target text. We iterate over every possible starting index `i` to isolate each suffix. For each suffix, we traverse the characters, descending from the root node. If an edge for the current character doesn't exist at the current node, we create a new node and link it. We then move to that node and continue.
+\textbf{Explanation:} This naive algorithm constructs a suffix trie. First, we append the termination character `\$` to the target text. We iterate over every possible starting index `i` to isolate each suffix. For each suffix, we traverse the characters, descending from the root node. If an edge for the current character doesn't exist at the current node, we create a new node and link it. We then move to that node and continue.
 
 \begin{enumerate}
     \item Initialize the text by appending the termination character.
@@ -223,9 +222,9 @@ To reduce the massive space complexity of the Suffix Trie, we compact it into a 
 
 \subsection{Memory Optimization for Edge Labels}
 
-While the number of nodes is linear, the \textit{text labels} on the edges can still sum up to \(\mathcal{O}(m^2)\) characters. 
-\sta To achieve true \(\mathcal{O}(m)\) space, we \textbf{do not explicitly store the string labels on the edges}. 
-Instead, because every edge label is simply a substring of the original genome \(T\), we represent the label using just two integers: 
+While the number of nodes is linear, the \textit{text labels} on the edges can still sum up to \(\mathcal{O}(m^2)\) characters.
+\sta To achieve true \(\mathcal{O}(m)\) space, we \textbf{do not explicitly store the string labels on the edges}.
+Instead, because every edge label is simply a substring of the original genome \(T\), we represent the label using just two integers:
 1. \textbf{Offset}: The starting index of the substring in \(T\).
 2. \textbf{Length}: The number of characters.
 
@@ -235,7 +234,7 @@ We additionally store the global starting position of the suffix in the leaf nod
 \subsection{Building a Suffix Tree}
 
 The naive approach (building a Suffix Trie and then compacting it) takes \(\mathcal{O}(m^2)\) time and space.
-Fortunately, the \textbf{Ukkonen algorithm (1995)} provides an online, linear-time \(\mathcal{O}(m)\) method to construct a Suffix Tree. 
+Fortunately, the \textbf{Ukkonen algorithm (1995)} provides an online, linear-time \(\mathcal{O}(m)\) method to construct a Suffix Tree.
 
 \sta The intuition behind Ukkonen's algorithm relies on repeated patterns: a shorter suffix is inherently the trailing portion of a longer suffix. As the algorithm builds the tree, it reuses suffix links and implicit nodes to avoid redundant work, keeping construction strictly linear in both time and space.
 
@@ -250,7 +249,7 @@ Genomes often consist of multiple distinct strings (e.g., multiple chromosomes).
 
 \section{Suffix Arrays}
 
-Although Suffix Trees achieve \(\mathcal{O}(m)\) memory, the constant factors are still high. Practical implementations require roughly 12.5 to 20 bytes per node. For a 3 billion base pair genome, this means 40 to 60 GB of RAM—which is unwieldy for standard desktop architectures. 
+Although Suffix Trees achieve \(\mathcal{O}(m)\) memory, the constant factors are still high. Practical implementations require roughly 12.5 to 20 bytes per node. For a 3 billion base pair genome, this means 40 to 60 GB of RAM—which is unwieldy for standard desktop architectures.
 
 To solve this, we move to a more memory-efficient data structure: the \textbf{Suffix Array}.
 

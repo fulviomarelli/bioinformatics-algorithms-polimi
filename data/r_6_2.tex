@@ -1,27 +1,14 @@
 
 % Lecture Notes: Multiple Sequence Alignment (Part 2)
 
-\newenvironment{important}{
-    \vspace{1em}\noindent
-    \begin{center}
-    \begin{minipage}{0.95\textwidth}
-    \hrule\vspace{0.5em}
-}{
-    \vspace{0.5em}\hrule
-    \end{minipage}
-    \end{center}
-    \vspace{1em}
-}
-\newcommand{\sta}{\textbf{[*] }}
-
 \section{Progressive Multiple Sequence Alignments}
-The alignment of multiple biological sequences relies heavily on heuristic methods, primarily progressive alignment, because finding the exact optimal solution in a multidimensional search space is computationally intractable. By combining pair-wise alignments in a specific order dictated by the sequences' evolutionary history, we can closely approximate the optimal multiple sequence alignment (MSA). 
+The alignment of multiple biological sequences relies heavily on heuristic methods, primarily progressive alignment, because finding the exact optimal solution in a multidimensional search space is computationally intractable. By combining pair-wise alignments in a specific order dictated by the sequences' evolutionary history, we can closely approximate the optimal multiple sequence alignment (MSA).
 
 \begin{important}
 \textbf{Progressive Alignment}: A heuristic method that builds a multiple sequence alignment step-by-step by continuously aligning pairs of sequences or alignment profiles according to a guide tree that traces evolutionary divergence backwards.
 \end{important}
 
-The foundational heuristic states that by starting the alignment with the closest relatives (sequences with the most recent divergence), we make fewer gap-placement errors. Because errors early in the process compound, anchoring the alignment with highly similar strings ensures that gaps are correctly placed, which then guides the alignment of more distant and difficult sequences. 
+The foundational heuristic states that by starting the alignment with the closest relatives (sequences with the most recent divergence), we make fewer gap-placement errors. Because errors early in the process compound, anchoring the alignment with highly similar strings ensures that gaps are correctly placed, which then guides the alignment of more distant and difficult sequences.
 
 \textbf{Example:} Aligning the English word "sugar" and the French "sucre".
 If forced to align these directly, the system might arbitrarily match the wrong characters to minimize gaps. However, if we start by aligning very similar dialectical variations (e.g., "zuker" and "zukero"), the core alignment profile accurately preserves the position of the "r". When the more distant "sugar" and "sucre" are eventually added to the cluster, this established core guides the algorithm to correctly align the structural "r" across all variations.
@@ -35,7 +22,7 @@ The core mechanism requires a "guide-tree" that dictates the exact order of oper
 \sta Notably, in this progressive procedure, the algorithm never evaluates an overarching mathematical score for the entire multi-sequence alignment; it simply accepts the final result of the step-by-step merges.
 
 \subsection{Building the Guide Tree}
-Because the true evolutionary history of the sequences is almost never known in advance, we face a "chicken and egg" problem: we need the tree to build the alignment, but the tree is usually derived from the alignment. Consequently, we estimate the tree ourselves by assuming that the more similar two strings are, the more recent the evolutionary event that produced them. 
+Because the true evolutionary history of the sequences is almost never known in advance, we face a "chicken and egg" problem: we need the tree to build the alignment, but the tree is usually derived from the alignment. Consequently, we estimate the tree ourselves by assuming that the more similar two strings are, the more recent the evolutionary event that produced them.
 
 We build the guide tree using a greedy approach, moving "back in time" from the leaves (individual present-day sequences) up to the root. Every time two nodes join, it represents an evolutionary event such as speciation.
 
@@ -51,20 +38,20 @@ We build the guide tree using a greedy approach, moving "back in time" from the 
 No matter the initial number $k$ of sequences, the problem strictly reduces at every step until a final merge of two objects occurs, meaning the tree generation and the alignment construction finish simultaneously.
 
 \section{Hierarchical Clustering}
-The greedy tree-building strategy is fundamentally an application of hierarchical clustering, a major technique in data mining and machine learning. 
+The greedy tree-building strategy is fundamentally an application of hierarchical clustering, a major technique in data mining and machine learning.
 
 \begin{important}
 \textbf{Hierarchical Clustering}: A technique that groups data points into progressively larger clusters based on pairwise distances, continuously merging the closest entities until a single cluster encompasses all data.
 \end{important}
 
-Every time we align two individual strings, we put them in the same cluster; every time we align a string to a profile, we add an item to a cluster; and every time we align two profiles, we merge two existing clusters. 
+Every time we align two individual strings, we put them in the same cluster; every time we align a string to a profile, we add an item to a cluster; and every time we align two profiles, we merge two existing clusters.
 
 % [IMAGE: A hierarchical clustering dendrogram plotting nucleo-cytoplasmic large DNA viruses (such as Mamavirus and Mimivirus). The horizontal edge lengths are drawn proportionally to the computed sequence distance, visually demonstrating the evolutionary "closeness" of the viral clusters.]
 
-To perform any clustering, each item is treated as a point in multi-dimensional space, requiring only a suitable distance measure. While numerical data might use Euclidean distance or cosine similarity, sequence clustering relies on edit distances or scaled alignment scores. 
+To perform any clustering, each item is treated as a point in multi-dimensional space, requiring only a suitable distance measure. While numerical data might use Euclidean distance or cosine similarity, sequence clustering relies on edit distances or scaled alignment scores.
 
 \subsection{Measuring Distances to Clusters}
-Because a progressive alignment frequently needs to compare single sequences against clusters (alignment profiles) or compare two clusters against each other, we must formalize distance metrics for groups. 
+Because a progressive alignment frequently needs to compare single sequences against clusters (alignment profiles) or compare two clusters against each other, we must formalize distance metrics for groups.
 
 For the distance between a single string and a cluster, the main mathematical choices are:
 \begin{itemize}
@@ -87,12 +74,12 @@ While the previous algorithms address global multiple sequence alignment (where 
 In a ChIP-seq experiment, biologists might isolate thousands of DNA regions (each roughly 1,000 nucleotides long) where a specific transcription factor binds. The physical binding site itself is highly constrained and small—usually just 5 to 20 bases. Across the thousands of sequences, this short motif will differ slightly by mismatches (substitutions), but it rarely contains insertions or deletions. Finding this short, gapless common denominator is the core use-case for local MSA.
 
 \subsection{Formalization and Complexity}
-The local multiple alignment problem can be formally restricted as follows: Given a set of input strings $S_1, S_2, \dots, S_k$, a fixed substring length $w$, and a scoring function $f(x)$, find the exact set of $k$ substrings of length $w$ that maximizes the alignment score without using gaps. 
+The local multiple alignment problem can be formally restricted as follows: Given a set of input strings $S_1, S_2, \dots, S_k$, a fixed substring length $w$, and a scoring function $f(x)$, find the exact set of $k$ substrings of length $w$ that maximizes the alignment score without using gaps.
 
 Even strictly forbidden from inserting gaps, this motif finding problem remains an NP-hard combinatorial optimization challenge. If all $k$ input strings have length $n$, there are exactly $n - w + 1$ possible substring starting positions per string. Consequently, the total number of possible sequence combinations is $(n - w + 1)^k$, growing exponentially with the number of input sequences.
 
 \section{Scoring Local Alignments: Information Content}
-Because gapless local alignments are rigidly defined by an array of integer offsets $(p_1, p_2, \dots, p_k)$ representing starting positions, the resulting sequence block can be easily converted into an alignment profile. In this profile, every row represents a symbol from the alphabet (e.g., A, C, G, T) and every column represents a position in the motif. 
+Because gapless local alignments are rigidly defined by an array of integer offsets $(p_1, p_2, \dots, p_k)$ representing starting positions, the resulting sequence block can be easily converted into an alignment profile. In this profile, every row represents a symbol from the alphabet (e.g., A, C, G, T) and every column represents a position in the motif.
 
 The frequencies in each column sum up to 1:
 \[ \sum_{i} \mathbf{f}_{i,j} = 1 \quad \forall j \in [1,w] \]
@@ -105,21 +92,21 @@ Instead of using the sum-of-pairs score applied in global alignments, local moti
 This function, structurally related to Shannon entropy and Kullback-Leibler (KL) divergence, evaluates the observed probability distribution of symbols in the alignment profile against the random background distribution of those symbols in the target organism.
 \end{important}
 
-For standard human DNA, we assume equiprobable background frequencies of 25\% per nucleotide ($1/4$). 
+For standard human DNA, we assume equiprobable background frequencies of 25\% per nucleotide ($1/4$).
 \begin{itemize}
     \item If a column is perfectly random ($f_{i,j} = 1/4$ for all $i$), the term $\log_2(1) = 0$, yielding a minimum score of $0$.
     \item If a column is completely conserved (e.g., $100\%$ Adenine), the score reaches a maximum of $\log_2(4) = 2$ bits. Thus, the maximum possible score for a motif of length $w$ is $2 \times w$.
 \end{itemize}
 
-\sta Note that the background probability $1/4$ must be altered for organisms with differing GC-content. For example, \textit{Saccharomyces cerevisiae} (yeast) has a GC-content of 38\%, making the random background frequencies $0.19$ for G/C and $0.31$ for A/T. 
+\sta Note that the background probability $1/4$ must be altered for organisms with differing GC-content. For example, \textit{Saccharomyces cerevisiae} (yeast) has a GC-content of 38\%, making the random background frequencies $0.19$ for G/C and $0.31$ for A/T.
 
 % [IMAGE: A "sequence logo" mapping the Information Content of a motif. The x-axis shows the column position (length $w$), and the y-axis shows information content (from 0 to 2 bits). Each stacked letter's size visualizes its specific IC contribution to that column.]
 
 \section{Search Space Exploration Strategies}
-Finding the set of $k$ starting positions that maximizes the Information Content score requires exploring a massive search space. An exhaustive search—where every substring of $S_1$ is compared to every substring of $S_2$, expanding exponentially up to $S_k$—generates $O(n^k)$ profiles and is utterly unfeasible. 
+Finding the set of $k$ starting positions that maximizes the Information Content score requires exploring a massive search space. An exhaustive search—where every substring of $S_1$ is compared to every substring of $S_2$, expanding exponentially up to $S_k$—generates $O(n^k)$ profiles and is utterly unfeasible.
 
 \subsection{Greedy Algorithms}
-A simple heuristic reduction is a greedy algorithm. Rather than retaining all combinations, we process the sequences iteratively and bottleneck the retained solutions. 
+A simple heuristic reduction is a greedy algorithm. Rather than retaining all combinations, we process the sequences iteratively and bottleneck the retained solutions.
 \begin{enumerate}
     \item Align every substring of $S_1$ to every substring of $S_2$, generating $O(n^2)$ profiles.
     \item Rank them by IC score and keep only the best $n$ profiles.
@@ -138,9 +125,9 @@ A dominant method for exploring combinatorial spaces is Local Search, which conc
 To execute a local search, we must formalize our variables and our "neighborhood". We define the $k$ strings using discrete variables $X_1 \dots X_k$, where each variable holds the integer starting position $p_i$ of the motif within its respective string.
 
 \textbf{Example:} The MAX-CUT graph partitioning problem.
-To illustrate defining a neighborhood, consider MAX-CUT, where nodes must be partitioned into two sets (black/white) to maximize the number of edges crossing the partition. The variables are binary (0 or 1). The local search initializes random binary assignments. To explore the "neighborhood", the algorithm cycles through the variables one by one. For node $X_i$, it checks the logical NOT of the current value ($\overline{X_i}$), holding all other nodes fixed. If flipping the node improves the total cut score, the move is accepted. 
+To illustrate defining a neighborhood, consider MAX-CUT, where nodes must be partitioned into two sets (black/white) to maximize the number of edges crossing the partition. The variables are binary (0 or 1). The local search initializes random binary assignments. To explore the "neighborhood", the algorithm cycles through the variables one by one. For node $X_i$, it checks the logical NOT of the current value ($\overline{X_i}$), holding all other nodes fixed. If flipping the node improves the total cut score, the move is accepted.
 
-For sequence motif finding, the variables range from $1$ to $(n-w+1)$ instead of binary, but the neighborhood isolation logic is identical. 
+For sequence motif finding, the variables range from $1$ to $(n-w+1)$ instead of binary, but the neighborhood isolation logic is identical.
 \begin{enumerate}
     \item Initialize a random solution $P(0)$ by choosing random starting points.
     \item Select one sequence variable, $X_i$, and temporarily remove its substring from the alignment profile.
@@ -156,7 +143,7 @@ Deterministic Local Search (which blindly follows the steepest immediate gradien
 
 In binary optimization scenarios, algorithms like Simulated Annealing allow accepting a score decrease ($\Delta f \le 0$) based on the probability:
 \[ P[\text{update } X_i] = e^{\frac{\Delta f}{T}} \quad \text{with } \Delta f \le 0 \]
-Here, $T$ is a dynamic "temperature" parameter that starts high (allowing frequent random leaps) and steadily cools to zero, eventually freezing into a deterministic local search. 
+Here, $T$ is a dynamic "temperature" parameter that starts high (allowing frequent random leaps) and steadily cools to zero, eventually freezing into a deterministic local search.
 
 However, for local MSA motif finding, we rely on a proportional stochastic technique known as \textbf{Gibbs Sampling}.
 
@@ -165,14 +152,14 @@ However, for local MSA motif finding, we rely on a proportional stochastic techn
 def gibbs_sampling(sequences, w):
     # Initialize with random offsets
     current_solution = random_initial_positions(sequences, w)
-    
+
     while not converged:
         # Pick a random sequence variable X_i to update
         i = random.choice(range(len(sequences)))
 
         # Temporarily remove string i from the profile
         profile = remove_string_from_profile(current_solution, i)
-        
+
         # Calculate IC scores for ALL possible starting positions in sequence i
         ic_scores = []
         for p in possible_positions(sequences[i], w):
