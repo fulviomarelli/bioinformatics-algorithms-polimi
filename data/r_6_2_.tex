@@ -1,0 +1,264 @@
+\begin{document}
+% Lecture Notes: Multiple Sequence Alignment (Part 2) - Progressive Alignments, Motif Finding, and Heuristic Optimization
+
+\section{Progressive Multiple Sequence Alignments}
+
+While exact solutions for multiple sequence alignment (MSA) using a multi-dimensional hypercube are computationally intractable for many sequences, heuristic approaches are required. The de facto standard for this problem is the \textbf{progressive alignment} method.
+
+\begin{important}
+  \textbf{Progressive Alignment}: A heuristic MSA method that iteratively aligns pairs of sequences or existing alignments (profiles) step-by-step, following a predefined order (a ``guide tree'') that roughly reflects the backward evolutionary history of the sequences.
+\end{important}
+
+The core idea is to begin by aligning the most closely related strings—those with the most recent evolutionary divergence—and then progressively work backwards to more distant relatives.
+
+\subsection{Aligning Sequences to Profiles}
+To build an alignment progressively, we must be able to align a new sequence to an already aligned group of sequences. An existing alignment is represented as a \textbf{profile}, which calculates the fractional occurrence of each character (including gaps) at every column position.
+
+When using weighted dynamic programming to add a new sequence to this profile, the traditional update rules apply (moving from the left, top, or diagonally), but the scoring scheme must be adjusted. Instead of a simple 1-to-1 character match, we evaluate a character $x$ against an entire column $j$ using weighted fractions:
+\[
+  \text{Score}(x, C_j) = \sum_{i \in \Sigma \cup \{-\}} f_{i,j} \cdot \text{score}(x, i)
+\]
+Where $f_{i,j}$ is the frequency of character $i$ in column $j$ of the profile, and the sum operates over the entire alphabet plus the gap symbol. Because column frequencies sum to $1$ ($\sum f_{i,j} = 1$), the partial match/mismatch penalties cleanly represent the expected score of aligning $x$ into that mixed column. The same principle is extended when merging two profiles together: a double-weighted comparison of fractional columns is evaluated.
+
+\subsection{The Role of the Guide Tree}
+The order in which sequences are merged is critical and is dictated by a \textbf{guide tree}.
+
+\textbf{Example:}
+Suppose we are aligning the English word \textit{sugar} and the French word \textit{sucre}.
+There are multiple plausible gap placements. However, if we start by aligning very close relatives (like \textit{zucker} and \textit{zukero}), the alignment structure naturally forces the `r` characters to align correctly. This core alignment then acts as an anchor, guiding the correct placement of gaps when more distant strings (like \textit{sugar}) are subsequently added. This illustrates why progressive alignment builds from the most similar sequences outwards.
+
+\sta The progressive procedure never explicitly maximizes the overall Sum-of-Pairs (SP) score of the final alignment. Because placing gaps incorrectly in early, highly-divergent alignments permanently degrades the score, starting with the most similar sequences minimizes the probability of erroneous gap placement.
+
+\section{Building the Guide Tree and Hierarchical Clustering}
+
+The requirement of a guide tree presents a ``chicken-and-egg'' problem: we need the evolutionary history to build the alignment, but we often build the alignment to deduce the evolutionary history. To resolve this, progressive alignment algorithms construct an approximate guide tree simultaneously with the alignment itself.
+
+\begin{important}
+  \textbf{Guide Tree Construction Algorithm}: 
+  A greedy strategy that iteratively merges the closest pair of objects (sequences or profiles) to estimate evolutionary history.
+\end{important}
+
+\begin{enumerate}
+  \item Compare all initial sequences pairwise to compute distance metrics.
+  \item Identify the pair with the minimal distance (e.g., $S_1$ and $S_2$).
+  \item Align $S_1$ and $S_2$, generating a profile alignment $A(S_1, S_2)$. This profile represents their common ancestor and replaces $S_1$ and $S_2$ in the pool of sequences.
+  \item Recompute distances between the new profile $A(S_1, S_2)$ and all remaining sequences or profiles. (Note: distances between unmodified objects like $S_3$ and $S_4$ are already known and do not need to be recomputed).
+  \item Repeat the process until all sequences are merged into a single final profile.
+\end{enumerate}
+
+\subsection{Hierarchical Clustering}
+The greedy construction of a guide tree is fundamentally a form of \textbf{hierarchical clustering}, an unsupervised machine learning technique. Every string is a data point in a multi-dimensional space, and alignment scores serve as the distance metric.
+
+% [IMAGE: Hierarchical clustering tree (dendrogram) showing viral genomes. Closely related viruses like Mamavirus and Mimivirus branch together with very short edge lengths, while more distant clusters (e.g., Organic Lake phycodnaviruses) branch off further up the tree. Edge length visually reflects the computed distance between clusters.]
+
+To perform clustering, we need robust ways to measure distance between a single sequence and a cluster (a profile), or between two clusters. Common choices include:
+\begin{itemize}
+  \item \textbf{Closest pair}: The minimum distance between any member of the first cluster and any member of the second.
+  \item \textbf{Farthest pair}: The maximum distance between members.
+  \item \textbf{Average distance}: The weighted average of all pairs between the two clusters (the most common and effective choice for sequence profiles).
+\end{itemize}
+
+\subsection{Neighbor Joining}
+A sophisticated variation of average distance clustering is \textbf{Neighbor Joining}. 
+\begin{important}
+  \textbf{Neighbor Joining}: A clustering method that evaluates the distance between two objects relative to their distance from \textit{all other objects} in the dataset.
+\end{important}
+
+Instead of blindly merging two clusters just because they are close to each other, Neighbor Joining evaluates if those clusters are also dangerously close to a third cluster. It prefers merging two objects that are moderately close to each other but extremely far from everything else, leaving ambiguous clusters to be resolved later in the evolutionary tree. This approach provides highly reliable guide trees for biological sequences.
+
+\section{The Local Multiple Alignment Problem}
+
+While global MSA forces end-to-end alignment, biological sequences often share only short, isolated regions of similarity interspersed in long, unrelated sequences.
+
+\textbf{Example:}
+A ChIP-seq experiment yields thousands of $1000$-nucleotide DNA fragments. Somewhere within each fragment, a specific transcription factor binds to a $10$-$15$ nucleotide segment.
+This illustrates the biological necessity for \textbf{local} MSA: we are not aligning the $1000$-base fragments, but searching for the small, homologous binding site (the ``motif'') hidden within them.
+
+Although local MSA can theoretically be solved using the multi-dimensional hypercube by adding a base score choice of $0$ (preventing negative score accumulation), this approach scales exponentially and is completely intractable for thousands of sequences. 
+
+\subsection{Formalization of Motif Finding}
+To build an efficient heuristic, we formalize local MSA as a \textbf{Motif Finding} problem:
+\begin{itemize}
+  \item \textbf{Given:} A set of $k$ input strings ($S_1, S_2, \dots, S_k$), each of length $n$.
+  \item \textbf{Given:} A fixed functional motif length $w$.
+  \item \textbf{Constraint:} We extract exactly one substring of length $w$ from each input string. Gaps are strictly prohibited.
+  \item \textbf{Goal:} Find the vector of starting positions $(p_1, p_2, \dots, p_k)$ that selects substrings yielding the maximum alignment score $f(X)$.
+\end{itemize}
+
+Even restricted to ungapped strings of fixed length $w$, there are $(n-w+1)^k$ possible combinatorial solutions. This remains an NP-hard combinatorial optimization problem.
+
+\section{Scoring Motifs: Information Content}
+
+Because local motif finding assumes no gaps and fixed lengths, standard sum-of-pairs scoring is frequently replaced by scoring functions derived from \textbf{Information Theory} and the \textbf{Kullback-Leibler divergence}.
+
+A set of aligned substrings is converted into a profile $P$ matrix ($4$ rows for DNA $\times$ $w$ columns). Each cell $f_{i,j}$ represents the frequency of nucleotide $i$ at position $j$.
+
+\begin{important}
+  \textbf{Information Content (IC) Score}: Measures the relative entropy of the alignment profile compared to a random background distribution. 
+  \[
+    S(P) = \sum_{i \in \{A,C,G,T\}} \sum_{j=1}^w f_{i,j} \log_2 \frac{f_{i,j}}{p_i^{bg}}
+  \]
+  Where $p_i^{bg}$ is the background probability of nucleotide $i$ in the organism's genome.
+\end{important}
+
+If the background sequence is purely random and equiprobable, $p_i^{bg} = 1/4 = 0.25$. 
+\begin{itemize}
+  \item \textbf{Minimum Score ($0$ bits)}: If a column perfectly matches the background distribution (e.g., $25\%$ of each nucleotide), the term evaluates to $\log_2(1) = 0$. The column contains zero biological information.
+  \item \textbf{Maximum Score ($2$ bits)}: If a column is perfectly conserved ($100\%$ one nucleotide), the frequency is $1$. The score for that column is $\log_2(1 / 0.25) = \log_2(4) = 2$ bits.
+\end{itemize}
+
+\sta Background probabilities must reflect the specific organism. For example, \textit{Saccharomyces cerevisiae} (yeast) has a GC-content of roughly $38\%$. Therefore, the background frequencies used for the denominator must be $0.19$ for G/C and $0.31$ for A/T, ensuring we do not mathematically reward motifs simply for matching the baseline composition of the yeast genome.
+
+% [IMAGE: Sequence logo representing the Information Content of a binding motif. The x-axis shows the position within the motif. The y-axis shows the information content in bits (ranging 0 to 2). The total height of the letter stack at each position equals the IC score of that column. The relative size of the letters (A, C, G, T) within the stack indicates their proportional frequency $f_{i,j}$ at that position.]
+
+\section{Heuristic Approaches to Motif Finding}
+
+Given the exponential search space, exhaustive search evaluates $O(n^k)$ profiles. We reduce this space using computational heuristics.
+
+\subsection{Greedy Algorithms}
+
+\begin{minted}{python}
+# [pseudocode]
+# Greedy alignment algorithm for Motif Finding
+def greedy_motif_search(strings, w):
+    # Step 1: compare all substrings of S1 and S2
+    best_profiles = get_best_n_profiles(S1, S2) 
+    
+    # Step 2 to k: merge subsequent strings iteratively
+    for current_string in strings[2:]:
+        next_profiles = []
+        for profile in best_profiles:
+            # Align every substring of current_string to the profile
+            new_profs = align_substrings_to_profile(current_string, profile)
+            next_profiles.extend(new_profs)
+        
+        # Keep only the top 'n' best solutions locally to bound complexity
+        best_profiles = top_n_scoring(next_profiles) 
+        
+    return best_profiles
+\end{minted}
+This greedy algorithm significantly drops the time complexity by pruning the search space at every sequence addition. It maintains only a polynomial number of candidate solutions ($O(n^2)$ profiles tracked at each step). 
+However, it risks discarding a sub-optimal intermediate combination that would have ultimately led to the global maximum once later strings were evaluated.
+
+\subsection{Exploring the Search Space: Local Search}
+
+An alternative to the sequential greedy build is \textbf{local search} (or hill climbing), which evaluates the search space as a $k$-dimensional grid where each axis represents the valid starting positions in one sequence.
+
+\begin{enumerate}
+  \item \textbf{Initialization}: Randomly assign a starting position $p_i$ for the motif in every sequence $S_1 \dots S_k$.
+  \item \textbf{Neighborhood Definition}: Select one sequence $S_i$. Hold the starting positions in all other $k-1$ sequences strictly fixed.
+  \item \textbf{Scanning}: Slide the length-$w$ window across all $(n-w+1)$ possible starting positions within $S_i$. For each position, compute the IC score of the resulting $k$-sequence profile.
+  \item \textbf{Update}: Update $p_i$ to the starting position that yields the highest IC score.
+  \item \textbf{Iteration}: Cycle to the next sequence and repeat. Process sequences sequentially or in a randomized order. Stop when a full cycle across all $k$ sequences produces no improvement in the IC score.
+\end{enumerate}
+
+\textbf{Example:}
+MAX-CUT graph partitioning (using binary variables $X_i \in \{0,1\}$).
+To find the partition cutting the most edges, we randomly assign each node to a set. We then evaluate the neighborhood by flipping a single node's assignment ($X_i \to \overline{X_i}$) while holding all others constant. If the new partition cuts more edges, we adopt it.
+This illustrates the concept of traversing a combinatorial landscape by toggling one isolated dimension of the state vector at a time.
+
+\sta The deterministic local search method stops at the first local maximum it discovers. Because complex biological search spaces are highly fractured and rugged, the algorithm must be restarted hundreds or thousands of times from completely distinct random initializations to ensure the true global maximum is not missed.
+
+\section{Stochastic Optimization}
+
+To prevent a local search algorithm from getting permanently trapped in suboptimal local maxima, we introduce \textbf{stochastic optimization} strategies. These algorithms occasionally permit moves that \textit{decrease} the objective score, allowing the search path to ``jump'' out of local traps and resume hill-climbing elsewhere.
+
+\subsection{Simulated Annealing}
+In a binary state space, if an update worsens the score ($\Delta f \le 0$), we do not immediately reject it. We accept the detrimental move with a probability:
+\[
+  P[\text{update } X_i] = e^{\frac{\Delta f}{T}}
+\]
+Where $T$ is a temperature parameter. 
+When $T$ is high (early in the search), the algorithm freely accepts negative changes, aggressively exploring the search space. As the algorithm progresses, $T$ is gradually lowered to zero (cooling), tightening the acceptance probability until the algorithm behaves exactly like deterministic hill-climbing, ultimately settling into the nearest maximum.
+
+\subsection{Gibbs Sampling for Motif Finding}
+
+\begin{important}
+  \textbf{Gibbs Sampling}: A stochastic implementation of local search where, rather than strictly selecting the single optimal position for variable $X_i$, every possible position is assigned a probability proportional to its resulting score, and the new position is drawn randomly from that distribution.
+\end{important}
+
+During motif finding, when scanning variable $X_i$ across sequence $S_i$:
+\begin{enumerate}
+  \item Calculate the Information Content score $IC(p_j)$ for every possible starting position $p_j$.
+  \item Sum the IC scores over the entire string: $IC(S_i) = \sum_{j} IC(p_j)$.
+  \item Assign a probability to each position:
+  \[
+    Pr[X_i = p_j] = \frac{IC(p_j)}{IC(S_i)}
+  \]
+  \item Randomly draw the new starting position $p_j$ based on these weighted probabilities.
+\end{enumerate}
+
+This ensures that the position generating the best alignment is heavily favored, but less optimal alignments still maintain a mathematically defined chance of selection. Unlike Simulated Annealing, Gibbs sampling maintains a constant degree of stochasticity and does not dynamically ``cool'' over time. Because it will theoretically jump around a local maximum indefinitely, the algorithm tracks the absolute best score encountered throughout all iterations, terminating after a fixed number of cycles to report the highest observed peak.
+
+\section{Search Space Landscape and Algorithm Selection}
+
+The choice between deterministic local search and stochastic optimization (like Gibbs Sampling) depends heavily on the topography of the search space.
+
+\begin{itemize}
+  \item \textbf{Smooth Search Spaces}: If the objective function landscape has only a few broad peaks, a deterministic search is often sufficient. Running the algorithm from a small number of random starting positions will reliably find the global maximum.
+  \item \textbf{Fractured Search Spaces}: If the landscape is highly rugged, with many narrow and distinct peaks, deterministic search will easily get trapped in low-scoring local maxima. In these environments, stochastic approaches are strictly necessary to jump out of local traps and thoroughly explore the space.
+\end{itemize}
+
+\sta When utilizing a stochastic approach that permits moving to lower-scoring positions, the algorithm must always keep a memory of the absolute best configuration seen across all iterations. The final state at the end of the run might be a sub-optimal position it jumped to right before terminating, so the algorithm must report the historical maximum rather than the final position.
+
+\section{Practical Computations in Multiple Sequence Alignment}
+
+To solidify the algorithmic concepts, we review the practical step-by-step computations required for scoring columns, handling gaps in profiles, and executing heuristic alignments.
+
+\subsection{Column-by-Column Sum-of-Pairs Scoring}
+When evaluating a multiple sequence alignment using the Sum-of-Pairs (SP) metric, the total score is the sum of all individual column scores. For an alignment of $k$ sequences, every column requires comparing every sequence to every other sequence exactly once. The number of pairwise comparisons per column is $\frac{k(k-1)}{2}$.
+
+\textbf{Example:}
+Computing the SP score for a single column.
+Suppose we are aligning $k=5$ sequences using a scoring scheme of Match $= +1$, Mismatch $= -1$, and Gap Penalty $= -2$. A specific column in the alignment contains the following characters: three \texttt{C}s, one \texttt{T}, and one gap (\texttt{-}).
+\begin{enumerate}
+  \item \textbf{Determine total comparisons}: $\frac{5 \times 4}{2} = 10$ pairwise comparisons must be calculated for this column.
+  \item \textbf{Score the gaps}: The single gap (\texttt{-}) must be compared against the other four characters (three \texttt{C}s and one \texttt{T}). This results in $4$ gap penalties: $4 \times (-2) = -8$.
+  \item \textbf{Score the mismatches}: The single \texttt{T} must be compared against the three \texttt{C}s. This results in $3$ mismatch penalties: $3 \times (-1) = -3$.
+  \item \textbf{Score the matches}: The three \texttt{C}s must be compared against each other. The number of pairs among $3$ identical characters is $\frac{3 \times 2}{2} = 3$. This results in $3$ match scores: $3 \times (+1) = +3$.
+  \item \textbf{Compute total column score}: Summing the components yields $-8 - 3 + 3 = -8$.
+\end{enumerate}
+This demonstrates how gaps and mismatches compound rapidly in columns with high sequence divergence, heavily penalizing uncoordinated gap placement.
+
+\subsection{Aligning a Sequence to a Profile (Gap Handling)}
+When using weighted dynamic programming to add a new string to an existing alignment profile, initializing the gap penalties requires calculating fractional scores. 
+
+\textbf{Example:}
+Scoring a gap insertion against a mixed profile column.
+Suppose an existing profile column is derived from $5$ sequences: four contain a character (e.g., \texttt{A, C, T, G}) and one contains a gap (\texttt{-}). We want to align a gap from a newly added sequence to this column. The base gap penalty is $-2$.
+\begin{enumerate}
+  \item \textbf{Analyze the profile column}: The column consists of $80\%$ characters and $20\%$ gaps.
+  \item \textbf{Compare gap to characters}: Aligning our new gap against the $80\%$ characters incurs the standard gap penalty weighted by that fraction: $0.8 \times (-2) = -1.6$.
+  \item \textbf{Compare gap to gap}: Aligning a gap against an existing gap is conceptually a null operation and incurs no penalty (score of $0$). Weighted by the fraction, this is $0.2 \times 0 = 0$.
+  \item \textbf{Total fractional penalty}: The final penalty for aligning a gap to this specific column is $-1.6$.
+\end{enumerate}
+This illustrates that aligning a gap to a profile column does \textit{not} automatically incur the full gap penalty. The penalty is proportionally mitigated by the preexisting fraction of gaps in that column.
+
+\subsection{The Center Star Algorithm Review}
+Although a basic heuristic, the Center Star algorithm practically demonstrates how sequences can be progressively merged without an explicit guide tree, relying instead on a single "center" sequence.
+
+\textbf{Example:}
+Building an alignment via Center Star.
+Given $k$ sequences, we construct the multiple alignment by designating one sequence as the master template.
+\begin{enumerate}
+  \item \textbf{Pairwise Phase}: Compute all $\frac{k(k-1)}{2}$ pairwise sequence alignments.
+  \item \textbf{Center Selection}: For each sequence, sum its alignment scores against all other $k-1$ sequences. The sequence with the highest total score is designated as the center star.
+  \item \textbf{Progressive Assembly}: Add the remaining $k-1$ sequences to the multiple alignment one by one, structuring them entirely based on their pairwise alignment with the center sequence.
+  \item \textbf{Gap Propagation}: If adding sequence $S_i$ requires inserting a gap into the center sequence, that exact gap must also be retroactively inserted into all previously aligned sequences ($S_1 \dots S_{i-1}$) to preserve their relative spatial alignment to the center.
+\end{enumerate}
+\sta The Center Star algorithm deliberately ignores a large portion of the computed data. Once the center is chosen, all pairwise alignments that do not involve the center are discarded. This heuristic sacrifices potentially useful evolutionary information between the outer sequences to achieve a fast, centralized alignment.
+
+\subsection{Computing Information Content}
+When optimizing local motifs using Information Theory, the Information Content (IC) metric calculates divergence from random background noise. 
+
+\textbf{Example:}
+Calculating IC for a perfectly conserved column.
+Assume human DNA background frequencies ($p_i^{bg} = 0.25$ for all bases). We evaluate a profile column where all sequences contain an \texttt{A} ($f_A = 1.0$).
+\begin{enumerate}
+  \item \textbf{Evaluate background ratio}: The ratio of observed frequency to background frequency is $1.0 / 0.25 = 4$.
+  \item \textbf{Compute bits}: The base-2 logarithm of the ratio is $\log_2(4) = 2$.
+  \item \textbf{Weight by frequency}: Multiply the bits by the observed frequency: $1.0 \times 2 = 2$ bits.
+\end{enumerate}
+This demonstrates the theoretical maximum IC score for a single column. If a column perfectly matched the background distribution (e.g., $f_A = 0.25$), the ratio would be $1$, the logarithm would evaluate to $0$, and the column would contribute $0$ bits to the overall motif score, indicating it contains no biological signal.
+
+\end{document}
