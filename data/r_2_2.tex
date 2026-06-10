@@ -5,7 +5,7 @@
 Comparing sequences is a fundamental bioinformatics task used to infer the biological function of one sequence from another. Much like comparing words in different human languages (e.g., the English word ``SUGAR'' and the French word ``SUCRE'' share a common Arabic ancestor, ``sukkar'') allows linguists to infer a shared historical origin, comparing biological sequences allows biologists to infer shared evolutionary history.
 
 % [IMAGE: Diagram showing the evolution of the word "sugar" from Arabic "sukkar" branching into modern European languages like French "sucre" and English "sugar" to illustrate divergent evolution from a common ancestor.]
-\myimage{2_2/1.jpg}{Diagram showing the evolution of the word "sugar" from Arabic "sukkar" branching into modern European languages like French "sucre" and English "sugar" to illustrate divergent evolution from a common ancestor.}
+\myimage{2_2/1.jpg}{Diagram showing the evolution of the word "sugar" from Arabic "sukkar" branching into modern European languages like French "sucre" and English "sugar" to illustrate divergent evolution from a common ancestor.}[width=0.4\textwidth]
 
 If two sequences are highly similar, it is highly probable that they share a common evolutionary history and sit close to one another in the evolutionary tree. The core hypothesis underlying this approach is that all species have a common origin, and speciation events lead to divergence, leaving traces of this divergence within their DNA. Consequently, the more recent the evolutionary divergence between two species, the more similar their DNA, genes, and encoded proteins will be. This evolutionary conservation explains why humans share essential genes and proteins even with basic, distant organisms like bacteria or yeast.
 
@@ -107,18 +107,6 @@ These weighted models are formally encapsulated in a Substitution Matrix $\sigma
 
 For simple DNA/RNA sequences, we usually apply a uniform model: all matches receive the same positive score, and all mismatches receive the same negative penalty.
 
-\begin{table}[ht]
-\centering
-\caption{Example of observed letter substitution frequencies in English text, used to derive mismatch weights. Frequent errors (like E to A) receive smaller penalties, while rare errors (Y to M) receive higher penalties.}
-\begin{tabularx}{\textwidth}{lXXX}
-\toprule
-\textbf{Original/Typed} & \textbf{E} & \textbf{A} & \textbf{...} \\
-\midrule
-\textbf{A} & - & 342 & ... \\
-\textbf{M} & ... & ... & 3 (for Y to M) \\
-\bottomrule
-\end{tabularx}
-\end{table}
 
 For protein sequences, the situation is even more complex. Not all mismatches are equally penalized. 
 \begin{itemize}
@@ -169,9 +157,11 @@ Settings: Match = +1, Mismatch = -1, Gap = -2.
 C A A G A C
 - - - G A C
 \end{minted}
-1. The alignment shows 3 consecutive gaps mapping to "CAA". Total gap penalty = $3 \times (-2) = -6$.
-2. The remaining "GAC" aligns perfectly. Total match score = $3 \times (+1) = +3$.
+1. The alignment shows 3 consecutive gaps mapping to "CAA". Total gap penalty = $3 \times (-2) = -6$.\\
+2. The remaining "GAC" aligns perfectly. Total match score = $3 \times (+1) = +3$.\\
 3. Overall score = $-6 + 3 = -3$.
+
+% INSERT  screenshot-2026-06-10_18-59-41.png  
 
 \textbf{Example:} Global Alignment Traceback Initialization
 Initializing the Needleman-Wunsch matrix requires penalizing gaps right from the start. This illustrates how the first row and column reflect matching a sequence against an empty string.
@@ -190,7 +180,8 @@ However, macromolecules evolve at different speeds. Redundancy in the genetic co
     \item Within genes, coding regions (exons) are heavily conserved, while non-coding regions (introns) mutate freely and are frequently deleted.
     \item Within a protein, functionally essential domains (active sites) undergo severe negative selection against alterations, remaining highly conserved across millions of years, while structural loops mutate freely.
 \end{itemize}
-Consequently, globally aligning two long sequences that only share a single conserved active site might drown out a highly conserved, functionally critical subdomain in a sea of negative scores from unconserved flanking regions. \sta We need a method to identify highly similar subsequences without forcing the rest of the string to align.
+Consequently, globally aligning two long sequences that only share a single conserved active site might drown out a highly conserved, functionally critical subdomain in a sea of negative scores from unconserved flanking regions. \\
+\sta We need a method to identify highly similar subsequences without forcing the rest of the string to align.
 
 \sta We need a method to identify small, highly similar regions buried inside larger, dissimilar sequences without forcing an end-to-end alignment.
 
@@ -226,7 +217,7 @@ Naively comparing all possible substrings of string $a$ ($O(n^2)$ substrings) an
 \sta \textbf{Why add 0?}\\
 If extending a local alignment yields a negative cumulative score, the accumulated errors have outweighed the benefits of previous matches. It is mathematically (and biologically) better to abandon that alignment entirely and start a fresh alignment from 0. Two empty strings ($\varepsilon$) always have a score of 0, so any reported local alignment must have a positive score. 
 
-When the choice evaluates to 0, no traceback pointer is recorded. \sta We ``reset'' the score to $0$ and start looking for a new conserved region, effectively severing the alignment from the poorly matching prefix. 
+When the choice evaluates to 0, no traceback pointer is recorded.\\\sta We ``reset'' the score to $0$ and start looking for a new conserved region, effectively severing the alignment from the poorly matching prefix. 
 
 \subsection{Traceback for Local Alignment}
 Unlike global alignment where traceback strictly begins at the bottom-right cell $(n,m)$, in local alignment:
@@ -241,6 +232,8 @@ Unlike global alignment where traceback strictly begins at the bottom-right cell
 Often, a dynamic programming matrix will reveal multiple cells containing the exact same maximum score, or a single max score cell that can be traced back through multiple valid branching paths. This illustrates the existence of multiple optimal biological alignments. Biological sequences often contain multiple disjoint conserved regions (e.g., multiple domains in a single protein).
 
 To capture all potential homologous relationships, a robust bioinformatic pipeline will report all paths that tie for the optimal score. Once the primary (best) optimal local alignment is found, we can iteratively locate the second-best, third-best, etc. We do this by finding the next highest score in the matrix that does not reside in cells already consumed by the primary local alignment, and initiating a new traceback from that peak. Biologically, finding multiple local alignments between two sequences is extremely common and highly informative.
+
+% INSERT screenshot-2026-06-10_19-05-44.png
 
 \section{Longest Common Subsequence (LCS)}
 An alternative to minimizing edit distance or computing generalized global alignments is measuring the similarity between two sequences by extracting their Longest Common Subsequence (LCS)—the length of identical elements preserved between two sequences.

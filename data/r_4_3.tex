@@ -24,7 +24,9 @@ To understand why this is true, consider the lexicographical sorting of the BWM.
 To track characters between the F and L columns without storing original positions, we distinguish between two types of rankings:
 \begin{itemize}
     \item \textbf{T-ranking:} Numbering characters based on their sequential appearance in the original unrotated string (e.g., $A_0, A_1, A_2$). Storing this is highly inefficient for a genome.
+    % INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-24-35.png
     \item \textbf{B-ranking:} A cumulative count (or zero-based index) of how many times a character has been observed so far in a specific column (either F or L) starting from the top down to the current position. It replaces the memory-intensive T-ranking.
+    % INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-26-55.png
 \end{itemize}
 
 Because the relative order of identical characters is preserved between the F and L columns, their B-ranks are identical. This guarantees that the character $A$ with B-rank $n$ in the L column is the exact same $A$ in the genome as the $A$ with B-rank $n$ in the F column.
@@ -42,17 +44,25 @@ This demonstrates the LF mapping property in action.
     \item Repeat this jump from L to F until you return to the `\$` character. This iterative process completely reconstructs the original string from right to left.
 \end{enumerate}
 
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-28-32.png
+
 \begin{important}
     \textbf{Cumulative Index Property:} The F column is perfectly lexicographically sorted (e.g., `\$`, all `A`s, all `C`s, etc.). Therefore, we do not need to store the F column at all. We only need to store the total counts of each character in the reference genome.
 \end{important}
 
 If we know we have 1 `\$`, 5 `A`s, and 2 `B`s, we can deduce mathematically that the `C`s must start at index $1 + 5 + 2 = 8$ in the F column. This compacts the entire F column down to an array of just 4 integers (for DNA).
 
+% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part2_04-Read_mapping-part2/imgs/cropped_page23_idx3.jpg
+
 \section{Searching for Substrings in the BWT}
 
 Just as we reconstruct the full string by walking backward, we can search for a partial substring (like a sequencing read) by matching it character by character from right to left.
 
 When searching for a word like "abra", we start with the last letter, 'a', and find the contiguous interval in the F column containing all 'a's. We then look at the L column within that specific interval to find the preceding letter 'r', narrowing down our interval in the F column to only those 'a's preceded by 'r'. We repeat this until the entire search pattern is matched.
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-33-45.png
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-34-16.png
 
 \sta Because the Burrows-Wheeler matrix is lexicographically sorted, all matches for any substring are guaranteed to appear in a contiguous block (an interval) of rows.
 
@@ -83,10 +93,14 @@ By looking at the Tally table entry at the beginning and end of our current inte
     \textbf{Tally Table Checkpointing:} To save memory, we do not store every row of the tally table. We only save "checkpoints" every $k$ rows (e.g., $k=32$ or $128$). To find the count at an unstored row $i$, the algorithm finds the nearest checkpoint. It then sequentially scans the L column from the checkpoint to row $i$, manually adding or subtracting occurrences.
 \end{important}
 
+% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part2_04-Read_mapping-part2/imgs/cropped_page48_idx13.jpg
+
 This guarantees that calculating the B-rank takes at most $k/2$ checks, maintaining an $O(1)$ time complexity while drastically reducing memory footprint.
 
 \subsection{Selective (Sampled) Suffix Array}
 To map the BWT match back to an original genome position, we use a selective suffix array. Instead of storing the original string index for every suffix (which is too large), we store the original positions only for every $k$-th character of the \textit{original sequence} (e.g., indices 0, 3, 6, 9...).
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-37-25.png
 
 \textbf{Example:} Resolving genome coordinates using LF mapping hops.
 This demonstrates how a selective suffix array is used.
@@ -134,6 +148,8 @@ Finding the SA interval for $W = \text{"go"}$ in $T = \text{"googol\$"}$.
     \item Interval for "go" is $[1, 2]$, correctly isolating the locations of "go" in the BWT.
 \end{enumerate}
 
+% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part3_04-Read_mapping-part3/imgs/cropped_page6_idx3.jpg
+
 \section{BWA: Inexact Matching and Heuristics}
 
 Real sequence reads contain sequencing errors and biological mutations (e.g., True Single Nucleotide Variants or SNPs, where $\sim 1$ in $1,000$ to $10^8$ bases differ from the reference depending on context). Practical read aligners must accommodate this.
@@ -153,7 +169,7 @@ While this formalization ignores indels (using Hamming distance rather than Edit
 Conceptually, inexact matching backwards maps cleanly to a Prefix Trie. Because the exact matching algorithm searches the query pattern from right to left (end to beginning), the theoretical search space models a depth-first search (DFS) through the reference genome's prefix trie.
 
 % [IMAGE: Diagram showing a prefix trie for the string GOOGOL. A depth-first search (DFS) path is highlighted for the search word "LOL" with $d_{max}=1$, showing how branches are pruned or explored based on the mismatch threshold.]
-\myimage{4_3/1.jpg}{Diagram showing a prefix trie for the string GOOGOL. A depth-first search (DFS) path is highlighted for the search word "LOL" with $d_{max}=1$, showing how branches are pruned or explored based on the mismatch threshold.}
+\myimage{4_3/1.jpg}{Diagram showing a prefix trie for the string GOOGOL. A depth-first search (DFS) path is highlighted for the search word "LOL" with $d_{max}=1$, showing how branches are pruned or explored based on the mismatch threshold.}[width=0.5\textwidth]
 
 To search inexactly, we execute a Depth-First Search (DFS) starting from the root. Every time we encounter an edge (character) in the trie that does not match our target search pattern, we increment an error counter. If the error counter exceeds $d_{max}$, we prune that branch and backtrack. Note that building a real prefix trie for a genome causes memory explosion, so this DFS traversal is simulated virtually using the BWT intervals.
 

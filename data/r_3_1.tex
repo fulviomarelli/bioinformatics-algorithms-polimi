@@ -24,7 +24,7 @@ When modern high-throughput platforms (Next-Generation Sequencing, NGS) generate
 \sta Paired-end sequencing is highly advantageous because it provides critical structural context. If two reads map to a reference genome much further apart than their expected fragment length, it strongly implies a structural variant, such as a deletion or translocation, in the sequenced individual.
 
 % [IMAGE: Diagram showing two paired-end reads mapping to different chromosomes, indicating a potential translocation, and another pair mapping far apart on the same chromosome, indicating a deletion.]
-\myimage{3_1/1.jpg}{Diagram showing two paired-end reads mapping to different chromosomes, indicating a potential translocation, and another pair mapping far apart on the same chromosome, indicating a deletion.}
+\myimage{3_1/1.jpg}{Diagram showing two paired-end reads mapping to different chromosomes, indicating a potential translocation, and another pair mapping far apart on the same chromosome, indicating a deletion.}[width=0.6\textwidth]
 % [IMAGE: A diagram showing paired-end and single-end reads mapping to a reference genome, illustrating how paired reads span unknown intervening sequences and can highlight translocations or deletions if mapped unusually far apart.]
 
 \subsection{Major Classes of Assembly Algorithms}
@@ -74,6 +74,8 @@ The distribution of coverage depth across the genome is well-modeled by a Poisso
     \end{equation}
 \end{important}
 
+% INSERT cropped_page10_idx14.jpg
+
 Using this model, we can calculate the probability that a specific base is \textit{never} sequenced ($k=0$):
 \[ P(X = 0) = \frac{e^{-\lambda} \lambda^0}{0!} = e^{-\lambda} \]
 Consequently, the probability of seeing at least one read covering a position (being covered at least once) is:
@@ -112,13 +114,14 @@ The relationship between base coverage ($\lambda$) and k-mer coverage ($d_k$) is
 This technique is exceptionally powerful for characterizing novel species before assembly begins.
 
 % [IMAGE: A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.]
-\myimage{3_1/2.jpg}{A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.}
+\myimage{3_1/2.jpg}{A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.}[width=0.5\textwidth]
 % [IMAGE: A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d_k. A smaller peak near zero represents unique sequencing errors.]
 
+% INSERT side to the 2. cropped_page16_idx16.jpg
 
 \section{Genome Assembly and Contigs}
 
-Because infinite coverage is impossible, any real genome assembly effort will not yield a single unbroken sequence. Instead, it yields fragmented contiguous sequences separated by gaps.
+Because infinite coverage is impossible, any real genome assembly effort will not yield a single unbroken sequence. Instead, itjpg yields fragmented contiguous sequences separated by gaps.
 
 \begin{important}
     \textbf{Contig}: A contiguous, gap-free DNA sequence formed by combining overlapping sequencing reads. Contigs represent the best possible reconstruction of the original genome given the data, though their absolute order and orientation remain unknown without further scaffolding.
@@ -126,6 +129,8 @@ Because infinite coverage is impossible, any real genome assembly effort will no
 
 % [IMAGE: A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.]
 \myimage{3_1/4.png}{A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.}
+
+% INSERT cropped_page22_idx22.jpg
 
 If we cannot sequence the gaps, we cannot definitively know the order, distance, or orientation of the contigs relative to one another (unless we use paired-end scaffolds, which we will discuss later).
 
@@ -164,6 +169,8 @@ This demonstrates that even with robust coverage, a genome shatters into nearly 
 The mathematical derivations above assumed that an overlap of just 1 nucleotide is sufficient to join two reads. In reality, random reads have a $25\%$ chance of matching one base by pure chance. We require a substantial minimum overlap to confidently join reads.
 
 Let $\theta$ represent the minimum fraction of read length $L$ required to declare a valid overlap (e.g., $\theta = 0.1$ means $10\%$ of the read must overlap). Two reads are only joined if their overlap is $\ge \theta L$.
+
+% INSERT cropped_page28_idx24.jpg
 
 This changes our rightmost read calculation. A read is now the rightmost read if no subsequent read starts within the \textit{leftmost} $(1-\theta)$ portion of its length. Thus, the expected number of contigs increases to:
 \[ \mathbb{E}[\#\text{contigs}] = N e^{-(1-\theta) \lambda} \]
@@ -231,6 +238,8 @@ To reconstruct the genome under this model, we must find a path that visits \tex
     \textbf{Hamiltonian Path}: A path in a directed or undirected graph that visits every vertex (node) exactly once. (It is not required to traverse all edges).
 \end{important}
 
+% INSERT cropped_page42_idx41.jpg
+
 \sta \textbf{Critical Limitation:} The Hamiltonian path problem is \textbf{NP-complete}. In the context of millions of reads, checking solutions scales exponentially ($\mathcal{O}(2^N)$ depending on formulation). As the number of k-mers scales into the billions, finding the path becomes computationally impossible for whole-genome assembly.
 
 \subsection{The Modern Approach: De Bruijn Graphs (DBG)}
@@ -244,7 +253,9 @@ Construction of a DBG proceeds as follows:
 \begin{enumerate}
     \item Extract all k-mers from the read data.
     \item For each k-mer, create a directed edge originating from a node labeled with its $(k-1)$ prefix and pointing to a node labeled with its $(k-1)$ suffix.
+    % INSERT cropped_page44_idx44.jpg
     \item \textbf{Merge} all nodes sharing identical $(k-1)$ labels into a single node, while \textbf{retaining all connecting edges}. This means nodes can be visited multiple times, which is biologically accurate as identical repeats exist.
+    % INSERT cropped_page53_idx54.jpg
 \end{enumerate}
 
 To reconstruct the genome from a DBG, we must utilize all of our observed k-mers, which means we must traverse \textit{every edge} exactly once.
@@ -298,8 +309,11 @@ To assemble the genome from a De Bruijn Graph, we must find an Eulerian path. We
 \subsection{Conditions for Traversability}
 In a connected \textit{directed} graph, we can determine the existence of a path instantly:
 \begin{itemize}
-    \item \textbf{Eulerian Cycle}: Exists if and only if \textit{every} vertex has an identical in-degree and out-degree ($In = Out$).
+    \item \textbf{Eulerian Cycle}: Exists if and only if \textit{every} vertex has an identical in-degree and out-degree ($In = Out$). 
+    So is a path that traverses every edge exactly once and returns at the end of the traversal to the start node. The degree of all the vertices is even, the graph is traversable and we can
+draw it starting at any vertex
     \item \textbf{Eulerian Path}: Exists if and only if exactly one vertex has $Out - In = 1$ (the starting node), exactly one vertex has $In - Out = 1$ (the ending node), and all other vertices have $In = Out$.
+    So there are exactly two vertices of odd degree and all other vertices are of even degree, but no cycle.
 \end{itemize}
 
 \subsection{Hierholzer's Algorithm Execution}
@@ -342,7 +356,7 @@ def hierholzer(graph):
 \end{enumerate}
 
 % [IMAGE: A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.]
-\myimage{3_1/7.jpg}{A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.}
+\myimage{3_1/7.jpg}{A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.}[width=0.6\textwidth]
 
 
 \section{Practical Challenges in Genome Assembly}
@@ -363,6 +377,8 @@ Sequencing platforms occasionally misread a base. A single base error in a read 
     \item These corrupted ``error'' k-mers will typically appear only once in the dataset (frequency = 1), whereas genuine k-mers appear with a frequency roughly equal to the average coverage depth $\lambda$.
     \item This creates isolated ``spurs'' or ``bubbles'' in the DBG. By plotting the k-mer frequency distribution, algorithms can identify these low-count k-mers (the noise peak on the far left of the distribution plot) and heuristically delete/prune them before constructing the graph.
 \end{itemize}
+
+% INSERT /home/papagna/Projects/latex_bio/insert/cropped_page96_idx92.jpg
 
 \subsection{Repetitive Regions and Strand Ambiguity}
 The human genome is littered with tandem repeats (e.g., \texttt{CATCATCAT...}). If a repetitive region is longer than the chosen k-mer size, the DBG collapses all copies of the repeat into a single strongly connected cycle or highly traversed loop. The algorithm loses the context of how many times the sequence repeats, causing structural ambiguity and destroying contiguity.

@@ -9,6 +9,8 @@ The dynamic programming approach to optimal Multiple Sequence Alignment (MSA) re
 \textbf{Progressive Alignment}: A heuristic method that builds a multiple sequence alignment step-by-step by continuously aligning pairs of sequences or alignment profiles according to a guide tree that traces evolutionary divergence backwards.
 \end{important}
 
+% INSERT /home/papagna/Projects/latex_bio/lex_md/06-Multiple_seq_alignmnet-part2_06-Multiple_seq_alignmnet-part2/imgs/cropped_page5_idx7.jpg
+
 Instead of evaluating an overall multiple alignment score (like the Sum of Pairs score) in a global optimization function, the progressive procedure simply constructs the final solution incrementally. To do this, we need a \textbf{guide tree} that dictates the order of alignment operations.
 
 \subsection{The Chicken-and-Egg Problem and Guide Trees}
@@ -65,8 +67,11 @@ To perform clustering, we need robust ways to measure distance between a single 
 \begin{itemize}
     \item \textbf{Closest pair (Single Linkage):} Distance is defined by the minimum distance between any single sequence in cluster A and any sequence in cluster B.
     \item \textbf{Farthest pair (Complete Linkage):} Distance is the maximum distance between a member of A and a member of B.
-    \item \textbf{Average distance (UPGMA):} The weighted average distance across all pairs between cluster A and cluster B. \sta This is the standard and most effective choice for sequence profiles.
+    \item \textbf{Average distance (UPGMA):} The weighted average distance across all pairs between cluster A and cluster B. 
+    \sta This is the standard and most effective choice for sequence profiles.
 \end{itemize}
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-11-23.png
 
 \subsection{Neighbor Joining}
 A sophisticated variation of average distance clustering highly effective for MSA is \textbf{Neighbor Joining}.
@@ -165,10 +170,14 @@ We define the $k$ strings using discrete variables $X_1 \dots X_k$, where each v
     \item \textbf{Iteration}: Cycle to the next variable and repeat. Process sequences sequentially or randomly. Stop when a full cycle produces no improvement. This is a \textbf{local maximum}.
 \end{enumerate}
 
+% INSERT /home/papagna/Projects/latex_bio/lex_md/06-Multiple_seq_alignmnet-part2_06-Multiple_seq_alignmnet-part2/imgs/cropped_page28_idx22.jpg
+
 \textbf{Example:} The MAX-CUT graph partitioning problem (Binary Variable Analogy).
 To illustrate neighborhood exploration, consider MAX-CUT, where binary variables assign nodes to sets to maximize crossing edges. This is identical in structure to local search. It initializes random assignments, then cycles through nodes. At each step, it fixes all node assignments except one, checks the logical NOT of the current value ($\overline{X_i}$), and if flipping improves the cut score, it's accepted.
 
 \sta Deterministic local search rigidly walks uphill to the nearest peak. Because the biological search space landscape is highly fractured, it frequently halts at sub-optimal local maxima. However, because strings can be processed in any random permutation, executing this algorithm multiple times from completely different random starting initializations drastically improves the likelihood of finding the global maximum.
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-17-29.png
 
 \section{Stochastic Search and Gibbs Sampling}
 To prevent a local search from getting permanently trapped in suboptimal local maxima, we introduce \textbf{stochastic optimization} strategies. These occasionally permit "downhill" moves that \textit{decrease} the objective score ($\Delta f \leq 0$) based on a computed probability, allowing the search to "jump away" from local maxima, cross valleys in the search space, and find taller peaks.
@@ -182,6 +191,8 @@ Where $T$ is a dynamic "temperature".
     \item Over time, it "cools down" (decreasing $T$ incrementally). As $T \to 0$, the probability approaches 0, freezing the algorithm into deterministic hill-climbing to converge on the peak.
 \end{itemize}
 
+% INSERT /home/papagna/Projects/latex_bio/lex_md/06-Multiple_seq_alignmnet-part2_06-Multiple_seq_alignmnet-part2/imgs/cropped_page40_idx36.jpg
+
 \subsection{Gibbs Sampling for Motif Finding}
 For local MSA motif finding, rather than simulated annealing, we rely on a proportional stochastic technique known as \textbf{Gibbs Sampling}, which does not use a cooling schedule.
 
@@ -194,6 +205,8 @@ In Gibbs sampling, we compute the IC score for \textit{all} possible substrings 
 \[ Pr[X_i = p_j] = \frac{IC(p_j)}{\sum_{j=1}^{n-w+1} IC(p_j)} \]
 
 A substring that dramatically improves the alignment might represent 50\% of the total score sum, meaning it has a 50\% chance of being chosen. A terrible substring might only represent 1\% of the sum, giving it a 1\% chance.
+
+% INSERT /home/papagna/Projects/latex_bio/lex_md/06-Multiple_seq_alignmnet-part2_06-Multiple_seq_alignmnet-part2/imgs/cropped_page42_idx37.jpg
 
 \begin{minted}{python}
 # [pseudocode] Gibbs Sampling for Motif Finding

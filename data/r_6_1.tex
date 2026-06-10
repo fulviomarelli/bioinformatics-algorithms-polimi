@@ -10,7 +10,7 @@ A foundational concept in evolutionary biology is Charles Darwin's ``tree of lif
 
 % [IMAGE: Evolutionary tree of Madagascan reptiles showing how different species diverged based on the cytochrome oxidase subunit I (COI) gene.]
 % [IMAGE: An evolutionary tree diagram of Madagascan reptiles, radiating outward to show species divergence based on similarities in the cytochrome oxidase subunit I (COI) gene.]
-\myimage{6_1/1.jpg}{An evolutionary tree diagram of Madagascan reptiles, radiating outward to show species divergence based on similarities in the cytochrome oxidase subunit I (COI) gene.}
+\myimage{6_1/1.jpg}{An evolutionary tree diagram of Madagascan reptiles, radiating outward to show species divergence based on similarities in the cytochrome oxidase subunit I (COI) gene.}[width=0.5\textwidth]
 % [IMAGE: Comprehensive Tree of Life showing major and minor living branches of life, radiating outwards from single-celled organisms to complex life forms.]
 % [IMAGE: A large-scale, interactive circular diagram of the ``Tree of Life'', showing deep evolutionary branching from ancient single-celled organisms to modern animals and plants.]
 \myimage{6_1/2.jpg}{A large-scale, interactive circular diagram of the ``Tree of Life'', showing deep evolutionary branching from ancient single-celled organisms to modern animals and plants.}
@@ -208,6 +208,8 @@ The Center Star algorithm is a progressive heuristic that builds a multiple alig
     \item \textbf{Iteratively build the MSA}: One by one, add the remaining strings to the growing alignment utilizing the exact pair-wise alignments generated in Step 1.
 \end{enumerate}
 
+% INCREDIBLE% /home/papagna/Projects/latex_bio/lex_md/06-Multiple_seq_alignmnet-part1_06-Multiple_seq_alignmnet-part1/imgs/cropped_page24_idx15.jpg
+
 \sta \textbf{Crucial update rule}: When a gap is introduced into the center sequence $S_c$ to align a new string, that same gap \textit{must be inserted across all existing sequences} in the partial alignment at that exact column to maintain structural integrity and consistency relative to the center string.
 
 \textbf{Example:} Shifting a partial alignment / columns in Center Star.
@@ -240,11 +242,15 @@ While computationally bounded, Center Star neglects biological reality. It assum
 
 If S1 and S2 are close relatives (e.g., humans and chimps), and S3 and S4 are close relatives (e.g., mice and rats), it makes biological sense to first align (S1, S2), separately align (S3, S4), and then \textit{merge those two alignments}. Center Star completely ignores this topology.
 
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-57-15.png
+
 To align sequences according to their true evolutionary history (a "guide tree"), we use \textbf{Progressive Alignment}. We begin by aligning the most closely related pairs of sequences at the tips of the tree, and progressively merge those alignments as we move backward in evolutionary time. The fundamental operation of progressive alignment is aligning a string to an existing alignment, or merging two alignments. We achieve this using Alignment Profiles.
 
 \begin{important}
     \textbf{Alignment Profile}: A 2D matrix representing an existing multiple sequence alignment, where each column denotes a position in the alignment, and the rows denote the fractional frequency $R[c,j]$ of each character $c \in \Sigma$ (and the gap character `-`) at that position. Frequencies in every column must sum to 1.
 \end{important}
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-58-21.png
 
 \textbf{Example:} Creating a profile from an alignment.
 \begin{itemize}
@@ -290,6 +296,8 @@ Assume scoring: Match = $1$, Mismatch = $-1$, and gap penalty = $-1$.
 \end{enumerate}
 The algorithm selects the maximum value ($1/3$), records a diagonal traceback pointer, and proceeds.
 \textit{What this illustrates}: Weighted DP scales substitution costs logically based on the historical composition of the sequences already aligned. It allows us to naturally favor aligning characters to columns where they are highly conserved in the existing phylogenetic branch. If a column is already highly conserved (e.g., mostly 'A'), matching an 'A' yields a high positive score, whereas introducing a gap yields a severe penalty.
+
+% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-59-36.png
 
 By recursively applying this algorithm up the branches of a phylogenetic guide tree, we progressively build an alignment that honors biological relationships far better than simple heuristics.
 

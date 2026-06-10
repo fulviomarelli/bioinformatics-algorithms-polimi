@@ -189,12 +189,12 @@ Because testing all infinite possible sequences of operations is computationally
 \section{Sequence Alignment and Dynamic Programming}
 
 We can visualize the transformation of one string to another using a compact sequence alignment, where matching characters are stacked vertically, and missing characters are padded with ``gaps'' (represented by hyphens ``-'').
-
+\begin{center}
 \begin{minted}{text}
 INTEN-TION
 -EXECUTION
 \end{minted}
-
+\end{center}
 This alignment code block visually encodes the minimum necessary edit operations needed to transform ``INTENTION'' into ``EXECUTION''. Gaps (`-`) symbolize insertions or deletions (an insertion in sequence A is logically symmetric to a deletion in sequence B). The mismatched characters (N over E, T over X, N over C) represent substitutions.
 
 \subsection{The Dynamic Programming Table}
@@ -221,15 +221,15 @@ E(a(i-1), b(j-1)) + \text{cost} & \text{(Diagonal move: substitution or match)}
 where \(\text{cost} = 0\) if \(a_i = b_j\) (the characters match), and \(\text{cost} = 1\) if \(a_i \neq b_j\) (a substitution is required).
 
 \subsubsection{Algorithm Execution}
-1. \textbf{Initialization}: Create a matrix with \(|a|+1\) rows and \(|b|+1\) columns. The 0-th row and 0-th column represent alignments against the empty string \(\varepsilon\).
-2. Row 0 is initialized as \(E(\varepsilon, b(j)) = j\).
-3. Column 0 is initialized as \(E(a(i), \varepsilon) = i\).
-4. \textbf{Matrix Fill}: Iterate through each cell \((i,j)\), applying Equation \eqref{eq:edit_dist}. The order of filling (row-by-row or column-by-column) does not matter as long as the left, top, and top-left diagonal cells are calculated first.
+1. \textbf{Initialization}: Create a matrix with \(|a|+1\) rows and \(|b|+1\) columns. The 0-th row and 0-th column represent alignments against the empty string \(\varepsilon\).\\
+2. Row 0 is initialized as \(E(\varepsilon, b(j)) = j\).\\
+3. Column 0 is initialized as \(E(a(i), \varepsilon) = i\).\\
+4. \textbf{Matrix Fill}: Iterate through each cell \((i,j)\), applying Equation \eqref{eq:edit_dist}. The order of filling (row-by-row or column-by-column) does not matter as long as the left, top, and top-left diagonal cells are calculated first.\\
 5. \textbf{Result}: The cell at \((n, m)\) (bottom right) contains the minimum edit distance for the complete strings.
 
 % [IMAGE: A dynamic programming matrix showing the step-by-step mathematical population of edit distance values for aligning "SATURDAY" against "SUNDAY", highlighting the initialization of the first row and column with incrementally increasing gap penalties.]
 \myimage{2_1/1.png}{A dynamic programming matrix showing the step-by-step mathematical population of edit distance values for aligning "SATURDAY" against "SUNDAY", highlighting the initialization of the first row and column with incrementally increasing gap penalties.}
-
+\vspace{-1em}
 \textbf{Example:}
 Calculating the cell $(1,1)$ for $a=$ ``SATURDAY'' and $b=$ ``SUNDAY''. The character for $a(1)$ is 'S' and $b(1)$ is 'S'. 
 The cell $(1,1)$ takes the minimum of:
@@ -310,7 +310,7 @@ Edit distance purely counts differences, and LCS purely counts conserved charact
 To generate the most biologically accurate alignments, modern algorithms combine the concepts of distance (penalizing mutations) and similarity (rewarding conservation) into a single overarching scoring system. 
 
 \begin{important}
-    \textbf{Needleman-Wunsch Algorithm (1970)}: A dynamic programming algorithm for Global Sequence Alignment. It finds the alignment that maximizes a total score by balancing positive match rewards against negative gap and mismatch penalties.
+    \textbf{Needleman-Wunsch Algorithm (1970)}: A dynamic programming algorithm for \textit{Global Sequence Alignment}. It finds the alignment that maximizes a total score by balancing positive match rewards against negative gap and mismatch penalties.
 \end{important}
 
 We define specific scores:
@@ -334,7 +334,7 @@ E(a(i-1), b(j-1)) + \text{score}(a_i, b_j) & \text{(Match/Mismatch score)}
 
 When assigning the gap weight \(w_d\), biological algorithms frequently utilize different penalty models depending on the anticipated evolutionary behavior. It is often biologically easier to extend a deletion that has already begun than to open multiple new micro-deletions.
 
-\begin{table}[!Ht]
+\begin{table}[ht]
     \centering
     \caption{Common Gap Penalty Models}
     \begin{tabularx}{\textwidth}{l X}
