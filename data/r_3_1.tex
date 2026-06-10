@@ -343,7 +343,7 @@ def hierholzer(graph):
 
 The mathematical models and Eulerian paths we have explored assume an idealized scenario: identical read lengths, uniform coverage, and error-free DNA. Real-world biological data introduces significant noise and complicating factors.
 
-\subsection{Selecting k-mer Size ($k$) and Memory Constraints}
+\subsection{Selecting k-mer Size (\texorpdfstring{$k$}{k}) and Memory Constraints}
 The parameter $k$ dictates the entire structure of the De Bruijn Graph and the overlap required to merge reads (a $k$-mer implies a $k-1$ overlap). It requires a delicate balance:
 \begin{itemize}
     \item \textbf{If $k$ is too small}: Almost no k-mers are unique. The graph becomes massively tangled and hyper-connected with false overlaps and branch points, merging nodes that actually belong to entirely different chromosomes, leading to fragmented contigs.

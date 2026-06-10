@@ -1,4 +1,4 @@
-\begin{document}
+
 % Lecture Notes: Sequence Modeling with Hidden Markov Models (HMMs)
 
 \section{Introduction and Biological Motivation}
@@ -284,5 +284,3 @@ We embed historical context into the identity of the current state itself. For a
 If the system emits a `C` while in a CpG-island, it enters the \( C_+ \) state. From \( C_+ \), we assign a highly inflated transition probability \( a_{C_+ \to G_+} \), accurately simulating the di-nucleotide frequency while strictly adhering to the memoryless rules.
 
 Similarly, in protein-coding gene models (like GENSCAN), expanding state space allows us to track reading frames (codons) across spliced introns by explicitly defining states like \( E_0, E_1, E_2 \) for exons and \( I_0, I_1, I_2 \) for introns depending on the reading frame offset.
-
-\end{document}
