@@ -141,14 +141,14 @@ Assume we observe the sequence \( x = 1, 2, 1, 5, 6, 2, 1, 6, 2, 4 \). Assuming 
 The all-Fair path is about 6.59 times more likely than the all-Loaded path for this particular sequence. 
 \sta \textit{Note:} Joint probabilities approach zero rapidly, necessitating the use of log-scores to prevent computational underflow.
 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/07-Sequence_modeling-HMM_07-Sequence_modeling-HMM/imgs/cropped_page27_idx20.jpg
+\myimage{7_1/5.jpg}{}
 
 \subsubsection{Setting 2: Scoring All Paths (Forward Algorithm)}
 
 To find the \textit{total} probability \( P(x) \) that the model generated the sequence, regardless of the specific path taken, we sum the joint probabilities over an exponential number of possible paths:
 \[ P(x) = \sum_{\pi} P(x, \pi) \]
 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/07-Sequence_modeling-HMM_07-Sequence_modeling-HMM/imgs/cropped_page42_idx34.jpg
+\myimage{7_1/6.jpg}{}
 
 We compute this efficiently in $\mathcal{O}(K^2 N)$ time using dynamic programming via the \textbf{Forward Algorithm}. Let \( f_k(i) \) be the probability of generating the prefix sequence \( x_1 \dots x_i \) and ending in state \( k \).
 
@@ -159,7 +159,7 @@ We compute this efficiently in $\mathcal{O}(K^2 N)$ time using dynamic programmi
     \item \textbf{Termination:} The total probability of the sequence is \( P(x) = \sum_k f_k(N) \).
 \end{itemize}
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-40-59.png
+\myimage{7_1/7.png}{}
 
 \subsection{Decoding: Finding the Hidden States}
 
@@ -205,9 +205,9 @@ def viterbi(obs, states, init_p, trans_p, emit_p):
     return prob, path[state]
 \end{minted}
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-36-23.png
+\myimage{7_1/8.png}{}
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-37-16.png
+\myimage{7_1/9.png}{}
 
 \textbf{Example: Viterbi Trace for a Viral (V) vs. Self (S) Genome Model} \\
 Assume we observe the sequence \( x = (G, C, G, A, T) \).
@@ -227,13 +227,13 @@ Emissions \( S \): \( G(0.25), C(0.25), A(0.25), T(0.25) \).
 \end{enumerate}
 This demonstrates how the high transition probability from Viral to Self (\(0.85\)) dominates, making it optimal to start in the viral state but immediately switch to the self state.
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-38-12.png
+\myimage{7_1/10.png}{}
 
 \subsubsection{Setting 4: Decoding All Paths (Posterior Decoding)}
 
 Viterbi gives the single best path, but it ignores the probability mass of all other valid paths. To find the most likely state for a \textit{specific position} \( i \) averaged over all paths, we use \textbf{Posterior Decoding}.
 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/07-Sequence_modeling-HMM_07-Sequence_modeling-HMM/imgs/cropped_page64_idx60.jpg
+\myimage{7_1/11.jpg}{}
 
 We combine the \textbf{Forward algorithm} (how we got to position \( i \)) and the \textbf{Backward algorithm} (the probability of observing the remainder of the sequence given we are at state \( k \) at position \( i \)).
 
@@ -245,7 +245,7 @@ Define \( b_k(i) = P(x_{i+1} \dots x_N \mid \pi_i = k) \).
     \[ b_k(i) = \sum_l \left( e_l(x_{i+1}) \cdot a_{kl} \cdot b_l(i+1) \right) \]
 \end{itemize}
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-45-13.png
+\myimage{7_1/12.png}{}
 
 By multiplying the forward and backward probabilities, we isolate the probability of being in state \( k \) at position \( i \) given the entire sequence \( x \):
 \[ P(\pi_i = k \mid x) = \frac{f_k(i) \cdot b_k(i)}{P(x)} \]
@@ -257,14 +257,14 @@ where \( P(x) \) can be found via the Forward algorithm, or computed as \( P(x) 
 
 Before an HMM can decode a genome, we must estimate its parameters: transition probabilities (\( a_{kl} \)) and emission probabilities (\( e_k(x) \)).
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-49-03.png
+\myimage{7_1/13.png}{}
 
 \subsubsection{Setting 5a: Supervised Learning (Known Labels - When the right answer is known)}
 
 When we have training data fully annotated with true hidden states, learning uses Maximum Likelihood Estimation (MLE) by simply counting frequencies:
 \[ a_{kl} = \frac{A_{kl}}{\sum_i A_{ki}} \quad \text{and} \quad e_k(b) = \frac{E_k(b)}{\sum_c E_k(c)} \]
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_23-51-31.png
+\myimage{7_1/14.png}{}
 
 \sta \textbf{Pseudocounts:} Given limited data, unobserved events might get a strict probability of 0, which is fatal in HMMs (multiplying by 0 negates an entire path). We resolve this by adding artificial constants, or \textbf{pseudocounts} (\( r_{kl}, r_k(b) \)), to all observed counts before normalization:
 \[ A_{kl} = (\text{observed count}) + r_{kl} \]

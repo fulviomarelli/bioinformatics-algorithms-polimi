@@ -149,7 +149,7 @@ Fortunately, the BWT has a direct mathematical relationship with the Suffix Arra
 
 Since the termination character \verb|$| acts as a hard boundary and appears only once in the string, the lexicographical sorting of the cyclic rotations is functionally identical to the lexicographical sorting of the standard suffixes of the text. Consequently, the \( i \)-th row of the sorted Burrows-Wheeler Matrix corresponds directly to the \( i \)-th entry of the Suffix Array. 
 
-% INSERT /home/papagna/Projects/latex_bio/insert/screenshot-2026-06-10_22-12-47.png
+\myimage{4_2/2.png}{}
 
 The character in the last column of the BWT matrix is simply the character that immediately precedes the suffix in the original string. This relationship allows us to extract the BWT directly from the Suffix Array:
 \[

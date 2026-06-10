@@ -42,7 +42,7 @@ When aligning reads to a reference genome, we must distinguish between true biol
 % [IMAGE: Alignments in the IGV (Integrative Genomics Viewer) Browser. The image shows a target reference sequence at the bottom, an amino acid translation track, and a stack of aligned sequencing reads (gray horizontal bars) on top. Colored marks within the reads indicate mismatches or potential mutations.]
 \myimage{4_1/1.jpg}{Alignments in the IGV (Integrative Genomics Viewer) Browser. The image shows a target reference sequence at the bottom, an amino acid translation track, and a stack of aligned sequencing reads (gray horizontal bars) on top. Colored marks within the reads indicate mismatches or potential mutations.}[width=0.5\textwidth]
 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part1_04-Read_mapping-part1/imgs/cropped_page3_idx4.jpg
+\myimage{4_1/7.jpg}{}
 
 
 \textbf{Example:}
@@ -147,7 +147,7 @@ Instead of putting all reads into a trie, we can take our reference genome \(T\)
 % [IMAGE: Suffix trie for the string MISSISSIPPI$. A tree branching from a single root node. Each path down the tree spells out a suffix, e.g., M-I-S-S-I-S-S-I-P-P-I-$, I-S-S-I-S-S-I-P-P-I-$, etc. There are 12 leaf nodes (including the empty suffix $).]
 % [IMAGE: Suffix trie of the string T="MISSISSIPPI$". The tree branches out from the root showing every possible suffix path. Deeply branching nodes represent repeated substrings, like "SSI" and "I".]
 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part1_04-Read_mapping-part1/imgs/cropped_page25_idx22.jpg
+\myimage{4_1/8.jpg}{Suffix trie of the string T="MISSISSIPPI\$". The tree branches out from the root showing every possible suffix path. Deeply branching nodes represent repeated substrings, like "SSI" and "I".}
 
 \subsection{Why Index Suffixes?}
 
@@ -238,7 +238,7 @@ Whenever a node has only one outgoing edge, it serves no navigational purpose fo
 
 % [IMAGE: Suffix tree for MISSISSIPPI$. Compared to the Suffix Trie, long unbranching paths (like "SSIPPI$") are merged into a single edge. Every internal node now has at least two outgoing children.]
 % [IMAGE: Transformation from a Suffix Trie to a Suffix Tree for the string "MISSISSIPPI$". Long single-path chains like "ISSIPPI$" are merged into a 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part1_04-Read_mapping-part1/imgs/cropped_page39_idx32.jpg
+\myimage{4_1/9.jpg}{Transformation from a Suffix Trie to a Suffix Tree for the string "MISSISSIPPI\$". Long single-path chains like "ISSIPPI\$" are merged into a}
 
 \subsection{Node and Space Complexity Reduction}
 By combining non-branching paths:
@@ -365,7 +365,7 @@ The algorithm cleverly sorts the suffixes in iterative phases by exploiting info
 
 By continually doubling the length of the prefix being sorted, we rapidly converge on a fully sorted suffix array.
 
-% INSERT /home/papagna/Projects/latex_bio/lex_md/04-Read_mapping-part1_04-Read_mapping-part1/imgs/cropped_page60_idx48.jpg
+\myimage{4_1/10.jpg}{}
 
 \subsection{Prefix Doubling: Detailed Example}
 

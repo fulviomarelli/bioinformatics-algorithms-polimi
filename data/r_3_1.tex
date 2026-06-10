@@ -74,7 +74,7 @@ The distribution of coverage depth across the genome is well-modeled by a Poisso
     \end{equation}
 \end{important}
 
-% INSERT cropped_page10_idx14.jpg
+\myimage{3_1/8.jpg}{}
 
 Using this model, we can calculate the probability that a specific base is \textit{never} sequenced ($k=0$):
 \[ P(X = 0) = \frac{e^{-\lambda} \lambda^0}{0!} = e^{-\lambda} \]
@@ -117,7 +117,7 @@ This technique is exceptionally powerful for characterizing novel species before
 \myimage{3_1/2.jpg}{A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.}[width=0.5\textwidth]
 % [IMAGE: A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d_k. A smaller peak near zero represents unique sequencing errors.]
 
-% INSERT side to the 2. cropped_page16_idx16.jpg
+\myimage{3_1/15.jpg}{A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d\_k. A smaller peak near zero represents unique sequencing errors.}
 
 \section{Genome Assembly and Contigs}
 
@@ -130,7 +130,7 @@ Because infinite coverage is impossible, any real genome assembly effort will no
 % [IMAGE: A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.]
 \myimage{3_1/4.png}{A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.}
 
-% INSERT cropped_page22_idx22.jpg
+\myimage{3_1/9.jpg}{}
 
 If we cannot sequence the gaps, we cannot definitively know the order, distance, or orientation of the contigs relative to one another (unless we use paired-end scaffolds, which we will discuss later).
 
@@ -170,7 +170,7 @@ The mathematical derivations above assumed that an overlap of just 1 nucleotide 
 
 Let $\theta$ represent the minimum fraction of read length $L$ required to declare a valid overlap (e.g., $\theta = 0.1$ means $10\%$ of the read must overlap). Two reads are only joined if their overlap is $\ge \theta L$.
 
-% INSERT cropped_page28_idx24.jpg
+\myimage{3_1/10.jpg}{}
 
 This changes our rightmost read calculation. A read is now the rightmost read if no subsequent read starts within the \textit{leftmost} $(1-\theta)$ portion of its length. Thus, the expected number of contigs increases to:
 \[ \mathbb{E}[\#\text{contigs}] = N e^{-(1-\theta) \lambda} \]
@@ -238,7 +238,7 @@ To reconstruct the genome under this model, we must find a path that visits \tex
     \textbf{Hamiltonian Path}: A path in a directed or undirected graph that visits every vertex (node) exactly once. (It is not required to traverse all edges).
 \end{important}
 
-% INSERT cropped_page42_idx41.jpg
+\myimage{3_1/11.jpg}{}
 
 \sta \textbf{Critical Limitation:} The Hamiltonian path problem is \textbf{NP-complete}. In the context of millions of reads, checking solutions scales exponentially ($\mathcal{O}(2^N)$ depending on formulation). As the number of k-mers scales into the billions, finding the path becomes computationally impossible for whole-genome assembly.
 
@@ -253,9 +253,9 @@ Construction of a DBG proceeds as follows:
 \begin{enumerate}
     \item Extract all k-mers from the read data.
     \item For each k-mer, create a directed edge originating from a node labeled with its $(k-1)$ prefix and pointing to a node labeled with its $(k-1)$ suffix.
-    % INSERT cropped_page44_idx44.jpg
+\myimage{3_1/12.jpg}{}
     \item \textbf{Merge} all nodes sharing identical $(k-1)$ labels into a single node, while \textbf{retaining all connecting edges}. This means nodes can be visited multiple times, which is biologically accurate as identical repeats exist.
-    % INSERT cropped_page53_idx54.jpg
+\myimage{3_1/13.jpg}{}
 \end{enumerate}
 
 To reconstruct the genome from a DBG, we must utilize all of our observed k-mers, which means we must traverse \textit{every edge} exactly once.
@@ -378,7 +378,7 @@ Sequencing platforms occasionally misread a base. A single base error in a read 
     \item This creates isolated ``spurs'' or ``bubbles'' in the DBG. By plotting the k-mer frequency distribution, algorithms can identify these low-count k-mers (the noise peak on the far left of the distribution plot) and heuristically delete/prune them before constructing the graph.
 \end{itemize}
 
-% INSERT /home/papagna/Projects/latex_bio/insert/cropped_page96_idx92.jpg
+\myimage{3_1/14.jpg}{}
 
 \subsection{Repetitive Regions and Strand Ambiguity}
 The human genome is littered with tandem repeats (e.g., \texttt{CATCATCAT...}). If a repetitive region is longer than the chosen k-mer size, the DBG collapses all copies of the repeat into a single strongly connected cycle or highly traversed loop. The algorithm loses the context of how many times the sequence repeats, causing structural ambiguity and destroying contiguity.
