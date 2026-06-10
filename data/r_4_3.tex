@@ -203,6 +203,7 @@ Searching for $W = \text{"LOL"}$ inside $T = \text{"GOOGOL\$"}$ with $d_{max} = 
 During the DFS, if the algorithm considers taking a mismatch path on the very last character processed (the first character of the query), it looks up $D$. Knowing $D$ guarantees at least 1 error in the suffix, taking another error now would total 2 errors. If $d_{max}=1$, the algorithm stops early without unnecessary lookup.
 If the DFS matches the first letter 'L' to a 'G' in the text, it has spent 1 error. Before descending further to check 'O', it queries $D(1)$. $D(1)$ states the rest of the search pattern requires at least $1$ additional error. Because $1 \text{ (current)} + 1 \text{ (future)} = 2 > d_{max}$, the algorithm immediately prunes this branch without making further checks.
 
+\newpage
 \subsection{Recursive Search: InexRecur}
 
 With `CalculateD` computed, the actual BWT inexact search uses a recursive function \texttt{InexRecur} to compute valid Suffix Array intervals that contain matches within the error threshold.
