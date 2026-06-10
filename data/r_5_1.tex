@@ -1,41 +1,68 @@
-
 % Lecture Notes: Variant Calling and Downstream Analysis of NGS Data
+% Lecture Notes: Variant Calling and Downstream Analysis
 
-\section{Introduction to Downstream Applications of NGS}
+\section{Review: Exact Matching with Errors using Suffix Arrays}
 
-Once sequencing reads have been mapped and aligned to a reference genome, the data can be used to extract a variety of biological insights. While the primary focus of this lecture is the identification of genomic variants, several other powerful applications rely on the foundations of read mapping.
+Before diving into variant calling, we review an advanced read mapping concept: searching for a sequence within a reference genome using suffix arrays while allowing for a specific maximum number of mismatches (\( D_{max} \)). 
+
+To optimize this search and avoid exploring dead-end paths, we pre-calculate a lower bound of expected errors for every suffix of our search word. 
+
+\begin{important}
+  \textbf{Lower Bound Error Array (\(D\))}: An array that stores the minimum number of mismatches expected when matching the remaining portion (suffix) of a search word against the reference string. 
+\end{important}
+
+If we are searching for a word (e.g., "hazel") in a reference string (e.g., "razle dazzle"), we start matching from the end of the search word. We check sub-strings incrementally: 
+\begin{enumerate}
+    \item Is the last letter "l" in the reference? Yes. (Minimum errors = 0)
+    \item Is "el" in the reference? Yes. (Minimum errors = 0)
+    \item Is "zel" in the reference? Yes. (Minimum errors = 0)
+    \item Is "azel" in the reference? No. We must have at least one error. We increment our minimum error count to 1, and resume checking the next sub-string starting from the mismatch.
+\end{enumerate}
+
+When performing the actual recursive search in the suffix array, we compare our allowed errors (\( D_{max} \)) against the pre-calculated minimum errors for the remainder of the word. \sta If the minimum expected errors exceed our remaining allowed errors, we immediately terminate that search path, drastically reducing the computational search space.
+
+\section{Applications of Read Mapping}
+
+Once sequencing reads have been mapped and aligned to a reference genome, the alignments can be used to extract a variety of biological insights. The specific downstream application depends entirely on the experimental protocol applied to the DNA or RNA prior to sequencing.
 
 \subsection{Alternative Sequencing Applications}
 
 By modifying the experimental protocol before sequencing, we can target specific biological phenomena rather than just mapping the entire genomic sequence.
 
 \begin{important}
-  \textbf{ChIP-seq (Chromatin Immunoprecipitation Sequencing)}: A method used to analyze protein interactions with DNA. Instead of sequencing the entire genome, only the DNA fragments to which a specific protein (e.g., a transcription factor like TP53) has bound are isolated and sequenced.
+  \textbf{ChIP-seq (Chromatin Immunoprecipitation Sequencing)}: A method used to analyze protein interactions with DNA. Instead of sequencing the entire genome, the goal is to sequence only the DNA fragments to which a specific protein of interest (e.g., a transcription factor like TP53) has bound.
 \end{important}
 
-In ChIP-seq, mapped reads concentrate strongly around specific genomic regions where the protein physically interacted with the DNA, while the rest of the genome exhibits only low-level "random noise". Researchers use statistical \textit{peak calling} algorithms to identify these high-density regions and map transcription factor binding sites.
+In this protocol, proteins are cross-linked to the DNA, the DNA is fragmented, and an antibody is used to isolate only the fragments bound by the target protein. After sequencing and mapping, the reads strongly concentrate around the specific genomic regions where the protein bound, with the rest of the genome exhibiting only low-level random background noise. 
+
+\begin{important}
+  \textbf{Peak Calling}: The computational and statistical process of identifying regions in the genome with a significantly higher depth of mapped reads compared to background noise, indicating true protein-binding sites.
+\end{important}
 
 \begin{important}
   \textbf{RNA-seq (RNA Sequencing)}: A technique that sequences transcribed RNA molecules (converted to complementary DNA, or cDNA) to measure gene expression levels and analyze transcript structure.
 \end{important}
 
-Because RNA-seq samples mature RNA, the mapped reads align almost exclusively to exonic (protein-coding) regions. The analysis provides two main types of information:
+Because RNA-seq measures the transcriptome, the mapped reads align almost exclusively to exonic regions (the parts of the genome that are transcribed into mature RNA). The analysis provides two main types of information:
 \begin{itemize}
     \item \textbf{Expression levels:} Genes with higher read coverage correspond to higher expression levels in the cell.
-    \item \textbf{Alternative splicing:} Reads can span splice junctions, starting in one exon and ending in another, effectively skipping the intronic regions that were spliced out.
+    \item \textbf{Alternative splicing:} Reads can span splice junctions, starting in one exon and ending in another, effectively skipping the intronic regions that were spliced out. Analyzing these "split reads" allows us to reconstruct how exons are pieced together.
 \end{itemize}
 
 % [IMAGE: A "Sashimi" plot showing RNA-seq read coverage over exonic regions. Arcs connect exons to indicate splice-junction spanning reads. A comparison between a control sample and a patient sample illustrates aberrant splicing caused by a mutation, leading to skipped exons.]
+% [IMAGE: A Sashimi plot showing read coverage over exonic regions and arcs representing splice-junction spanning reads. The top plot shows normal splicing in a control sample, while the bottom plot shows aberrant splicing (e.g., exon skipping) due to a mutation in a patient.]
 
 \begin{important}
-  \textbf{Hi-C}: A chromosome conformation capture method that identifies three-dimensional chromatin interactions by fusing interacting genomic regions and sequencing the resulting artificial junctions.
+  \textbf{Hi-C (Chromosome Conformation Capture)}: A method that identifies three-dimensional chromatin interactions by chemically fusing interacting genomic regions and sequencing the resulting artificial junctions.
 \end{important}
 
-Hi-C produces paired-end reads where one read maps to a specific location (e.g., Chromosome 2) and its pair maps to a completely different location (e.g., Chromosome 4), indicating that these two regions were physically adjacent in the cell nucleus. The output is typically visualized as a two-dimensional interaction map.
+The basic idea is to chemically fuse two distinct genomic regions that are physically interacting in 3D space, despite potentially being far apart on the linear DNA sequence (or even on different chromosomes). The DNA is shattered, and the artificial junctions are sequenced as read pairs. 
+
+If Read 1 maps to a specific location (e.g., Chromosome 2) and its pair Read 2 maps to a completely different location (e.g., Chromosome 4), it indicates a physical interaction between those two loci. The accumulation of many such read pairs strongly indicates true physical contact, such as a regulatory loop. The output is typically visualized as a two-dimensional interaction map.
 
 \section{Genomic Variations and Variant Calling}
 
-The main application of Whole Genome Sequencing (WGS) is identifying differences between the sequenced genome of an individual and the standard reference genome. 
+The main application of Whole Genome Sequencing (WGS) is identifying differences between the sequenced genome of an individual and the standard reference genome. This is heavily utilized in diagnostics, evolutionary biology, and cancer research.
 
 \begin{important}
   \textbf{Variant Calling}: The computational process of identifying variable sites (mutations) and their genomic locations relative to a reference genome.
@@ -46,40 +73,46 @@ The main application of Whole Genome Sequencing (WGS) is identifying differences
 \end{important}
 
 We distinguish between two fundamentally different types of mutations based on their origin:
-\begin{itemize}
-    \item \textbf{Germline Mutations:} Present in the germ cells (egg or sperm) and therefore inherited and present in \textit{every} cell of the resulting organism's body. \sta These are responsible for hereditary disorders, such as Fibrodysplasia Ossificans Progressiva (a severe disease causing soft tissue to ossify, caused by a single point mutation in the ACVR1 gene).
-    \item \textbf{Somatic Mutations:} Acquired after conception in specific somatic (non-germline) cells. \sta Somatic mutations are the primary drivers of cancer (e.g., ERBB2 mutations in glioblastoma). They are identified by comparing a tumor sample to a "matched normal" control sample (e.g., blood) from the same patient to filter out harmless germline variants.
-\end{itemize}
 
-\subsection{Types of Genomic Variations}
+\begin{important}
+  \textbf{Germline Mutation}: A variant that is present in the germ cells (egg or sperm) and is therefore inherited and present in virtually every cell of the resulting individual's body.
+\end{important}
+\sta These are responsible for hereditary disorders. \\
+\textbf{Example:} Fibrodysplasia Ossificans Progressiva (FOP). This is a severe hereditary disease causing trauma-induced ossification of soft tissue (muscles turning to bone). It is driven by a specific germline point mutation in the \textit{ACVR1} gene. Because it is germline, every cell in the individual carries the blueprint for this defective receptor.
+
+\begin{important}
+  \textbf{Somatic Mutation}: A variant that arises in a non-germ cell after fertilization. It is passed only to the cellular descendants of that mutated cell. Somatic mutations are the primary drivers of cancer.
+\end{important}
+\sta To identify these, we must sequence both the tumor tissue and a normal control sample (e.g., blood) from the same patient. Subtracting the germline mutations found in the blood reveals the tumor-specific somatic mutations. \\
+\textbf{Example:} Somatic \textit{ERBB2} or \textit{IDH1} mutations driving unchecked cell proliferation in glioblastoma.
+
+\subsection{Types of Basic Genomic Variations}
 
 Genomic variations range from single-base changes to massive structural rearrangements.
 
-\begin{important}
-  \textbf{SNP (Single-Nucleotide Polymorphism)}: A single-base variant that is relatively common, being present in at least 1\% of a given population. Pronounced "snip".
-\end{important}
+\begin{itemize}
+    \item \textbf{SNP (Single-Nucleotide Polymorphism)}: A single-base change that is relatively common in the general population (by convention, present in $\ge 1\%$ of the population).
+    \item \textbf{SNV (Single-Nucleotide Variant)}: Any single-base change identified in an individual genome, regardless of population frequency.
+\end{itemize}
 
-\begin{important}
-  \textbf{SNV (Single-Nucleotide Variant)}: A single-base variant identified in an individual genome, regardless of its frequency in the population.
-\end{important}
-
-\sta In medical genomics, researchers are often interested in rare SNVs that are not established SNPs, as common SNPs are unlikely to be the sole cause of a rare, severe genetic disease. A typical human genome contains about 3–4 million SNVs.
+\sta In medical genomics, researchers are often interested in rare SNVs that are not established SNPs, as common SNPs are unlikely to be the sole cause of a rare, severe genetic disease. There are roughly 3–4 million SNVs in a typical human genome.
 
 \begin{important}
   \textbf{Indels}: Small insertions or deletions of one or a few nucleotides.
 \end{important}
 
-\textbf{Example:} Frameshift Mutation
-Indels in protein-coding regions can cause disastrous "frameshifts." If a sequence is read in triplets (e.g., \texttt{CAT CAT CAT}), inserting a single 'A' shifts the entire reading frame (\texttt{cAt aCA Tca...}), changing all subsequent amino acids and likely truncating the protein. This illustrates why even small indels can be highly destructive.
+Indels can be particularly destructive if they occur within the protein-coding region of a gene. \\
+\textbf{Example:} Frameshift Mutation. \\
+Suppose a sequence of codons reads \texttt{CAT CAT}, encoding specific amino acids. If a single \texttt{A} is inserted, the reading frame shifts to \texttt{cAt aCA Tca}, changing every subsequent amino acid and often resulting in a truncated, non-functional protein.
 
-\begin{important}
-  \textbf{Structural Variants (SVs)}: Large-scale genomic alterations, typically defined as being 1 kbp or larger, including deletions, duplications, inversions, and translocations.
-\end{important}
+\subsection{Structural Variants (SVs)}
+
+Structural variants are massive genomic alterations, generally defined as being 1,000 base pairs (1 kbp) or larger. A typical genome has hundreds of these, averaging 250,000 nucleotides in length—much larger than an average gene.
 
 SVs are categorized as:
 \begin{itemize}
-    \item \textbf{Balanced}: No net change in the amount of DNA (e.g., inversions, translocations).
-    \item \textbf{Unbalanced / Copy Number Variants (CNVs)}: The amount of DNA is increased or decreased (e.g., deletions, duplications). A human genome typically contains hundreds or thousands of SVs, with an average size of 250,000 nucleotides—much larger than an average gene.
+    \item \textbf{Balanced SVs}: The overall amount of DNA remains the same. Examples include inversions (a segment is flipped) and translocations (a segment is moved to another chromosome).
+    \item \textbf{Unbalanced SVs}: The total amount of DNA changes. These are primarily \textbf{Copy Number Variants (CNVs)}, consisting of large deletions or duplications.
 \end{itemize}
 
 \section{Evaluating Sequencing Confidence}
@@ -91,31 +124,31 @@ To reliably call variants, we must quantify our confidence in the sequencing dat
 \end{important}
 
 \begin{important}
-  \textbf{Base Quality}: The confidence with which an individual nucleotide was sequenced by the machine (e.g., how unambiguous the optical signal was for that specific base).
+  \textbf{Base Quality}: The confidence with which an individual nucleotide was sequenced by the machine (e.g., based on the clarity of the optical signal for that specific base).
 \end{important}
 
-Both qualities are typically expressed as \textbf{PHRED quality scores}, computed using a simple logarithmic transformation:
+Both qualities are expressed as \textbf{PHRED quality scores}, computed using a logarithmic transformation based on the probability of error (\( p \)):
 \begin{equation}
     Q_{PHRED} = -10 \log_{10} p
 \end{equation}
-where $p$ is the probability that the base call or read mapping is \textit{wrong}.
 
-\textbf{Example:} PHRED Score Interpretation
-A PHRED score of $Q=30$ implies $p = 10^{-3} = 0.001$. This means there is a 1 in 1000 probability of error, corresponding to 99.9\% accuracy.
+\sta \textbf{Example:} PHRED Score Interpretation. \\
+A PHRED score of $Q=20$ implies $p = 10^{-2} = 0.01$ (1\% error rate, 99\% accuracy). A PHRED score of $Q=30$ implies $p = 10^{-3} = 0.001$ (0.1\% error rate, 99.9\% accuracy).
 
 \subsection{Variant Allele Frequency (VAF)}
 
 \begin{important}
-  \textbf{Variant Allele Frequency (VAF)}: The fraction of mapped reads at a specific genomic position that support the alternate (mutated) base rather than the reference base.
+  \textbf{Variant Allele Frequency (VAF)}: The fraction of mapped reads at a specific genomic position that support the alternate (mutated) base rather than the reference base. Calculated as $f(b) = \frac{n-k}{n}$, where $n$ is total reads and $n-k$ is the number of reads with the variant.
 \end{important}
 
 For germline mutations, VAF clusters around expected discrete values:
 \begin{itemize}
-    \item \textbf{Heterozygous variant:} $\approx 50\%$ of reads (since one of two chromosomal copies is affected).
-    \item \textbf{Homozygous variant:} $\approx 100\%$ of reads (since both chromosomal copies are affected).
+    \item \textbf{Homozygous reference}: VAF $\approx 0\%$.
+    \item \textbf{Heterozygous variant}: VAF $\approx 50\%$ (since one of two chromosomal copies is affected).
+    \item \textbf{Homozygous variant}: VAF $\approx 100\%$ (since both chromosomal copies are affected).
 \end{itemize}
 
-\sta In cancer (somatic mutations), VAF analysis is much more complex due to \textit{tumor purity} (normal cells mixed with tumor cells) and \textit{tumor clonality} (sub-populations of tumor cells carrying different mutations). For instance, a mutation present in only 5\% of reads might represent a small but critical clone responsible for therapy resistance.
+\sta In cancer (somatic mutations), VAF analysis is much more complex due to \textit{tumor purity} (normal cells mixed with tumor cells) and \textit{tumor clonality} (sub-populations of tumor cells carrying different mutations). A heterozygous mutation in a tumor with 80\% purity will have an expected VAF of $\sim 40\%$. If a mutation only exists in a 5\% subclone, the VAF might be as low as 2.5\%, but could represent a critical clone responsible for therapy resistance.
 
 \section{Algorithms for Single Nucleotide Variant Calling}
 
@@ -129,112 +162,146 @@ To evaluate variants, mapped reads are visually and computationally stacked into
 21 31587794 G 27 .,.,.,.,.,.,.,.,.,.,.,.,^],
 \end{minted}
 
-This output from `samtools` represents a sequence alignment column-by-column. 
+This text-based output from \texttt{samtools} summarizes the alignment for individual genomic positions. 
 \begin{enumerate}
-    \item Each line shows the chromosome, 1-based coordinate, and the reference base (e.g., `A` at position 31587793).
-    \item The number indicates read coverage (26 reads cover position 31587793).
-    \item Dots `.` and commas `,` represent a match to the reference base on the forward and reverse strands, respectively.
-    \item Letters (`ACGTN` or `acgtn`) indicate mismatches. At position 31587793, 10 reads favor `G` (alternate) and 16 favor `A` (reference), strongly suggesting a heterozygous variant.
+    \item Each line details the chromosome, 1-based coordinate, reference base (e.g., \texttt{A} at position 31587793), and read coverage (26 reads).
+    \item A dot (\texttt{.}) indicates a match to the reference base on the forward strand.
+    \item A comma (\texttt{,}) indicates a match on the reverse strand.
+    \item Uppercase/Lowercase letters (\texttt{ACGTN} / \texttt{acgtn}) indicate mismatches to the reference on the forward/reverse strands, respectively.
 \end{enumerate}
+
+In the snippet above, at position \texttt{31587793}, 16 reads favor \texttt{A} (reference), while 10 reads favor \texttt{G} (alternate). This roughly 50/50 split strongly suggests a heterozygous variant.
 
 \subsection{A Naive Frequency-Based Heuristic}
 
-Early NGS studies used strict quality cutoffs (e.g., filtering out bases with $Q < 20$) followed by a straightforward frequency threshold:
+Early approaches used a simple heuristic: filter out bases requiring $Q \ge 20$, compute VAF, and apply strict frequency thresholds:
 \begin{itemize}
     \item If VAF $< 20\% \implies$ Homozygous reference.
     \item If $20\% \le$ VAF $\le 80\% \implies$ Heterozygous variant.
     \item If VAF $> 80\% \implies$ Homozygous variant.
 \end{itemize}
 
-\sta \textbf{Limitations:} This naive approach fails severely at low sequencing depths. If a position has only 6 reads, observing 1 variant read yields a 17\% VAF (called "reference"), while 2 variant reads yield a 33\% VAF (called "heterozygous"). This is an insignificant statistical difference resulting from random sampling. Furthermore, throwing away data strictly below a quality threshold destroys useful probabilistic information.
+\sta \textbf{Limitations:} This naive approach fails severely at low sequencing depths. If a position has only 6 reads, finding 1 alternate read yields a 17\% VAF. The heuristic calls this "homozygous reference". However, due to random sampling, pulling 5 reference reads and 1 alternate read from a truly heterozygous (50/50) site is entirely possible. Setting hard read-count minimums or throwing away data below a quality threshold results in a massive loss of useful probabilistic information.
 
 \subsection{Probabilistic Approach: The MAQ Algorithm}
 
-Modern algorithms like MAQ (Mapping and Assembly with Qualities) use Bayesian inference to model the uncertainty of both the sequencing and mapping processes.
+To address depth and quality issues, algorithms like MAQ (Mapping and Assembly with Qualities) use Bayesian inference to model the uncertainty of both the sequencing and mapping processes.
 
 \begin{important}
   \textbf{Bayes' Theorem}: Relates the conditional probability of a model given the data, to the likelihood of the data given the model:
-  \[ P(M \mid D) = \frac{P(D \mid M) P(M)}{P(D)} \]
+  \[ P(E_i \mid B) = \frac{P(B \mid E_i) P(E_i)}{\sum_i P(B \mid E_i) P(E_i)} \]
+  Where $E_i$ represents the possible states (genotypes) and $B$ represents the observed data.
 \end{important}
 
-MAQ aims to find the \textbf{Maximum A Posteriori (MAP)} estimate—the genotype $g \in \{ \langle a,a \rangle, \langle a,b \rangle, \langle b,b \rangle \}$ that maximizes the posterior probability:
-\begin{equation}
-    \hat{g} = \underset{g}{\operatorname{argmax}} p(g \mid D) = \underset{g}{\operatorname{argmax}} p(D \mid g) p(g)
-\end{equation}
+\begin{important}
+  \textbf{Maximum A Posteriori (MAP) Estimation}: A Bayesian methodology used to generate an estimate of an unknown quantity that equals the mode of the posterior distribution. We select the genotype $g \in \{ \langle a,a \rangle, \langle a,b \rangle, \langle b,b \rangle \}$ that maximizes the posterior probability:
+  \begin{equation}
+      \hat{g} = \underset{g}{\operatorname{argmax}} p(g \mid D) = \underset{g}{\operatorname{argmax}} p(D \mid g) p(g)
+  \end{equation}
+\end{important}
 
 \subsubsection{Integrating Mapping and Base Quality}
-Before computing genotype probabilities, MAQ adjusts the base quality $Q_i$ of a nucleotide based on the mapping quality $Q_z$ of the read it belongs to:
+Before computing genotype probabilities, MAQ recalculates the base quality $Q_i$ of a nucleotide as the minimum of its original base quality and the mapping quality $Q_z$ of the read it belongs to:
 \begin{equation}
     Q_i = \min(Q_i, Q_z)
 \end{equation}
-\textit{Rationale:} If a base was sequenced perfectly ($Q_i$ is high) but the read might map to the wrong chromosome ($Q_z$ is low), we must temper our confidence in that base. Conversely, a confident mapping does not save a poorly sequenced base.
+\textbf{Rationale:} If a base has a high sequencing quality, but the read has a terrible mapping quality (we don't know where it truly belongs in the genome), we should not trust this base. Conversely, a confident mapping does not save a poorly sequenced, blurry optical signal. Taking the minimum ensures we only trust data that is both accurately sequenced \textit{and} accurately positioned.
 
-\subsubsection{Genotype Prior Probabilities ($P(g)$)}
-MAQ sets a prior probability $r$ for observing a heterozygous genotype. To reduce false positives, $r$ is low ($r = 0.001$) for novel mutations, but much higher ($r = 0.2$) for known SNPs.
+\subsubsection{Consensus Genotype Calling}
+Assume an alignment column $D$ has $n$ total reads, with $k$ reference bases ($a$) and $n-k$ alternate bases ($b$). MAQ computes the posterior probability for all three possible genotypes and picks the maximum.
+
+To do this, MAQ defines prior probabilities ($r$) for observing a heterozygous genotype:
 \[ P(\langle a, a \rangle) = (1 - r) / 2 \]
 \[ P(\langle b, b \rangle) = (1 - r) / 2 \]
 \[ P(\langle a, b \rangle) = r \]
 
-\subsubsection{Likelihood Calculation ($P(D \mid g)$)}
-For a column of $n$ mapped reads with $k$ reference bases ($a$) and $n-k$ alternate bases ($b$):
-\begin{itemize}
-    \item \textbf{Heterozygous case $\langle a,b \rangle$}: Modeled as a standard binomial process where drawing either allele has a $p=0.5$ probability.
-    \[ P(D \mid \langle a,b \rangle) = \binom{n}{k} \frac{1}{2^n} \]
-    \item \textbf{Homozygous reference $\langle a,a \rangle$}: Every observed alternate base $b$ must be a sequencing/mapping error. Let $\alpha_{n,n-k}$ be the probability of observing $n-k$ errors in $n$ bases.
-    \item \textbf{Homozygous alternate $\langle b,b \rangle$}: Every observed reference base $a$ must be an error. Let $\alpha_{n,k}$ be the probability of $k$ errors.
-\end{itemize}
+To reduce false positives, $r$ is low ($r = 0.001$) for novel mutations, but much higher ($r = 0.2$) for known SNPs. \sta This aggressive prior for new SNPs heavily penalizes false-positive heterozygous calls caused by sequencing noise.
 
-MAQ calculates the product of the likelihood and the prior for all three genotypes, normalizes them so they sum to 1, and selects the genotype with the highest posterior probability.
+Next, we calculate the probability of the data given the model ($P(D \mid g)$). 
+If the true genotype is homozygous reference $\langle a,a \rangle$, then all $n-k$ alternate bases must be errors. MAQ defines $\alpha_{n,k}$ as the probability of observing $k$ errors in $n$ nucleotides (calculated using a modified binomial distribution factoring in individual base error rates).
 
-\section{Somatic Variant Calling in Cancer}
+The unnormalized posterior probabilities are computed as:
+\begin{align}
+p(g = \langle a, a \rangle \mid D) &\propto \alpha_{n, n - k} \cdot (1 - r) / 2 \\
+p(g = \langle b, b \rangle \mid D) &\propto \alpha_{n, k} \cdot (1 - r) / 2 \\
+p(g = \langle a, b \rangle \mid D) &\propto \binom{n}{k} \frac{1}{2^n} \cdot r
+\end{align}
 
-Calling somatic mutations requires distinguishing true tumor-specific variants from background germline variants. Algorithms like \textbf{VarScan2} accomplish this by processing a tumor sample and a matched normal control sample in parallel.
+To normalize, MAQ divides each by the sum of all three. It then selects the genotype with the highest posterior probability and reports a genotype quality score $Q_g = -10 \log_{10}[1 - P(\hat{g} \mid D)]$.
+
+\section{Pipeline for Calling Somatic SNVs in Cancer}
+
+Calling somatic mutations requires distinguishing true tumor-specific variants from the millions of background germline variants present in the patient. Algorithms like \textbf{VarScan2} accomplish this by processing a tumor sample and a matched normal control sample in parallel.
 
 \subsection{The VarScan2 Heuristic and Fisher's Exact Test}
-If the independently called genotypes of the tumor and normal samples disagree (e.g., Normal = Homozygous Reference, Tumor = Heterozygous Variant), VarScan2 tests whether the difference in allele counts is statistically significant.
+VarScan2 evaluates the tumor and control samples:
+\begin{enumerate}
+    \item \textbf{Independent Genotyping}: It first makes a basic genotype call for both tumor and normal based on read thresholds (e.g., requires $\ge 3$ reads with $Q \ge 20$).
+    \item \textbf{Comparison}: If the independently called genotypes disagree (e.g., Normal = Homozygous Reference, Tumor = Heterozygous Variant), VarScan2 tests whether the difference in allele counts is statistically significant.
+\end{enumerate}
 
-It constructs a $2 \times 2$ contingency table of read counts (Reference vs. Alternate) for both samples, and applies a one-tailed \textbf{Fisher's exact test} utilizing the hypergeometric distribution:
+It constructs a $2 \times 2$ contingency table of read counts (Reference vs. Alternate) for both samples, and applies a one-tailed \textbf{Fisher's exact test} utilizing the hypergeometric distribution to find the probability of observing exactly $N_{T,alt}$ alternate reads in the tumor:
 \begin{equation}
-    P(X \ge N_{T,alt}) = \sum_{i=N_{T,alt}}^{N_T} \frac{\binom{N_T}{i} \binom{N_C}{N_{C,alt}}}{\binom{N_{tot}}{i+N_{C,alt}}}
+    P(X = N_{T, alt}) = \frac{\binom{N_T}{N_{T, alt}} \binom{N_C}{N_{C, alt}}}{\binom{N_{tot}}{N_{alt}}}
 \end{equation}
+
+Because we want the probability of observing \textit{at least} this many alternate reads by chance, we sum the probabilities from $N_{T,alt}$ to $N_T$:
+\begin{equation}
+    P(X \ge N_{T, alt}) = \sum_{i=N_{T, alt}}^{N_T} \frac{\binom{N_T}{i} \binom{N_C}{N_{C, alt}}}{\binom{N_{tot}}{i + N_{C, alt}}}
+\end{equation}
+
 If the resulting p-value is $\le 0.05$, the variant is officially called a \textit{somatic mutation}.
 
 \begin{important}
-  \textbf{Loss of Heterozygosity (LOH)}: An event where a normal cell is heterozygous (e.g., alleles A and T), but the tumor sample shows only one allele (e.g., T). This often occurs because the genomic segment containing the 'A' allele was physically deleted in the tumor's DNA.
+  \textbf{Loss of Heterozygosity (LOH)}: A specific somatic event where the normal tissue is heterozygous (e.g., has both an \texttt{A} and a \texttt{T} allele), but the tumor tissue appears homozygous (e.g., only shows \texttt{T}). This often occurs because the genomic segment containing the \texttt{A} allele was physically deleted in the tumor's DNA, leaving only the mutated \texttt{T} allele.
 \end{important}
 
-\section{Structural Variations and CNV Calling}
+\section{Calling Structural Variations (CNVs) via Read Depth}
 
-Structural variants, specifically Copy Number Variants (CNVs), are detected not by observing mismatched bases, but by observing the \textbf{read depth} (coverage) across regions.
+To find massive duplications or deletions (Copy Number Variants), we cannot look at single nucleotide pileups. Instead, we analyze \textbf{Read Depth} (coverage) across large consecutive genomic regions.
 
 % [IMAGE: Coverage plot comparing a tumor sample and a control sample. The y-axis shows log2-normalized read counts. The tumor plot shows a massive spike indicating an amplification (e.g., 60 copies of a gene) and sudden drops indicating deletions of entire chromosome arms.]
+% [IMAGE: Coverage plot comparing tumor to control. Log2 median-normalized read counts are plotted as dots along the chromosome. Sudden drops indicate deletions; massive spikes (e.g., 60 copies) indicate gene amplification.]
 
-\subsection{Read Depth and the Poisson Distribution}
-The genome is divided into fixed-size windows (e.g., 1 kbp). The expected number of reads mapping to a window follows a Poisson distribution:
+\subsection{Coverage Plots and the Poisson Distribution}
+We divide the genome into fixed-size windows (e.g., 1 kbp or 10 kbp). We count the number of reads mapping to each window.
+\begin{itemize}
+    \item A normal diploid region (2 copies) serves as the baseline.
+    \item A heterozygous deletion (1 copy) will show approximately half the baseline reads.
+    \item A duplication (3 copies) will show 1.5$\times$ the baseline reads.
+\end{itemize}
+
+Because read mapping is a random process, the expected number of reads mapping to a window follows a Poisson distribution:
 \begin{equation}
-    P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}
+    P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!} \quad \text{where} \quad \lambda = \frac{N}{G} \cdot W
 \end{equation}
-where $\lambda = \frac{N}{G} \cdot W$ (Total Reads / Genome Size $\times$ Window Size).
+Here, $N$ is total reads, $G$ is genome size, and $W$ is window size. 
 
-If a window normally expects $\lambda$ reads, a heterozygous deletion (1 copy instead of 2) yields roughly $0.5\lambda$ reads, and a duplication (3 copies) yields $1.5\lambda$ reads. For sufficiently large $\lambda$, the Poisson distribution is approximated by a normal distribution, allowing us to compute a $Z$-score for each window:
+For large $\lambda$ ($\ge 10$), the Poisson distribution is approximated by a normal distribution, allowing us to compute a \textbf{z-score} for every window:
 \begin{equation}
     z = \frac{x - \mu}{\sigma}
 \end{equation}
-which is converted into an upper-tail or lower-tail p-value to test for abnormal increases or decreases in coverage.
+The z-score tells us how many standard deviations a window's read count is above or below the chromosomal mean, which is then converted into an upper-tail or lower-tail p-value.
 
-\subsection{Event-Wise Testing (EWT) and Multiple Testing Correction}
+\subsection{Event-Wise Testing (EWT)}
 
-To prevent calling spurious CNVs from a single noisy window, algorithms search for \textit{intervals} of $\ell$ consecutive windows that show a collective deviation. 
+To prevent calling spurious CNVs from a single noisy window, we search for consecutive windows that consistently show aberrant z-scores. The Event-Wise Testing (EWT) algorithm by Yoon et al. (2009) starts with window size $\ell=1$, then iteratively expands to $\ell=2, 3...$ grouping adjacent windows until the mathematical condition breaks.
 
-\begin{important}
-  \textbf{Multiple Testing Correction (MTC)}: A statistical adjustment required when performing millions of simultaneous tests across the genome. Without correction, a 5\% false-positive rate ($p=0.05$) over 50 tests yields an expected error rate of $1 - (0.95)^{50} \approx 92.3\%$, guaranteeing false discoveries.
-\end{important}
-
-The most stringent MTC is the \textbf{Bonferroni correction}, which divides the target significance level ($\alpha=0.05$) by the total number of tests ($k$):
-\[ p_{threshold} = \frac{\alpha}{k} \]
-
-In Yoon et al.'s Event-Wise Testing (EWT) algorithm, an interval $\mathcal{A}$ of $\ell$ windows is called a duplication if the maximum (least significant) p-value inside the interval meets a modified, less conservative threshold:
+An interval $\mathcal{A}$ of $\ell$ windows is called a duplication if the maximum (least significant) p-value inside the interval meets a modified threshold:
 \begin{equation}
     \max_i \{ P_i^{\text{Upper}} \mid i \in \mathcal{A} \} < \left( \frac{\ell}{L} \times \text{FPR} \right)^{\frac{1}{\ell}}
 \end{equation}
-Here, $L$ is the total number of windows on the chromosome, and FPR is the target false positive rate (e.g., 0.05). The term $\frac{\ell}{L} \times \text{FPR}$ effectively acts as a Bonferroni correction adjusted for the length of the event.
+Here, $L$ is the total number of windows on the chromosome, and FPR is the target false positive rate (e.g., 0.05). 
+
+\subsection{Correction for Multiple Testing}
+
+Why does the EWT formula look so complex? It is attempting to solve the \textbf{Multiple Testing Problem}.
+
+\begin{important}
+  \textbf{Multiple Testing Correction (MTC)}: A statistical adjustment required when performing millions of simultaneous tests across the genome. If we test 20,000 genes with a significance threshold of $\alpha = 0.05$, we accept a 5\% chance of being wrong on any individual test. Across 20,000 tests, a 5\% error rate guarantees roughly 1,000 false positive discoveries. "If you torture the data long enough, it will confess."
+\end{important}
+
+The most stringent MTC is the \textbf{Bonferroni correction}, which divides the target significance level ($\alpha=0.05$) by the total number of tests ($k$) to maintain the overall error rate:
+\[ p_{threshold} = \frac{\alpha}{k} \]
+
+For CNV calling, a strict Bonferroni correction for $L$ windows would require $P_i < \frac{\text{FPR}}{L}$. However, this is so conservative that it causes many "false negatives" (missing true CNVs). The EWT formula term $\left( \frac{\ell}{L} \times \text{FPR} \right)^{\frac{1}{\ell}}$ acts as a less restrictive, heuristic relaxation of Bonferroni designed specifically for contiguous, non-overlapping windows.
