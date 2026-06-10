@@ -1,60 +1,40 @@
+\begin{document}
 
+% Lecture Notes: Multiple Sequence Alignment (Part 1)
 
 \section{Introduction to Evolutionary Trees and Multiple Sequence Alignment}
 
-Evolutionary biology relies heavily on computational approaches to trace the shared history of organisms. While early conceptualizations of evolution, such as Charles Darwin's "tree of life," focused on morphological traits, modern bioinformatics enables us to build phylogenetic trees based on molecular data (e.g., DNA or protein sequences).
+Evolutionary biology is a major application domain for computational approaches and sequence analysis. By comparing biological sequences (such as DNA or proteins), we can reconstruct evolutionary processes and deduce the relationships among different species or variants. While early conceptualizations of evolution, such as Charles Darwin's "tree of life," focused on morphological traits, modern bioinformatics enables us to build phylogenetic trees based on molecular data.
+
+A foundational concept in evolutionary biology is Charles Darwin's ``tree of life'', which visualizes how different species evolved from common ancestors. This concept scales from broad, macroscopic comparisons (e.g., all kingdoms of life) to highly specific, localized comparisons. For instance, evolutionary trees can be constructed to map the relationships between reptile species in Madagascar, or even to track the micro-evolutionary divergence of viral variants, such as the Alpha, Beta, and Omicron variants of SARS-CoV-2.
 
 % [IMAGE: Evolutionary tree of Madagascan reptiles showing how different species diverged based on the cytochrome oxidase subunit I (COI) gene.]
+% [IMAGE: An evolutionary tree diagram of Madagascan reptiles, radiating outward to show species divergence based on similarities in the cytochrome oxidase subunit I (COI) gene.]
 % [IMAGE: Comprehensive Tree of Life showing major and minor living branches of life, radiating outwards from single-celled organisms to complex life forms.]
+% [IMAGE: A large-scale, interactive circular diagram of the ``Tree of Life'', showing deep evolutionary branching from ancient single-celled organisms to modern animals and plants.]
 % [IMAGE: SARS-CoV-2 evolutionary tree showing the divergence of viral variants (e.g., Alpha, Omicron) over time.]
+% [IMAGE: A dense phylogenetic tree mapping the evolutionary divergence of SARS-CoV-2 variants as of March 2022, grouping different branches by variant types (e.g., Omicron, Delta).]
 
-So far, sequence alignment techniques have focused heavily on pair-wise comparisons (global alignment, local alignment, or mapping a single read to a reference). However, evolutionary processes rarely involve just two entities. To understand the broader relationships among species or viral variants, we must align multiple sequences simultaneously.
+So far, sequence alignment techniques—such as global alignment, local alignment, and read mapping—have focused heavily on pair-wise comparisons (comparing exactly two sequences at a time). Even when mapping millions of short reads to a reference genome, the operation remains fundamentally pairwise. However, evolutionary processes rarely involve just two entities. Extracting reliable evolutionary histories requires comparing more than two sequences simultaneously. To understand the broader relationships among species or viral variants, we must align multiple sequences simultaneously.
 
 \subsection{From Two to Many: The Principle of Parsimony}
 
-Sequences from different species often share a common evolutionary history. The general rule is that the more similar two sequences are, the more recent their common ancestor is. To formalize evolutionary changes, we rely on the principle of \textbf{parsimony}, which assumes that the simplest sequence of evolutionary events is the most likely.
+Sequences from different species often share a common evolutionary history. The general rule is that the more similar two sequences are, the more recent their common ancestor is. To formalize evolutionary changes, we rely on the principle of \textbf{parsimony}.
 
-When comparing a position across sequences, parsimony implies:
+\begin{important}
+    \textbf{Principle of Parsimony}: In evolutionary terms, the most likely evolutionary path is the one that requires the fewest number of independent changes (mutations, insertions, or deletions). It assumes that the simplest sequence of evolutionary events is the most likely.
+\end{important}
+
+When comparing a position across sequences from related species, parsimony implies:
 \begin{itemize}
-    \item \textbf{Match}: It is most likely that nothing changed during evolution (the ancestor possessed this exact character).
-    \item \textbf{Mismatch}: It is most likely that one of the sequences diverged from the ancestral character, rather than both mutating independently to new characters.
-    \item \textbf{Gap}: Represents an insertion or a deletion relative to the ancestral sequence.
+    \item \textbf{Match}: If both sequences share the same character at a position, it is most likely that the character was present in their common ancestor and was conserved, rather than both mutating independently to new characters (or the same character).
+    \item \textbf{Mismatch}: If the characters differ, it is most likely that the ancestor had one of the two characters, and only one of the species diverged (underwent a point mutation), rather than both mutating independently to new characters.
+    \item \textbf{Gap}: Represents an insertion or a deletion (indel) relative to the ancestral sequence. It is more probable that a single indel occurred in one lineage than identical indels occurring independently in both.
 \end{itemize}
-
-\textbf{Example:} Aligning words across languages
-To illustrate, consider the word "sugar" across different languages. A pair-wise alignment between English ("SUGAR") and French ("SUCRE") might yield multiple equally scoring alternatives depending on gap penalties.
-
-Pair-wise alignment (Alternative 1):
-\begin{verbatim}
-S U G A R -
-S U C - R E
-\end{verbatim}
-
-Pair-wise alignment (Alternative 2):
-\begin{verbatim}
-S U G A R
-S U C R E
-\end{verbatim}
-
-If gaps carry heavy penalties, Alternative 2 might win locally. However, if we align these words alongside other languages (e.g., Spanish "AZUCAR", Basque "ZUKER"), we see that the 'R' is conserved across almost all variants.
-
-Multiple Sequence Alignment Consensus:
-\begin{verbatim}
-- S U G A R -
-- S U C - R E
-- S A K A R I
-- Z U K E R -
-A Z U C A R -
-\end{verbatim}
-\textit{What this illustrates}: Multiple sequence alignment clarifies ambiguous cases resulting from pair-wise comparisons. It provides a generalized context that allows us to extrapolate the biologically and evolutionarily "correct" alignment, even if it locally introduces a gap.
-
-% [IMAGE: Multiple sequence alignment of the En_B_anynana protein family in butterflies, highlighting conserved amino acid regions across different species.]
-% [IMAGE: Sequence alignment of ArgR transcription factor binding sites within a single species, showing that MSA is also useful for comparing functional genomic regions.]
-
 
 \section{Formalizing Multiple Sequence Alignment (MSA)}
 
-To approach multiple sequence alignment computationally, we must rigorously define the problem structure and the objective function we aim to optimize.
+To approach multiple sequence alignment computationally and determine the best alignment out of all possible gap placements, we must rigorously define the problem structure and the objective function we aim to optimize.
 
 \begin{important}
     \textbf{Multiple Sequence Alignment (MSA)}: Given $k$ strings $S_1, S_2, \dots, S_k$ over an alphabet $\Sigma$, an MSA is a new set of $k$ strings $S'_1, S'_2, \dots, S'_k$ over the extended alphabet $\Sigma' = \Sigma \cup \{-\}$ such that:
@@ -66,86 +46,147 @@ To approach multiple sequence alignment computationally, we must rigorously defi
 
 Because the only variable in creating an MSA is the placement of gaps, the mathematical challenge is deciding \textit{where} to insert these gaps to maximize sequence similarity across the entire group.
 
+\subsection{Why Pairwise Alignment is Insufficient}
+
+An MSA provides a generalized view of the relationships among all input sequences and helps clarify ambiguous alignments that cannot be confidently resolved using only pairwise comparisons.
+
+\textbf{Example:} Aligning the word for "sugar" across different languages.
+A pair-wise alignment between English ("SUGAR") and French ("SUCRE") might yield multiple equally scoring alternatives depending on gap penalties.
+
+\textit{Alternative 1 (gaps penalized loosely)}:
+\begin{verbatim}
+S U G A R -
+S U C - R E
+\end{verbatim}
+
+\textit{Alternative 2 (gaps penalized heavily)}:
+\begin{verbatim}
+S U G A R
+S U C R E
+\end{verbatim}
+
+If gaps carry heavy penalties, Alternative 2 might win locally in isolation because it avoids gap penalties. However, if we align these words alongside other languages (e.g., Spanish "AZUCAR", Basque "ZUKER"), we observe that the 'R' character is highly conserved across almost all variants.
+
+Multiple Sequence Alignment Consensus:
+\begin{verbatim}
+- S U G A R -
+- S U C - R E
+- S A K A R I
+- Z U K E R -
+A Z U C A R -
+\end{verbatim}
+\textit{What this illustrates}: Multiple sequence alignment clarifies ambiguous cases resulting from pair-wise comparisons. In isolation, Alternative 2 might seem optimal to a naive algorithm. By viewing the global consensus, we extrapolate the biologically and evolutionarily "correct" pairwise alignment, even if it locally introduces a gap, because it successfully aligns the conserved "R" column across the entire dataset.
+
+% [IMAGE: Multiple sequence alignment of the En_B_anynana protein family in butterflies, highlighting conserved amino acid regions across different species.]
+% [IMAGE: Sequence alignment of ArgR transcription factor binding sites within a single species, showing that MSA is also useful for comparing functional genomic regions.]
+
 \subsection{Scoring Multiple Alignments: Sum of Pairs}
 
-To find the optimal multiple alignment, we need a formalized scoring function. An MSA implicitly induces a pair-wise alignment for every possible pair of sequences within the set. We can leverage the familiar 2D substitution matrix (used in pair-wise alignments) to compute a score for the entire MSA.
+To find the optimal multiple alignment, we need a formalized scoring function. An MSA implicitly induces a pair-wise alignment for every possible pair of sequences within the set. We can leverage the familiar 2D substitution matrix (used in pair-wise alignments) to compute a score for the entire MSA. The most common metric is the Sum of Pairs score.
 
 \begin{important}
     \textbf{Sum of Pairs (SP) Score}: The total score of a multiple alignment is computed as the sum of the pair-wise alignment scores $a(S_i, S_j)$ for every possible unique pair of sequences.
     \[
     SP = \sum_{i=1}^{k-1} \sum_{j=i+1}^k a(S_i, S_j)
     \]
-    The goal of the MSA optimization problem is to find the alignment that maximizes the SP score.
+    Where $a(S_i, S_j)$ is the pairwise alignment score between string $i$ and string $j$.
+    The goal of the MSA optimization problem is to find the placement of gaps that maximizes the SP score.
 \end{important}
 
+\subsection{Column Scores and Gap-Gap Penalties}
 
-\section{Optimal Alignment via Dynamic Programming}
+We can also deconstruct the SP score column-by-column. Let $A_i$ be the $i$-th column of the alignment matrix, and $N$ be the total number of characters in that column (equal to $k$).
 
-Just as the optimal alignment for $k=2$ strings can be found using a 2D dynamic programming matrix, the optimal SP score for $k$ strings can be found by generalizing the algorithm into higher dimensions.
+\[
+S(A_i) = \sum_{j=1}^N \sum_{k>j} s(a_i^{(j)}, a_i^{(k)})
+\]
+
+Here, $s(x,y)$ is derived from a standard 2D scoring matrix (e.g., match, mismatch, and gap penalties).
+
+\sta \textbf{Critical exception for gaps}: When calculating the SP score, aligning a gap with another gap evaluates to a score of exactly $0$, i.e., $s(-,-) = 0$.
+\textbf{Example:} Aligning a column of pure gaps.
+\begin{itemize}
+    \item If a column in an MSA consists entirely of gaps, it biologically signifies nothing (it neither improves nor worsens the alignment, and could trivially be added or removed without changing sequence content). Thus, it contributes a score of 0 to the SP sum.
+\end{itemize}
+
+\section{Optimal Alignment via Multidimensional Dynamic Programming}
+
+Just as the optimal alignment for $k=2$ strings can be found using a 2D dynamic programming matrix, the optimal global multiple alignment score (SP score) for $k$ strings can be found by generalizing the algorithm into $k$ dimensions.
 
 \begin{itemize}
-    \item For $k=2$, we use a 2D structure (matrix) and check 3 neighboring cells (left, top, diagonal).
-    \item For $k=3$, we use a 3D structure (cube) and check 7 neighboring cells.
-    \item For $k>3$, we use a $k$-dimensional hypercube (hyperlattice) and check $2^k - 1$ neighboring cells.
+    \item For $k=2$ strings, we use a 2D structure (matrix).
+    \item For $k=3$ strings, we use a 3D structure (cube).
+    \item For $k>3$ strings, we use a $k$-dimensional hypercube (hyperlattice).
 \end{itemize}
+
+In this $k$-dimensional space, the final cell (maximum index in every dimension) contains the optimal global multiple alignment score, which is reconstructed via traceback.
 
 \sta \textit{Critical Remark: You will not be asked to manually compute a 5-dimensional DP matrix on an exam. However, you must deeply understand the geometric principle of extending DP dimensions and how neighborhood tracebacks operate theoretically.}
 
 \subsection{Neighboring Cells and 3D Scoring}
 
-To compute the score for a specific node in a 3-dimensional lattice (aligning three sequences $V$, $W$, $U$), we must evaluate 7 possible origin points (representing different combinations of character consumptions and gap insertions). Let $v_i$, $w_j$, and $u_k$ be the current characters of the three sequences.
+In a 2D matrix, a cell is updated by looking at 3 neighbors (top, left, diagonal). 
+In a $k$-dimensional space, the number of neighbors to check is $2^k - 1$. For $k=3$, we use a 3D structure and evaluate $2^3 - 1 = 7$ neighboring cells representing the 7 possible ways to build the alignment at that step.
 
-\[
+To compute the score for a specific node in a 3-dimensional lattice (aligning three sequences $V$, $W$, $U$), let $v_i$, $w_j$, and $u_k$ be the current characters of the three sequences.
+
+\begin{equation} \label{eq:3d_dp}
 s_{i,j,k} = \max \left\{ \begin{array}{ll}
-s_{i-1, j-1, k-1} + \delta(v_i, w_j, u_k) & \text{cube diagonal: no indels} \\
-s_{i-1, j-1, k} + \delta(v_i, w_j, \text{-}) & \text{face diagonal: one indel} \\
-s_{i-1, j, k-1} + \delta(v_i, \text{-}, u_k) & \text{face diagonal: one indel} \\
-s_{i, j-1, k-1} + \delta(\text{-}, w_j, u_k) & \text{face diagonal: one indel} \\
-s_{i-1, j, k} + \delta(v_i, \text{-}, \text{-}) & \text{edge diagonal: two indels} \\
-s_{i, j-1, k} + \delta(\text{-}, w_j, \text{-}) & \text{edge diagonal: two indels} \\
-s_{i, j, k-1} + \delta(\text{-}, \text{-}, u_k) & \text{edge diagonal: two indels}
-\end{array} \right.
-\]
+s_{i-1, j-1, k-1} + \delta(v_i, w_j, u_k) & \text{cube diagonal (no gaps/indels)} \\
+s_{i-1, j-1, k} + \delta(v_i, w_j, \text{-}) & \text{face diagonal (1 gap/indel)} \\
+s_{i-1, j, k-1} + \delta(v_i, \text{-}, u_k) & \text{face diagonal (1 gap/indel)} \\
+s_{i, j-1, k-1} + \delta(\text{-}, w_j, u_k) & \text{face diagonal (1 gap/indel)} \\
+s_{i-1, j, k} + \delta(v_i, \text{-}, \text{-}) & \text{edge diagonal (2 gaps/indels)} \\
+s_{i, j-1, k} + \delta(\text{-}, w_j, \text{-}) & \text{edge diagonal (2 gaps/indels)} \\
+s_{i, j, k-1} + \delta(\text{-}, \text{-}, u_k) & \text{edge diagonal (2 gaps/indels)}
+\end{array} \right\}
+\end{equation}
 
 Here, $\delta(x,y,z)$ is an entry in a 3D scoring matrix. This 3D score is simply decomposed into the sum of the underlying 2D pair-wise scores:
 \[
 \delta(x,y,z) = s(x,y) + s(x,z) + s(y,z)
 \]
 
+% [IMAGE: A schematic of a 3D unit cube representing the 7 possible paths to reach the furthest node on the hyperlattice, illustrating the transitions for matching characters vs introducing gaps.]
+
 \textbf{Example:} Scoring a specific column in an MSA.
 Consider the 7th column of a 3-sequence alignment consisting of an 'A' and two gaps: `(A, -, -)`.
 1. The SP score for this column evaluates the three pairs: (A, -), (A, -), and (-, -).
 2. The score is: $s(\text{A}, \text{-}) + s(\text{A}, \text{-}) + s(\text{-}, \text{-})$.
-3. Biologically, aligning two gaps against each other does not provide new evolutionary information (it neither improves nor worsens the alignment). Therefore, we strictly set $s(\text{-}, \text{-}) = 0$.
+3. Biologically, aligning two gaps against each other does not provide new evolutionary information. Therefore, we strictly set $s(\text{-}, \text{-}) = 0$.
 \textit{What this illustrates}: The column score is just the mathematical decomposition of the $k$-dimensional move into pair-wise penalties, heavily penalizing single character insertions against multiple gaps.
 
 \subsection{Complexity and NP-Hardness}
 
 Assuming we are aligning $k$ sequences of equal length $n$:
 \begin{itemize}
-    \item \textbf{Space Complexity}: The hypercube data structure requires $(n+1)^k$ cells. $\implies O(n^k)$.
-    \item \textbf{Time Complexity}: For each cell, we must check $2^k - 1$ neighbors. $\implies O(2^k n^k)$.
+    \item \textbf{Space Complexity}: We must allocate $(n+1)^k$ cells in our data structure (the hypercube). $\implies O(n^k)$.
+    \item \textbf{Time Complexity}: Filling each cell requires checking $2^k - 1$ neighbors. $\implies O(2^k n^k)$.
 \end{itemize}
 
-Because $k$ is an input variable (not a constant), the space and time scale exponentially with the number of sequences. Consequently, the optimal multiple sequence alignment problem is \textbf{NP-hard}. In practice, it is computationally unfeasible to run the exact dynamic programming algorithm for more than 4 to 6 sequences of typical lengths.
+\sta Because $k$ (the number of sequences) is an input variable—not a constant—the time and space requirements scale exponentially. Consequently, finding the optimal Multiple Sequence Alignment is \textbf{NP-hard}.
 
+In practice, full DP is considered computationally unfeasible for $k > 4$ (or up to $k=6$ with modern optimizations of typical lengths). It remains NP-hard for virtually every non-trivial scoring function. We must therefore rely on heuristic algorithms and approximations.
 
-\section{Dealing with NP-Hard Problems}
+\section{Dealing with NP-Hard Problems: Approximability and Heuristic Methods}
 
-Faced with an NP-hard problem in practical bioinformatics (where analyzing 20+ sequences is standard), we must find workarounds. Common strategies include restricting the search space heuristically or designing \textbf{approximation algorithms}.
+Faced with an NP-hard maximization (or minimization) problem in applied bioinformatics (where analyzing 20+ sequences is standard), we must find workarounds. Common strategies include restricting the search space heuristically or designing \textbf{approximation algorithms}.
 
-An approximation algorithm runs in polynomial time and comes with a theoretical performance guarantee. Let $M(I)$ be the optimal score for instance $I$, and $A(I)$ be the score found by the approximation algorithm. We seek an algorithm that guarantees:
-\[
-\frac{A(I)}{M(I)} \geq \epsilon \quad \text{for some constant } \epsilon \in (0, 1]
-\]
+\begin{important}
+    \textbf{Performance Guaranteed Approximation}: An approximation algorithm runs in polynomial time and comes with a theoretical performance guarantee. For every instance $I$, the obtained score $A(I)$ is bounded relative to the theoretical optimal maximum (or minimum) $M(I)$ by a constant $\epsilon \in (0, 1]$:
+    \[
+    \frac{A(I)}{M(I)} \geq \epsilon \quad \text{for some constant } \epsilon \in (0, 1]
+    \]
+\end{important}
 For distance-minimization formulations, the bound is reversed: the algorithm guarantees the distance is at most some constant multiple of the optimal distance.
 
+To build a polynomial-time approximation, we can leverage the intuitive heuristic that \textit{highly similar sequences require fewer gaps to align}. Fewer gaps equate to fewer opportunities to place a gap incorrectly in a sub-optimal position and ruin the optimal score.
 
 \section{The Center Star Algorithm}
 
 Since exact hypercube DP is impossible, we can approximate the MSA by chaining together a series of pair-wise alignments (which only require manageable $O(n^2)$ 2D matrices).
 
-The core heuristic: \textit{The more similar sequences are, the fewer gaps are needed. Fewer gaps mean a lower chance of placing a gap in the sub-optimal position.}
+The Center Star algorithm is a progressive heuristic that builds a multiple alignment by designating a "center" string—the sequence most broadly/globally similar to all others—and progressively aligning the rest of the strings to that center.
 
 \begin{important}
     \textbf{Center Star Algorithm}: A heuristic approximation algorithm that builds a multiple alignment by designating a "center" string—the sequence most broadly similar to all others—and progressively aligning the rest of the strings to that center.
@@ -154,69 +195,85 @@ The core heuristic: \textit{The more similar sequences are, the fewer gaps are n
 \subsection{Algorithm Steps}
 
 \begin{enumerate}
-    \item \textbf{Compute all pair-wise alignments} for every unique pair of input strings $S_i$ and $S_j$.
+    \item \textbf{Compute all pair-wise alignments} for every possible unique pair of the $k$ input strings $S_i$ and $S_j$. There will be $\frac{k(k-1)}{2}$ pairs.
     \item \textbf{Calculate the total pair-wise score} $SP(S_i)$ for each string. This is the sum of its alignment scores against all other strings: $SP(S_i) = \sum_{i \neq j} a(S_i, S_j)$.
-    \item \textbf{Identify the Center Star} ($S_c$): Choose the string that maximizes this sum.
+    \item \textbf{Identify the Center Star} ($S_c$): Choose the string that maximizes this sum. This is the sequence globally most similar to the rest of the dataset.
     \[ S_c = \arg \max_{S_i} SP(S_i) \]
-    \item \textbf{Iteratively build the MSA}: Start with $S_c$. One by one, merge the other strings into the growing alignment utilizing the exact pair-wise alignments generated in Step 1.
+    \item \textbf{Initialize} the MSA with $S_c$.
+    \item \textbf{Iteratively build the MSA}: One by one, add the remaining strings to the growing alignment utilizing the exact pair-wise alignments generated in Step 1.
 \end{enumerate}
 
-\textbf{Example:} Shifting a partial alignment
+\sta \textbf{Crucial update rule}: When a gap is introduced into the center sequence $S_c$ to align a new string, that same gap \textit{must be inserted across all existing sequences} in the partial alignment at that exact column to maintain structural integrity and consistency relative to the center string.
+
+\textbf{Example:} Shifting a partial alignment / columns in Center Star.
 Imagine $S_c = \text{MK}$. In previous steps, we aligned $S_1 = \text{MP}$ to $S_c$ perfectly. Now we need to merge $S_3 = \text{MSK}$. The pair-wise alignment between $S_c$ and $S_3$ indicates a gap must be placed in $S_c$ to accommodate the 'S', transforming $S_c$ locally to `M-K`.
 \begin{enumerate}
     \item We cannot simply insert a gap into $S_c$ and ignore $S_1$.
     \item We must insert a gap into the \textit{entire} existing partial alignment at that column index.
-    \item $S_1$ becomes `M-P`. The final alignment retains structural integrity relative to the center string.
+    \item $S_1$ becomes `M-P`. 
 \end{enumerate}
-\textit{What this illustrates}: When a new sequence forces an insertion (gap) into the center string, that gap propagates vertically through all sequences currently in the MSA matrix. The order in which sequences are added does \textbf{not} change the final output.
+Another scenario: Aligning \texttt{ATCTTC-TT} to the partial alignment containing center sequence \texttt{ATGGCCATT}. 
+If the new pairwise alignment requires shifting the end of \texttt{ATGGCCATT} to become \texttt{ATGGCCATT--}, we must pad \textit{every} sequence already in the MSA with \texttt{--} at the corresponding position.
+
+\textit{What this illustrates}: When a new sequence forces an insertion (gap) into the center string, that gap propagates vertically through all sequences currently in the MSA matrix, dynamically reshaping the global alignment width. The order in which sequences are added does \textbf{not} change the final output.
 
 \subsection{Complexity and Approximation Bounds}
 
+Assuming $k$ sequences of length $n$:
 \begin{itemize}
-    \item \textbf{Step 1 (Pair-wise computations)}: We compute $O(k^2)$ matrices. Each matrix takes $O(n^2)$ time and space. The step takes $O(k^2 n^2)$ time.
-    \item \textbf{Memory optimization}: By computing pairs sequentially and discarding the matrices, space complexity drops to $O(n^2)$.
-    \item \textbf{Merging}: Choosing the center and building the alignment takes $O(nk)$ time.
-    \item \textbf{Overall Complexity}: $O(k^2 n^2)$ time. Vastly superior to $O(2^k n^k)$.
+    \item \textbf{Step 1 (Pair-wise computations)}: We compute $O(k^2)$ matrices. Each matrix takes $O(n^2)$ time. The step takes $O(k^2 n^2)$ time.
+    \item \textbf{Memory optimization}: Space is $O(n^2)$ if matrices are evaluated sequentially and discarded after use.
+    \item \textbf{Merging (Steps 2-5)}: Choosing the center and adding strings to build the alignment takes $O(n \cdot k)$ time.
+    \item \textbf{Overall Complexity}: $O(k^2 n^2)$ time and $O(n^2)$ space. Vastly superior to $O(2^k n^k)$. If pairwise alignments are run fully in parallel, time could theoretically drop to $O(n)$.
 \end{itemize}
 
-\sta \textbf{Approximation Guarantee}: If formulated as minimizing edit distance (which satisfies the triangle inequality $z \le x+y$), the Center Star algorithm guarantees an $\epsilon \le 2$. This means, in the absolute worst-case scenario, the overall distance of the Center Star alignment is at most exactly twice the true optimal minimum distance.
+\sta \textbf{Approximation Guarantee}: If formulated as minimizing edit distance (which satisfies the triangle inequality $z \le x+y$), the Center Star algorithm guarantees an $\epsilon \le 2$ (or acts as an approximation algorithm with $\varepsilon = 2$). This means, in the absolute worst-case scenario, the overall heuristic alignment distance of the Center Star alignment is never worse than at most exactly twice the true optimal sequence minimum distance.
 
+\section{Biological Realism: Progressive Alignments and Alignment Profiles}
 
-\section{Progressive Alignments and Alignment Profiles}
-
-While computationally bounded, Center Star neglects biological reality. It assumes all sequences radiate equally from a single "center" sequence. In reality, species evolve through hierarchical branching (a phylogenetic tree).
+While computationally bounded, Center Star neglects biological reality. It assumes all sequences radiate equally from a single "center" sequence. In reality, species usually evolve through hierarchical branching lineages (a phylogenetic tree), not by radiating uniformly from one central modern sequence.
 
 If S1 and S2 are close relatives (e.g., humans and chimps), and S3 and S4 are close relatives (e.g., mice and rats), it makes biological sense to first align (S1, S2), separately align (S3, S4), and then \textit{merge those two alignments}. Center Star completely ignores this topology.
 
-To align sequences according to their true evolutionary history (a "guide tree"), we use \textbf{Progressive Alignment}. The fundamental operation of progressive alignment is aligning a string to an existing alignment, or merging two alignments. We achieve this using Alignment Profiles.
+To align sequences according to their true evolutionary history (a "guide tree"), we use \textbf{Progressive Alignment}. We begin by aligning the most closely related pairs of sequences at the tips of the tree, and progressively merge those alignments as we move backward in evolutionary time. The fundamental operation of progressive alignment is aligning a string to an existing alignment, or merging two alignments. We achieve this using Alignment Profiles.
 
 \begin{important}
-    \textbf{Alignment Profile}: A matrix representation of an existing multiple sequence alignment. For each column $j$, the profile stores the frequency $R[c,j]$ of every character $c \in \Sigma$ (including the gap character `-`). The frequencies in a single column must sum to 1.
+    \textbf{Alignment Profile}: A 2D matrix representing an existing multiple sequence alignment, where each column denotes a position in the alignment, and the rows denote the fractional frequency $R[c,j]$ of each character $c \in \Sigma$ (and the gap character `-`) at that position. Frequencies in every column must sum to 1.
 \end{important}
+
+\textbf{Example:} Creating a profile from an alignment.
+\begin{itemize}
+    \item \textit{Alignment}: \\
+    \texttt{A C -} \\
+    \texttt{A C -} \\
+    \texttt{G C C}
+    \item \textit{Profile Calculation}: In column 1, we have two 'A's and one 'G'. The profile for column 1 records $A=2/3$, $G=1/3$, and all others (including gaps) $=0$. 
+    \item \textit{What this illustrates}: The profile compresses the multiple sequence alignment into a probabilistic consensus sequence. The drawback is that we lose the identity of which specific sequence provided which letter.
+\end{itemize}
 
 \subsection{Weighted Dynamic Programming}
 
-We can use a 2D dynamic programming matrix to align a new string $X = (x_1, \dots, x_n)$ to an existing profile $R$. The rows of the matrix represent characters of $X$, and the columns represent the columns of the profile.
+We can use a 2D dynamic programming matrix to align a new string $X = (x_1, \dots, x_n)$ to an existing profile $R$. The rows of the matrix represent characters of $X$, and the columns represent the columns of the profile $R$.
 
-We compute the cost of aligning character $x$ to profile column $j$ using a weighted average:
-\[
+We compute the cost of aligning character $x$ to profile column $j$ using a weighted average (the expected value of the pairwise similarities):
+\begin{equation}
 P(x, j) = \sum_{c \in \Sigma} \operatorname{sim}(x, c) \times R[c, j]
-\]
-Where $\operatorname{sim}(x, c)$ is the substitution matrix score (or gap penalty) between character $x$ and character $c$.
+\end{equation}
+Where $\operatorname{sim}(x, c)$ is the standard 2D substitution matrix score (or gap penalty) between character $x$ and character $c$, and $R[c,j]$ is the frequency of character $c$ in column $j$.
 
 The matrix cell $A[i,j]$ is filled using the following recurrence rule:
-\[
+\begin{equation}
 A[i,j] = \max \left\{ \begin{array}{ll}
 A[i-1, j-1] + P(x_i, j) & \text{align } x_i \text{ to profile column } j \\
-A[i-1, j] + \text{gap penalty} & \text{introduce a gap into the profile} \\
-A[i, j-1] + P(\text{`\text{-}'}, j) & \text{introduce a gap into string } X
-\end{array} \right.
-\]
+A[i-1, j] + \text{gap\_penalty} & \text{introduce a gap into the profile} \\
+A[i, j-1] + P(\text{`\text{-}'}, j) & \text{introduce a gap into sequence } X
+\end{array} \right\}
+\end{equation}
 
-\textbf{Example:} Calculating Weighted DP Transitions
+\textbf{Example:} Calculating Weighted DP Transitions (transition score).
 Suppose we want to calculate cell $A$ mapping the first character of $X$, an `A`, to the first column of the profile.
 Assume column 1 of the profile contains $2/3$ `A` and $1/3$ `G`.
-Assume $\operatorname{sim}(\text{match}) = +1$, $\operatorname{sim}(\text{mismatch}) = -1$, and $\text{gap penalty} = -1$.
+Assume scoring: Match = $1$, Mismatch = $-1$, and gap penalty = $-1$.
 \begin{enumerate}
     \item \textbf{Option 1 (Diagonal Move)}: Align `A` to column 1.
     \[ 0 + P(\text{`A'}, 1) = \left( \operatorname{sim}(\text{A, A}) \times \frac{2}{3} \right) + \left( \operatorname{sim}(\text{A, G}) \times \frac{1}{3} \right) = \left(1 \times \frac{2}{3}\right) + \left(-1 \times \frac{1}{3}\right) = \frac{1}{3} \]
@@ -227,7 +284,7 @@ Assume $\operatorname{sim}(\text{match}) = +1$, $\operatorname{sim}(\text{mismat
     \[ -1 + P(\text{`\text{-}'}, 1) = -1 + \left((-1) \times \frac{2}{3}\right) + \left((-1) \times \frac{1}{3}\right) = -2 \]
 \end{enumerate}
 The algorithm selects the maximum value ($1/3$), records a diagonal traceback pointer, and proceeds.
-\textit{What this illustrates}: Weighted DP scales substitution costs logically based on the historical composition of the sequences already aligned. If a column is already highly conserved (e.g., mostly 'A'), matching an 'A' yields a high positive score, whereas introducing a gap yields a severe penalty.
+\textit{What this illustrates}: Weighted DP scales substitution costs logically based on the historical composition of the sequences already aligned. It allows us to naturally favor aligning characters to columns where they are highly conserved in the existing phylogenetic branch. If a column is already highly conserved (e.g., mostly 'A'), matching an 'A' yields a high positive score, whereas introducing a gap yields a severe penalty.
 
 By recursively applying this algorithm up the branches of a phylogenetic guide tree, we progressively build an alignment that honors biological relationships far better than simple heuristics.
 
@@ -272,3 +329,5 @@ Using a guide tree to perform progressive alignment introduces a fundamental Cat
 \end{itemize}
 
 \sta \textbf{Resolution:} In practice, bioinformatics tools solve this circular dependency through a bootstrap approach. Before proceeding with the heavy computational work of weighted profile alignment, the algorithm first \textit{predicts} an approximate guide tree. It usually does this by rapidly calculating rough pairwise distances (often using fast heuristics rather than full dynamic programming) to establish a baseline topology. Once this rough tree is predicted, it serves as the guide tree to drive the rigorous progressive multiple sequence alignment.
+
+\end{document}

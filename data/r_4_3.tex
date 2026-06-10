@@ -1,20 +1,30 @@
-
 \def\sta{$\star$ \textbf{Critical Remark:} }
 
 % Lecture Notes: Bioinformatics Algorithms - Read Mapping (Part 3) - BWT and FM Index
+% Lecture Notes: BWT/FM Index Algorithms for Read Mapping
+
+\section{Introduction to Read Mapping with BWT}
+
+In modern genomics, next-generation sequencing produces millions of short DNA segments (reads) that must be aligned to a reference genome. Scanning the entire three-billion-base-pair human genome for every single read sequentially is computationally infeasible. Instead, we require an index structure—analogous to a database index that allows jumping directly to the relevant entries rather than scanning linearly. 
+
+Several widely used short-read aligners employ the Burrows-Wheeler Transform (BWT) and the FM Index structure as their computational backbone. Notable examples include BWA, BWA-MEM, Bowtie, and SOAP2. \sta Understanding the underlying mechanics of these algorithms is critical for optimizing bioinformatics pipelines and handling sequencing errors or genetic variations.
 
 \section{Reversing the Burrows-Wheeler Transform (BWT)}
 
 The Burrows-Wheeler Transform (BWT) is a reversible permutation of the characters of a string. While in read mapping we do not typically need to fully reconstruct the original reference genome from its BWT, understanding the reversal process is crucial because searching the BWT for read alignments relies on the exact same underlying mechanics.
 
+Before exploring how to search within the BWT, we must understand how to reconstruct the original string from the transform. The BWT is essentially the last column (the L column) of the sorted Burrows-Wheeler Matrix (BWM) of rotations. Reversing the transform relies on a fundamental relationship between the first column (F) and the last column (L) of this matrix.
+
 \begin{important}
-    \textbf{LF Mapping Property:} A fundamental property of the BWT which states that the $i$-th occurrence of a specific character in the First column (F) of the Burrows-Wheeler matrix corresponds to the exact same original character in the sequence as the $i$-th occurrence of that character in the Last column (L).
+    \textbf{LF Mapping Property:} A fundamental property of the BWT which states that the $i$-th occurrence of a specific character in the First column (F) of the Burrows-Wheeler matrix corresponds to the exact same original character in the sequence as the $i$-th occurrence of that character in the Last column (L). The relative ordering of identical characters is exactly the same in the First (F) column and the Last (L) column.
 \end{important}
+
+To understand why this is true, consider the lexicographical sorting of the BWM. The relative order of a set of identical characters (e.g., all instances of 'A') in the F column is strictly determined by the strings that follow them. In the L column, these identical characters have been rotated to the back, meaning the strings that determine their relative order are exactly the same strings that now sit at the front of those rows. Because the sorting context is identical, the $i$-th 'A' encountered top-to-bottom in the F column is the exact same 'A' from the original string as the $i$-th 'A' encountered in the L column.
 
 To track characters between the F and L columns without storing original positions, we distinguish between two types of rankings:
 \begin{itemize}
     \item \textbf{T-ranking:} Numbering characters based on their sequential appearance in the original unrotated string (e.g., $A_0, A_1, A_2$). Storing this is highly inefficient for a genome.
-    \item \textbf{B-ranking:} A cumulative count of how many times a character has been observed so far in a specific column (either F or L) starting from the top.
+    \item \textbf{B-ranking:} A cumulative count (or zero-based index) of how many times a character has been observed so far in a specific column (either F or L) starting from the top down to the current position. It replaces the memory-intensive T-ranking.
 \end{itemize}
 
 Because the relative order of identical characters is preserved between the F and L columns, their B-ranks are identical. This guarantees that the character $A$ with B-rank $n$ in the L column is the exact same $A$ in the genome as the $A$ with B-rank $n$ in the F column.
@@ -25,11 +35,11 @@ To reconstruct the original string, we trace the BWT backward, from right to lef
 \textbf{Example:} Reconstructing an original string from the BWT.
 This demonstrates the LF mapping property in action.
 \begin{enumerate}
-    \item Start at the row containing the unique end character (e.g., `\$`) in the F column. Because `\$` is lexicographically smallest, it is always in the first row.
-    \item Look at the corresponding character in the L column of that row. This character (e.g., $A_0$) is the last character of the original sequence (immediately preceding `\$`).
-    \item Find the matching character with the same B-rank (e.g., $A_0$) in the F column.
-    \item Look at the L column in this new row. This character immediately precedes $A_0$ in the original text.
-    \item Repeat this jump from L to F until you return to the `\$` character.
+    \item Start at the row containing the unique end character (e.g., `\$`) in the F column. Because `\$` is lexicographically smallest, it is always in the first row. By definition, the character sitting in the same row in the L column is the one that immediately precedes `\$` in the original text.
+    \item Look at the corresponding character in the L column of that row. Suppose this character is 'A' with a B rank of 0 (the first 'A' in the L column).
+    \item Find the matching character with the same B-rank (e.g., 'A' with a B rank of 0) in the F column.
+    \item Look at the L column in this new row. This character immediately precedes the previous character in the original text.
+    \item Repeat this jump from L to F until you return to the `\$` character. This iterative process completely reconstructs the original string from right to left.
 \end{enumerate}
 
 \begin{important}
@@ -49,21 +59,28 @@ When searching for a word like "abra", we start with the last letter, 'a', and f
 However, the naive implementation of this search method faces three major computational hurdles:
 \begin{enumerate}
     \item \textbf{Efficiency of looking up preceding characters:} Scanning the L column within a bounded interval to count character occurrences takes time proportional to the interval size, which is $O(N)$ relative to the input length.
-    \item \textbf{B-rank Storage:} Explicitly storing the B-rank for every character in the 3 billion letter human genome would require billions of integers, defeating the memory compression benefits of the BWT.
-    \item \textbf{Position Lookup:} Once a match is found, the BWT matrix does not tell us \textit{where} in the original genome the match occurred. The standard Suffix Array provides this, but it requires 12+ GB of memory.
+    \item \textbf{B-rank Storage:} Explicitly storing the B-rank for every character in the 3 billion letter human genome would require billions of integers, linear space $O(N)$, negating the memory compression benefits of the BWT.
+    \item \textbf{Position Lookup:} Once a match is found, the BWT matrix does not tell us \textit{where} in the original genome the match occurred. The standard Suffix Array provides this, but it requires 12+ GB of memory for the human genome.
 \end{enumerate}
 
 \section{The FM Index: Optimizing the BWT for Read Mapping}
 
-To solve the issues of the naive BWT search, the \textbf{FM Index} (Full-text index in Minute space) augments the BWT with specialized auxiliary data structures. This allows tools like BWA, Bowtie, and SOAP2 to perform incredibly fast alignments.
+To solve the issues of the naive BWT search, the \textbf{FM Index} (Full-text index in Minute space) elegantly combines the BWT with specialized auxiliary data structures. This allows tools like BWA, Bowtie, and SOAP2 to perform incredibly fast alignments. A complete naive representation of the BWM would be $O(N^2)$. The FM index solves this by maintaining a highly compressed footprint:
+
+\begin{itemize}
+    \item \textbf{L Column (BWT)}: Kept entirely. Because the BWT inherently groups identical characters into runs, it is highly compressible.
+    \item \textbf{F Column Counts (C array)}: We do not need to store the F column. Because it is purely lexicographically sorted, we only need to store the cumulative counts of characters that are lexicographically smaller than a given character (e.g., 4 integers for DNA: A, C, G, T).
+    \item \textbf{Tally Table Checkpoints}: Allows fast B rank computation without storing an array of size $N$.
+    \item \textbf{Selective Suffix Array}: Resolves the physical positions of matches in the original string without keeping the full $O(N)$ Suffix Array.
+\end{itemize}
 
 \subsection{The Tally Table (Occ Table) with Checkpoints}
-To solve both the search efficiency and B-rank storage issues, we define an $Occ$ (occurrences) table, also known as a tally table. This table tracks the cumulative count of each character encountered in the L column up to a given row.
+To solve both the search efficiency and B-rank storage issues, we define an $Occ$ (occurrences) table, also known as a tally table. This table tracks the cumulative count of each character encountered in the L column up to a given row. A full tally table would store the running count of every character up to every row. For a sequence length $N$ and an alphabet size $\Sigma$, this takes $O(N \times |\Sigma|)$ space.
 
 By looking at the Tally table entry at the beginning and end of our current interval, we can instantly calculate how many instances of a target character exist within that interval, doing so in $O(1)$ constant time.
 
 \begin{important}
-    \textbf{Tally Table Checkpointing:} To save memory, we do not store every row of the tally table. We only save "checkpoints" every $k$ rows (e.g., $k=128$). To find the exact count at an unstored row, we jump to the nearest checkpoint and manually count the few characters in the L column between the checkpoint and our target row.
+    \textbf{Tally Table Checkpointing:} To save memory, we do not store every row of the tally table. We only save "checkpoints" every $k$ rows (e.g., $k=32$ or $128$). To find the count at an unstored row $i$, the algorithm finds the nearest checkpoint. It then sequentially scans the L column from the checkpoint to row $i$, manually adding or subtracting occurrences.
 \end{important}
 
 This guarantees that calculating the B-rank takes at most $k/2$ checks, maintaining an $O(1)$ time complexity while drastically reducing memory footprint.
@@ -77,23 +94,23 @@ This demonstrates how a selective suffix array is used.
     \item We find a match for our read at row index $X$ in the BWT.
     \item We check if index $X$ has a stored positional value in the selective suffix array.
     \item If it does not, we use the LF mapping property to step backwards one character in the original string, keeping track of how many "hops" we make.
-    \item Once we hit a row that \textit{does} have a stored positional value (e.g., position 500), we add the number of hops we made (e.g., 2) to find the original position of our match (502).
+    \item Once we hit a row that \textit{does} have a stored positional value (e.g., position 500), we simply add the number of hops we made (e.g., 2) to find the original position of our match (502).
 \end{enumerate}
-With $k=128$, we make a maximum of 127 hops, making position lookups extremely fast and bounding the selective suffix array to a fraction of the memory. The total FM index size for the human genome is roughly 1.5 GB.
+With $k=128$, we make a maximum of 127 hops (bounded by $k-1$), making position lookups extremely fast and bounding the selective suffix array to a fraction of the memory. The total FM index size for the human genome is roughly 1.5 GB.
 
 \section{BWA: Formalizing Exact Matching}
 
-The Burrows-Wheeler Aligner (BWA) formalizes the backward search approach using interval notation. Every substring $W$ corresponds to a continuous \textbf{Suffix Array Interval} denoted as $[\underline{R}(W), \overline{R}(W)]$, where $\underline{R}$ is the lower bound and $\overline{R}$ is the upper bound.
+The Burrows-Wheeler Aligner (BWA) formalizes the backward search approach using interval notation. Rather than finding a single character, we iteratively compute the bound of valid rows (the Suffix Array Interval) that share our search pattern as a prefix. Every substring $W$ corresponds to a continuous \textbf{Suffix Array Interval} denoted as $[\underline{R}(W), \overline{R}(W)]$, where $\underline{R}$ is the lower bound and $\overline{R}$ is the upper bound.
 
 \begin{important}
     \textbf{BWA Precalculations:}
     \begin{itemize}
-        \item $C(a)$: the number of characters in the original text $T$ that are lexicographically strictly smaller than character $a$. This is exactly the Cumulative Index count for the F column.
+        \item $C(a)$: the number of characters in the original text $T$ that are lexicographically strictly smaller than character $a$. This is exactly the Cumulative Index count for the F column. It acts as the absolute base offset for the character block in the F column.
         \item $Occ(a, i)$: the number of occurrences of character $a$ in the BWT string from index $0$ to index $i$. This is equivalent to the Tally Table.
     \end{itemize}
 \end{important}
 
-The search iteratively computes the interval for a pattern $W$ of length $m$. Let $W_k = W[k \dots m-1]$ be a suffix of $W$, where $W_k = a_k W_{k+1}$ (meaning $a_k$ is the current character being prepended). The interval updates from $W_{k+1}$ to $W_k$ as follows:
+The search iteratively computes the interval for a pattern $W = W[0 \dots m-1]$ of length $m$. Let $W_k = W[k \dots m-1]$ be a suffix of $W$, where $W_k = a_k W_{k+1}$ (meaning $a_k$ is the current character being prepended). The interval updates from $W_{k+1}$ to $W_k$ as follows:
 
 % [OCR ERROR: Equations in slide 11 are garbled. Reconstructing standard BWA formula based on transcript context and slide definitions]
 \begin{align}
@@ -104,22 +121,22 @@ The search iteratively computes the interval for a pattern $W$ of length $m$. Le
 Initialization starts at the end of $W$ ($k=m-1$), setting the initial interval to $[1, n-1]$ (representing all rows except the EOF character `\$`).
 
 \textbf{Example:} Exact matching algorithm applied iteratively.
-Finding the SA interval for $W = \text{"go"}$ in $T = \text{"googol"}$.
+Finding the SA interval for $W = \text{"go"}$ in $T = \text{"googol\$"}$.
 \begin{enumerate}
     \item \textbf{Step 1: Search for "o" (last character)}.
     We calculate boundaries using \eqref{eq:lower_bound} and \eqref{eq:upper_bound}.
     \item $\underline{R}("o") = C("o") + Occ("o", 0) + 1 = 3 + 0 + 1 = 4$
     \item $\overline{R}("o") = C("o") + Occ("o", 6) = 3 + 3 = 6$
-    \item Interval for "o" is $[4, 6]$.
+    \item Interval for "o" is $[4, 6]$. These rows correspond to all suffixes starting with "o".
     \item \textbf{Step 2: Search for "go" (prepending "g")}.
     \item $\underline{R}("go") = C("g") + Occ("g", \underline{R}("o") - 1) + 1 = C("g") + Occ("g", 3) + 1 = 0 + 0 + 1 = 1$
     \item $\overline{R}("go") = C("g") + Occ("g", \overline{R}("o")) = C("g") + Occ("g", 6) = 0 + 2 = 2$
-    \item Interval for "go" is $[1, 2]$.
+    \item Interval for "go" is $[1, 2]$, correctly isolating the locations of "go" in the BWT.
 \end{enumerate}
 
-\section{BWA: Inexact Matching}
+\section{BWA: Inexact Matching and Heuristics}
 
-Practical read aligners must accommodate sequencing errors and biological mutations (e.g., SNPs, where $\sim 1$ in $1,000$ bases differ from the reference).
+Real sequence reads contain sequencing errors and biological mutations (e.g., True Single Nucleotide Variants or SNPs, where $\sim 1$ in $1,000$ to $10^8$ bases differ from the reference depending on context). Practical read aligners must accommodate this.
 
 \begin{important}
     \textbf{Inexact Matching Problem:} Given search pattern $W$ and text $T$, find if there exists a substring $T^p$ (starting at position $p$) such that the distance metric $d(W, T^p) \leq d_{max}$, where $d_{max}$ is the maximum allowed errors.
@@ -128,20 +145,27 @@ Practical read aligners must accommodate sequencing errors and biological mutati
 While this formalization ignores indels (using Hamming distance rather than Edit distance for simplicity), the concept remains identical.
 
 \subsection{Prefix Tries and Depth-First Search}
-Conceptually, inexact matching backwards maps cleanly to a \textbf{Prefix Trie}. A prefix trie is identical to a suffix trie of the reversed text. A path from the root to a leaf spells the reverse of a prefix.
 
-To search inexactly, we execute a Depth-First Search (DFS) starting from the root. Every time we encounter a character in the trie that does not match our target search pattern, we increment an error counter. If the error counter exceeds $d_{max}$, we prune that branch and backtrack. Note that building a real prefix trie for a genome causes memory explosion, so this DFS traversal is simulated virtually using the BWT intervals.
+\begin{important}
+    \textbf{Prefix Trie}: A tree data structure equivalent to the suffix trie of a reversed string. The path from a leaf up to the root represents a unique prefix of the original string, meaning a downward path from the root reconstructs a prefix in reverse.
+\end{important}
+
+Conceptually, inexact matching backwards maps cleanly to a Prefix Trie. Because the exact matching algorithm searches the query pattern from right to left (end to beginning), the theoretical search space models a depth-first search (DFS) through the reference genome's prefix trie.
+
+% [IMAGE: Diagram showing a prefix trie for the string GOOGOL. A depth-first search (DFS) path is highlighted for the search word "LOL" with $d_{max}=1$, showing how branches are pruned or explored based on the mismatch threshold.]
+
+To search inexactly, we execute a Depth-First Search (DFS) starting from the root. Every time we encounter an edge (character) in the trie that does not match our target search pattern, we increment an error counter. If the error counter exceeds $d_{max}$, we prune that branch and backtrack. Note that building a real prefix trie for a genome causes memory explosion, so this DFS traversal is simulated virtually using the BWT intervals.
 
 \subsection{Early Pruning Heuristic: CalculateD}
 
-To prevent the DFS from exploring hopeless branches deep in the recursion tree, BWA employs a heuristic function called \texttt{CalculateD(W)}. It precalculates the \textit{minimum} number of mismatches required for any prefix of the search string.
+To prevent the DFS from exploring hopeless branches deep in the recursion tree, BWA employs a heuristic function called \texttt{CalculateD(W)}. It precalculates the \textit{minimum} number of mismatches required for any prefix of the search string. If the current number of accumulated errors plus the minimum expected future errors exceeds $d_{max}$, the algorithm immediately abandons the branch, drastically pruning the DFS tree.
 
 \begin{minted}{python}
 # [pseudocode]
 def CalculateD(W):
     z = 0
     j = 0
-    D = []
+    D = [0] * len(W)
     for i in range(0, len(W)):
         if W[j..i] is not a substring of T:
             z = z + 1
@@ -150,26 +174,28 @@ def CalculateD(W):
     return D
 \end{minted}
 
-This algorithm loops linearly over the search string $W$. It checks increasingly long substrings. The moment a substring $W[j..i]$ is not found in the original text $T$, it guarantees at least one error exists in that block. It increments the error counter $z$, updates the lower-bound array $D$, and resets the substring search boundary $j$ to the next character.
+This algorithm loops linearly over the search string $W$. It checks increasingly long substrings. The moment a substring $W[j..i]$ is not found in the original text $T$, it guarantees at least one error exists in that block. It increments the lower-bound error counter $z$, updates the array $D$, and resets the substring search boundary $j$ to the next character.
 
 \textbf{Example:} Early Pruning with `CalculateD`.
-Searching for $W = \text{"LOL"}$ inside $T = \text{"GOOGOL"}$ with $d_{max} = 1$.
+Searching for $W = \text{"LOL"}$ inside $T = \text{"GOOGOL\$"}$ with $d_{max} = 1$.
 \begin{enumerate}
-    \item $D(0) = 0$ because "L" exists in $T$.
-    \item $D(1) = 1$ because "LO" does not exist in $T$.
+    \item $D(0) = 0$ because "L" exists in $T$. W[0:1] = "L".
+    \item $D(1) = 1$ because "LO" does not exist in $T$. Thus, an error is guaranteed here. It increments $z$ to 1, sets $D(1) = 1$, and resets the checking window anchor $j$.
     \item $D(2) = 1$ because the next "L" exists in $T$.
 \end{enumerate}
+During the DFS, if the algorithm considers taking a mismatch path on the very last character processed (the first character of the query), it looks up $D$. Knowing $D$ guarantees at least 1 error in the suffix, taking another error now would total 2 errors. If $d_{max}=1$, the algorithm stops early without unnecessary lookup.
 If the DFS matches the first letter 'L' to a 'G' in the text, it has spent 1 error. Before descending further to check 'O', it queries $D(1)$. $D(1)$ states the rest of the search pattern requires at least $1$ additional error. Because $1 \text{ (current)} + 1 \text{ (future)} = 2 > d_{max}$, the algorithm immediately prunes this branch without making further checks.
 
 \subsection{Recursive Search: InexRecur}
 
-With `CalculateD` computed, the actual BWT inexact search uses a recursive function \texttt{InexRecur}.
+With `CalculateD` computed, the actual BWT inexact search uses a recursive function \texttt{InexRecur} to compute valid Suffix Array intervals that contain matches within the error threshold.
 
 % [OCR ERROR: Slides 19-22 contain heavily corrupted OCR for Algorithm 3 "InexRecur". The following explanation captures the logic dictated by the transcript.]
+% [OCR ERROR: original text was fragmented return logic]
 The function is recursively called for the query word $W$ from position $i$ down to $0$. It tracks:
 \begin{itemize}
     \item The current index $i$ in the search word $W$.
-    \item The maximum remaining allowed mismatches $z$.
+    \item The remaining allowed mismatches $z$.
     \item The current SA interval $[k, \ell]$ representing the partial match found so far for suffix $W_{i+1}$.
 \end{itemize}
 
@@ -206,7 +232,7 @@ def InexRecur(W, i, z, k, l):
     return results
 \end{minted}
 
-This recursive function formalizes the exact same Depth-First Search approach discussed on the prefix trie, but operates entirely within the bounded memory of the BWT matrix representation.
+This recursive function formalizes the exact same Depth-First Search approach discussed on the prefix trie, but operates entirely within the bounded memory of the BWT matrix representation. It dynamically updates $z$ and computes new SA interval bounds.
 
 \begin{itemize}
     \item \textbf{Base Case ($i < 0$):} The algorithm successfully matched the entire query sequence $W$. It returns the suffix array interval $[k, \ell]$, which contains all the starting positions of this inexact match in the reference genome.

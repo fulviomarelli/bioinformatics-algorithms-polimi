@@ -1,209 +1,262 @@
-
-
+% Lecture Notes: Introduction to Bioinformatics, Biological Foundations, and Sequencing Technologies
 % Lecture Notes: Introduction to Molecular Biology and DNA Sequencing
 
 \section{Introduction to Bioinformatics}
 
-Bioinformatics is an interdisciplinary field that relies on biological data and seeks to understand it through computational means. It is critical to note that while it uses computer science heavily, information science is not strictly synonymous with computer science. Rather, bioinformatics operates at the intersection of biology, informatics, chemistry, physics, mathematics, and statistics.
+Bioinformatics is an interdisciplinary field at the intersection of biology and informatics. It is important to note that information science is not strictly identical to computer science; while bioinformatics heavily utilizes computer science, it also encompasses chemistry, physics, information engineering, mathematics, and statistics. 
+
+The primary goal of bioinformatics is the analysis, classification, manipulation, storage, retrieval, and transmission of biological information stored in living cells. We use computational methods to analyze biological data that are typically too large and complex to be handled manually. 
 
 \begin{important}
-  \textbf{Bioinformatics}: The science of information and information flow in biological systems, specifically utilizing mathematical, statistical, and computing methods to analyze biological data (like DNA and amino acid sequences).
+  \textbf{Bioinformatics}: The science of information and information flow in biological systems, focusing on the use of mathematical, statistical, and computational methods to solve biological problems using DNA, RNA, and amino acid sequences.
 \end{important}
 
-Bioinformatics focuses primarily on analyzing, classifying, storing, and retrieving biological information that living cells intrinsically encode and decode.
-\sta It is distinctly \textit{not} just biologically-inspired computation (such as genetic algorithms or artificial neural networks), though such computational methods can certainly be applied to solve bioinformatics problems. Most work is performed \textit{in silico} (computational simulations and analyses), using data derived from \textit{in vivo} (living organisms) or \textit{in vitro} (lab environments) sources.
+\sta Bioinformatics is \textit{not} just biologically-inspired computation (such as genetic algorithms or artificial neural networks). While bioinformaticians may use these computational algorithms to solve biological problems, simply implementing a genetic algorithm for physics or business is not bioinformatics. Analyses in this field are generally performed \textit{in silico} (computationally), processing data obtained from \textit{in vivo} (living organisms) or \textit{in vitro} (laboratory/glass) experiments.
 
-\section{Cellular and Molecular Basics}
+\section{Cellular and Molecular Foundations}
 
-To meaningfully process biological sequences, a bioinformatician must understand the biological context from which the data originates.
+To properly analyze biological data, we must understand the underlying biology. Data produced by sequencing technologies carries specific biological meaning and error profiles that dictate how algorithms should be designed.
 
 \subsection{Cell Types}
-Cells are the fundamental units of life, and the location of genetic material within them differs depending on the organism's complexity:
+Cells are the fundamental units of life. There are two major classifications:
 \begin{itemize}
-    \item \textbf{Prokaryotes} (e.g., bacteria): The DNA is free-floating in the cytoplasm, usually as a single circular genome.
-    \item \textbf{Eukaryotes} (e.g., animals, plants): The DNA is packed into chromosomes and separated from the rest of the cell within a distinct organelle called the nucleus.
+  \item \textbf{Prokaryotes} (e.g., bacteria): Simpler cells where the genetic material is "free-floating" in the cytoplasm. They typically have a single circular genome.
+  \item \textbf{Eukaryotes} (e.g., animal and plant cells): More complex cells containing distinct organelles. Crucially, the DNA is packaged into chromosomes and enclosed within a cell nucleus.
 \end{itemize}
-\myimage{1_1/1.jpg}{Prokaryotic vs Eukaryotic cell structures.}
 
-\subsection{Biological Macromolecules}
-Cells are constructed from and regulated by various molecules, ranging from small molecules (like water and simple sugars) to large macromolecules. The most relevant macromolecules for genomic data are:
+\myimage{1_1/1.jpg}{Prokaryotic vs Eukaryotic cell structures.}
+% [IMAGE: Diagram showing typical animal and plant cells with labeled organelles, including the nucleus, mitochondria, and cytoplasm, provided by Encyclopædia Britannica.]
+
+\subsection{Key Molecules}
+Biological functions are carried out by different types of molecules:
 \begin{itemize}
-    \item \textbf{Proteins}: The primary building blocks and functional machines of the cell. They can serve structural roles, act as receptors on cell membranes, or function as transcription factors to regulate gene expression.
-    \item \textbf{Nucleic Acids (DNA and RNA)}: Responsible for the storage, transmission, and expression of genetic information.
+  \item \textbf{Small molecules}: Water, fatty acids, sugars, amino acids, and nucleotides. These act as sources of energy, signaling molecules, or building blocks for larger macromolecules.
+  \item \textbf{Proteins}: The functional machines of the cell. They act as structural components, enzymes (catalyzing chemical reactions), receptors (receiving signals), and transcription factors (regulating gene expression). Proteins often form physical \textit{protein-protein interaction networks} to execute complex functions.
+  \item \textbf{Nucleic Acids (DNA and RNA)}: Responsible for the storage, transmission, and expression of genetic information.
+  \begin{itemize}
+    \item \textbf{DNA (Deoxyribonucleic acid)}: The long-term storage and reproduction medium for genetic information. It is double-stranded (a double helix). It contains genes, regulatory elements, and regions with structural or unknown functions (previously, but inaccurately, termed "junk DNA").
+    \item \textbf{RNA (Ribonucleic acid)}: A single-stranded molecule that plays a key role in transforming genetic information into function (e.g., messenger RNA, which carries the code to build proteins).
+  \end{itemize}
 \end{itemize}
+
+% [IMAGE: Structure of a protein complex (Polycomb complexes PRC1 and PRC2) interacting with a functional element in the genome.]
 
 \section{The Chemical Structure of DNA and RNA}
 
-Biological sequences are ultimately chemical polymers. Both DNA (deoxyribonucleic acid) and RNA (ribonucleic acid) are made of monomer building blocks called nucleotides.
-
-\begin{important}
-  \textbf{Nucleotide}: The fundamental monomer of nucleic acids, consisting of three parts: a pentose (5-carbon) sugar, one or more phosphate groups, and a nitrogen-containing base.
-\end{important}
+\subsection{Nucleotides and the DNA Polymer}
+Both DNA and RNA are polymers composed of monomers called \textbf{nucleotides}. Each nucleotide consists of three parts:
+\begin{enumerate}
+  \item One or more phosphate groups.
+  \item A pentose sugar (a 5-carbon sugar).
+  \item A nitrogen-containing base.
+\end{enumerate}
 
 \myimage{1_1/2.jpg}{Chemical structure of a nucleotide.}[width=0.6\textwidth]
+% [IMAGE: Chemical structure of a nucleotide showing the phosphate group, pentose sugar with numbered carbon atoms (1' to 5'), and the nitrogenous base.]
 
-The primary difference between DNA and RNA lies in the pentose sugar: RNA utilizes ribose, while DNA utilizes deoxyribose (which lacks one oxygen atom). Furthermore, they use a slightly different set of nitrogenous bases:
-\begin{itemize}
-    \item \textbf{DNA bases}: Adenine (A), Cytosine (C), Guanine (G), Thymine (T).
-    \item \textbf{RNA bases}: Adenine (A), Cytosine (C), Guanine (G), Uracil (U).
-\end{itemize}
+In DNA, the pentose sugar is deoxyribose (meaning it lacks one oxygen atom compared to standard ribose), and the four possible bases are: \textbf{Adenine (A)}, \textbf{Cytosine (C)}, \textbf{Guanine (G)}, and \textbf{Thymine (T)}. 
 
-\subsection{The Sugar-Phosphate Backbone and Directionality}
-When a cell synthesizes a DNA polymer, the phosphate group attached to the \(5'\) (five-prime) carbon of one nucleotide forms a covalent bond with the \(3'\) (three-prime) carbon of the preceding nucleotide. This alternating chain of sugar and phosphate molecules creates a robust "backbone".
+In RNA, the sugar is standard ribose, and \textbf{Uracil (U)} replaces Thymine (T). 
 
-Because of this asymmetrical chemical bonding, a single DNA strand has a clear orientation. One end has an unattached \(5'\) phosphate group, and the other has an unattached \(3'\) hydroxyl group.
-\sta By strict biological convention, DNA sequences are always read and written in the \(5' \rightarrow 3'\) direction, because this is the direction in which cellular enzymes (like DNA polymerase) synthesize them.
+\begin{important}
+  \textbf{Directionality (5' to 3')}: The phosphate group of one nucleotide attaches to the $5^{\prime}$ carbon of its pentose sugar, and binds to the $3^{\prime}$ carbon of the adjacent nucleotide. This covalent sugar-phosphate backbone gives the molecule an inherent directionality. By universal convention, genetic sequences are always read and written from the $5^{\prime}$ end to the $3^{\prime}$ end because this is the direction in which cellular enzymes synthesize them.
+\end{important}
 
 \subsection{The Double Helix and Base Pairing}
-DNA in living cells rarely exists as a single strand; it forms a double-stranded helix. The two strands are held together by hydrogen bonds between opposing nitrogenous bases.
+DNA exists as a double helix composed of two strands that wrap around each other. These strands are held together by hydrogen bonds between the bases. 
 
-Due to their chemical shapes, these bases pair in a strictly deterministic manner:
-\begin{itemize}
-    \item \textbf{Adenine (A)} always pairs with \textbf{Thymine (T)}.
-    \item \textbf{Cytosine (C)} always pairs with \textbf{Guanine (G)}.
-\end{itemize}
+\begin{important}
+  \textbf{Base Pairing Rules}: Due to chemical affinities, Adenine (A) always pairs with Thymine (T), and Cytosine (C) always pairs with Guanine (G). We refer to these as base pairs (bp).
+\end{important}
+
 \myimage{1_1/3.jpg}{The DNA double helix and base pairing.}[width=0.5\textwidth]
 
-Crucially, the two strands of the double helix have an \textbf{anti-parallel orientation}. If one strand runs \(5' \rightarrow 3'\), the complementary strand runs \(3' \rightarrow 5'\) relative to it.
+Crucially, the two strands have \textbf{opposite orientations} (antiparallel). If one strand runs $5^{\prime}$ to $3^{\prime}$, the opposite strand runs $3^{\prime}$ to $5^{\prime}$. 
 
 \subsection{The Reverse Complement}
-\sta Because of base-pairing rules and the anti-parallel nature of DNA, understanding the \textbf{reverse complement} is a foundational skill for bioinformaticians. It ensures algorithms correctly search for patterns across the entire genome.
-
 \begin{important}
-  \textbf{Reverse Complement}: The sequence of the opposing DNA strand, derived by replacing every base with its complement (A $\leftrightarrow$ T, C $\leftrightarrow$ G) and reversing the reading order to maintain the standard \(5' \rightarrow 3'\) representation.
+  \textbf{Reverse Complement}: Because A pairs with T and C pairs with G, one DNA strand perfectly dictates the sequence of the other. The sequence of the opposite strand, when read in the standard $5^{\prime} \to 3^{\prime}$ direction, is called the reverse complement.
 \end{important}
 
-If we record a sequence from a reference genome (often designated the "positive strand"), we do not need to store the opposing "negative strand" because it can be computationally derived.
+\textbf{Example:}
+Suppose the positive strand of DNA is:
+$5^{\prime}$ \texttt{A G T C A G T T A C T A G} $3^{\prime}$
 
-\textbf{Example:} Generating a Reverse Complement
-Suppose the positive strand is: \(5' \text{-AGTCAG-} 3'\).
-To find the sequence of the opposite strand (read \(5' \rightarrow 3'\)):
-\begin{enumerate}
-    \item Find the complement: \(3' \text{-TCAGTC-} 5'\).
-    \item Reverse the order to write it \(5' \rightarrow 3'\): \textbf{\(5' \text{-CTGACT-} 3'\)}.
-\end{enumerate}
-This property is not just computationally useful; it is the physical mechanism allowing DNA replication during cell division. The cell separates the strands and uses each as a template to synthesize the other.
+The complementary sequence (opposite bases, but still matching left-to-right) is:
+$3^{\prime}$ \texttt{T C A G T C A A T G A T C} $5^{\prime}$
 
-\section{The Central Dogma of Molecular Biology}
+However, because sequences must be read $5^{\prime}$ to $3^{\prime}$, the true \textbf{reverse complement} sequence is:
+$5^{\prime}$ \texttt{C T A G T A A C T G A C T} $3^{\prime}$
 
-The Central Dogma outlines how genetic information stored in DNA is transformed into functional physical traits.
+\sta This concept is highly exam-relevant and critical for algorithmic design in bioinformatics. When searching for a sequence pattern in a reference genome database (which typically only stores the positive strand to save memory), algorithms must \textit{always} check both the given sequence and its reverse complement, as biological features (like genes or transcription factor binding sites) can occur on either strand.
+
+This base-pairing property is also what allows \textbf{DNA replication}. A cell can separate the two strands and reconstruct the complementary missing half for each, resulting in two identical double-helices.
+
+\subsection{Genome Size and Chromosomes}
+DNA is organized into chromosomes. The number of chromosomes and the total genome size vary wildly across species and do not strictly correlate with organismal complexity. 
+\begin{itemize}
+  \item \textbf{Humans}: 46 chromosomes (23 pairs: 22 autosomal pairs + XX or XY), containing roughly 3.1 billion base pairs.
+  \item \textbf{Rice}: 24 chromosomes, but has significantly more genes than humans. Human complexity is achieved through alternative processing of genes rather than raw gene count.
+\end{itemize}
+
+\section{The Flow of Genetic Information}
 
 \begin{important}
-  \textbf{The Central Dogma}: Information flows from DNA $\rightarrow$ RNA $\rightarrow$ Protein. DNA is \textit{transcribed} into RNA, and RNA is \textit{translated} into proteins.
+  \textbf{The Central Dogma of Molecular Biology}: The conceptual framework stating that genetic information flows from DNA $\rightarrow$ RNA $\rightarrow$ Protein. DNA is \textit{transcribed} into RNA, and RNA is \textit{translated} into functional proteins.
 \end{important}
 
-This is a simplified model. We now know it applies mostly to protein-coding genes, while many regions of the genome produce non-coding RNAs that have their own direct biological functions without ever becoming proteins.
+While this pathway outlines the synthesis of protein-coding genes, modern biology recognizes it as an oversimplification. Many regions of the genome produce non-coding RNAs that bypass the translation step entirely, exerting biological functions directly as RNA molecules.
+
+% [IMAGE: Diagram of the Central Dogma showing DNA replicating itself, being transcribed into RNA, and RNA being translated into Protein.]
 
 \subsection{Transcription}
-Transcription is the process of copying a specific gene from the DNA into an RNA molecule. A protein complex called RNA polymerase opens the DNA double helix and synthesizes a single-stranded RNA copy by matching complementary bases (using Uracil instead of Thymine).
-This process is heavily regulated by \textbf{transcription factors}: proteins that bind to specific DNA motifs (like promoters or enhancers) to turn a gene "on" or "off" depending on the cell's current needs.
+Transcription is the process of copying a specific region of DNA (a gene) into an RNA molecule. 
+\begin{enumerate}
+  \item Transcription factors bind to a regulatory region of the DNA called the promoter.
+  \item An enzyme called RNA polymerase separates the DNA strands.
+  \item RNA polymerase synthesizes a single-stranded RNA copy by base-pairing with the DNA template (inserting U instead of T).
+\end{enumerate}
 
 \subsection{RNA Splicing (Eukaryotes Only)}
-In eukaryotes, transcription occurs inside the nucleus, producing a precursor messenger RNA (pre-mRNA). Before leaving the nucleus, this pre-mRNA is highly edited via \textbf{splicing}.
+In eukaryotic cells, transcription occurs inside the nucleus, producing a precursor mRNA (pre-mRNA). Before leaving the nucleus for translation, this RNA must be heavily edited.
 
-\begin{itemize}
-    \item \textbf{Introns}: Intervening sequences that are enzymatically cut out (spliced out) and discarded.
-    \item \textbf{Exons}: The remaining sequences that are joined together to form the mature mRNA.
-\end{itemize}
+\begin{important}
+  \textbf{RNA Splicing}: The biochemical process where non-coding intervening sequences (\textbf{Introns}) are cut out and discarded, while the remaining functional sequences (\textbf{Exons}) are joined together to form the mature mRNA.
+\end{important}
+
 % [IMAGE: Visualization of pre-mRNA splicing, where grey intron loops are removed, leaving green and red exons connected together.]
 
-\sta \textbf{Alternative Splicing}: The cell can choose to skip certain exons or retain certain introns depending on biological conditions. This creates an enormous evolutionary advantage. A single gene sequence can therefore be spliced in different combinations to produce multiple, functionally distinct proteins. This explains why organisms like humans can be highly complex without necessarily having vastly more genes than simpler organisms (like rice).
+\sta A critical biological advantage of eukaryotes is \textbf{Alternative Splicing}. A cell can selectively include or exclude certain exons depending on its current metabolic needs, developmental stage, or tissue type. This allows a single gene to code for multiple different proteins, vastly expanding the complexity of the organism without requiring vastly more DNA. Prokaryotes do not have a nucleus; they transcribe and translate simultaneously, and therefore do not perform splicing.
 
-\subsection{Translation}
-Translation is the process where mature mRNA is decoded by a ribosome to build a specific protein (polypeptide chain). Because DNA and RNA use an alphabet of only 4 letters, and proteins are constructed from an alphabet of 20 distinct amino acids, the information is read in groups of three.
+\subsection{Translation (Protein Synthesis)}
+Proteins are polypeptides: chains of individual amino acids. There are 20 standard amino acids encoded by the human genetic code. Since DNA/RNA only has 4 bases, information is encoded in triplets to provide enough combinations ($4^3 = 64$).
 
 \begin{important}
-  \textbf{Codon}: A triplet sequence of three consecutive nucleotides in mRNA that specifies a single amino acid to be added to the growing protein chain.
+  \textbf{Codon}: A sequence of three consecutive nucleotides in an mRNA molecule that corresponds to a specific amino acid, a start signal, or a stop signal during translation.
 \end{important}
 
-The genetic code translates these 64 possible codons (\(4^3\)) into 20 amino acids. There is built-in redundancy (multiple codons can specify the same amino acid). Translation always begins at a specific \textbf{start codon} (usually AUG) and terminates at one of three \textbf{stop codons}. Small RNA molecules called transfer RNAs (tRNAs) read the codons via base-pairing and physically deliver the correct amino acid to the ribosome.
+\begin{enumerate}
+  \item The mature mRNA exits the nucleus and binds to a ribosome in the cytoplasm.
+  \item Translation begins at the start codon (usually \texttt{AUG}, which codes for Methionine) and establishes the reading frame.
+  \item Transfer RNAs (tRNAs) carrying specific amino acids arrive at the ribosome. Each tRNA has an "anticodon" that base-pairs with the mRNA codon.
+  \item The ribosome links the amino acids together via peptide bonds, reading the mRNA from $5^{\prime}$ to $3^{\prime}$ and building the protein from its N-terminus to its C-terminus.
+  \item The process terminates when a stop codon (\texttt{UAA}, \texttt{UAG}, or \texttt{UGA}) is reached.
+\end{enumerate}
 
+% [IMAGE: The Genetic Code table showing the 64 codons and their corresponding amino acids, start, and stop signals.]
 % [IMAGE: The standard genetic code table mapping mRNA codons (first, second, and third letters) to their respective amino acids.]
 
-\section{DNA Sequencing Technologies}
+\begin{minted}{text}
+# [pseudocode] Example of Translation Mapping
+DNA SEQUENCE:  T A C G T A A T A C C G T A C ...
+mRNA SEQUENCE: A U G C A U U A U G G C A U G ...
+AMINO ACIDS:   Met - His - Tyr - Gly - Met ...
+\end{minted}
 
-To analyze biological systems, bioinformaticians rely on sequencing data. Understanding how sequencing machines read DNA provides vital insight into the types of errors and biases present in the resulting datasets.
+This illustrates how the genetic sequence physically dictates the linear sequence of amino acids in a protein. The sequence of amino acids (primary structure) then folds into complex 3D shapes (secondary, tertiary, and quaternary structures) driven by chemical interactions between the amino acid side chains.
 
-\subsection{Sanger Sequencing}
-Developed by Fred Sanger (who won a Nobel Prize for it), this was the primary sequencing method for decades and was used to map the first human genome.
+\section{Biological Systems and 'Omics'}
 
-\begin{important}
-  \textbf{Sequencing by Synthesis}: The core paradigm of Sanger sequencing. The unknown single-stranded DNA is used as a template. As enzymes build the complementary strand, the technology identifies which bases are being inserted, effectively reading the sequence.
-\end{important}
-
-\textbf{How it works:}
-\begin{enumerate}
-    \item The DNA is replicated in a solution containing normal nucleotides and specialized chain-terminating dideoxynucleotides (ddNTPs).
-    \item These ddNTPs are chemically modified (missing a $3'$ oxygen) so that once incorporated, no further bases can be added to the chain.
-    \item Originally, the reaction was split into four distinct lanes (one for A, C, G, T), and radioactive markers were used. The fragments were separated by length using gel electrophoresis (shorter fragments move faster through the gel).
-    \item Modern Sanger sequencing uses fluorescent dyes (e.g., A is green, T is red), allowing all four terminators to run in a single reaction. A laser reads the colors as fragments pass by, producing a sequence chromatogram.
-\end{enumerate}
-While highly accurate, Sanger sequencing is drastically limited in throughput (only ~400 kilobases per day per machine) and expensive for entire genomes.
-
-\subsection{Next-Generation Sequencing (Illumina)}
-To sequence genomes cheaply and rapidly, Next-Generation Sequencing (NGS) shifted to a massively parallel approach. Illumina emerged as the dominant technology.
-
-\sta NGS provides enormous throughput but relies on extremely \textbf{short reads} (e.g., 100--500 base pairs). This necessitates powerful bioinformatic algorithms to assemble these tiny fragments back into a full reference genome or to map them onto an existing reference.
-
-\textbf{The Illumina Protocol:}
-\begin{enumerate}
-    \item \textbf{Library Preparation (Fragmentation)}: The organism's genomic DNA is fractured (e.g., via sonication) into short, random fragments. Overhangs are repaired to form blunt ends.
-    \item \textbf{Adapter Ligation}: Known synthetic sequences, called adapters, are glued to the \(5'\) and \(3'\) ends of every random DNA fragment. Because the adapters are a known sequence, we can build tools to manipulate the unknown fragments.
-    \item \textbf{Flow Cell Deposition and Bridge Amplification}: The adapter-ligated fragments are washed over a glass slide (flow cell) coated with complementary oligonucleotides. The fragments hybridize (bind) to the slide. To amplify the signal, the sequences bend over to form a "bridge," and the cell copies them. This repeats until each original fragment becomes a dense cluster of thousands of identical clones.
-    \item \textbf{Sequencing by Synthesis}: In parallel across millions of clusters, fluorescently labeled, \textit{reversibly terminating} nucleotides are washed over the slide.
-    \item \textbf{Cycles}: In cycle one, a single base is added to every cluster. A laser excites the slide, taking a high-resolution photograph to record the color emitted by each cluster. The chemical terminator block is removed, the dye is washed away, and the next cycle begins.
-\end{enumerate}
-% [IMAGE: Visual grid showing clusters on an Illumina flow cell lighting up with different colors across sequential cycles to build a sequence string.]
-
-Because the efficiency of nucleotide incorporation degrades slightly over consecutive cycles (e.g., some strands in a cluster fail to incorporate a base, resulting in "mixed signals"), the reliability drops sharply after a few hundred cycles, limiting read length.
-
-\subsection{Third-Generation Sequencing (Nanopore)}
-To circumvent the short-read problem, long-read technologies were developed.
-\begin{itemize}
-    \item \textbf{Mechanism}: An artificial membrane contains tiny pores. A single DNA molecule is pulled through the pore by an electrical voltage.
-    \item \textbf{Detection}: As specific bases block the pore, they disrupt the electrical current in characteristic ways. Measuring this current change over time yields the sequence.
-\end{itemize}
-Nanopore sequencing offers extraordinarily long reads (e.g., >10,000 to >100,000 bases), which is computationally invaluable for spanning highly repetitive regions of the genome that confuse short-read mapping. Its historic disadvantage has been a higher baseline error rate.
-
-\section{Conclusion: From Data to Algorithms}
-Modern biological research has generated petabytes of DNA, RNA, and protein sequence data. The computational challenge stems not only from the volume of data but from its fragmented and noisy nature. Because sequencing machines output millions of short, disconnected, slightly error-prone text strings (reads), advanced algorithmic techniques—such as read mapping, genome assembly, and sequence alignment—are required to reconstruct the meaningful biological reality.
-
-
-
-\section{Beyond Genomic DNA: The "-omes" and Advanced Sequencing Applications}
-
-While sequencing the genome provides the foundational blueprint of an organism, a living cell is dynamic. To fully understand biological systems, bioinformaticians must analyze data across multiple layers of cellular activity.
-
-\subsection{The Omics Hierarchy}
-The Central Dogma (DNA $\rightarrow$ RNA $\rightarrow$ Protein) naturally defines distinct levels of biological information. By appending the suffix \textit{-ome} (meaning "the complete set of") and \textit{-omics} (the study thereof), we define massive, high-throughput subfields of bioinformatics.
+The cellular metabolism is incredibly intricate, involving massive signaling pathways and metabolic reactions (catabolic breaking down of molecules, and anabolic synthesis). Understanding this system requires capturing data at different levels of the Central Dogma, leading to various \textit{-omics} fields.
 
 \begin{important}
   \textbf{Omics}: The comprehensive study of complete sets of biological molecules within a biological system, typically utilizing high-throughput sequencing and computational methods.
 \end{important}
 
 \begin{itemize}
-    \item \textbf{Genome / Genomics}: The complete set of genes and genetic material. It represents the static blueprint of the organism.
-    \item \textbf{Transcriptome / Transcriptomics}: The complete set of RNA transcripts (mostly mRNA) produced by the genome at a specific moment. \sta Unlike the genome, the transcriptome is highly dynamic and changes based on environmental conditions, disease states, or cell types.
-    \item \textbf{Proteome / Proteomics}: The complete set of proteins expressed and physically present within a cell.
-    \item \textbf{Interactome}: The complete set of molecular interactions (e.g., protein-protein interaction networks) that map how molecules physically collaborate to exert functions.
-    \item \textbf{Metabolome}: The complete set of small-molecule chemicals involved in metabolic reactions.
+  \item \textbf{Genome / Genomics}: The complete set of genetic material (DNA). It represents the static blueprint of the organism.
+  \item \textbf{Transcriptome / Transcriptomics}: The complete set of RNA transcripts. \sta Unlike the genome, the transcriptome is highly dynamic and shows the state of gene expression at a given moment, changing based on environmental conditions, disease states, or cell types.
+  \item \textbf{Proteome / Proteomics}: The complete set of proteins expressed and physically present within a cell.
+  \item \textbf{Interactome}: The complete set of molecular interactions (e.g., protein-protein interaction networks) that map how molecules physically collaborate to exert functions.
+  \item \textbf{Metabolome / Metabolomics}: The complete set of small-molecule chemicals involved in metabolic reactions.
 \end{itemize}
 
-\subsection{Alternative Sequencing Applications}
-The technologies developed for DNA sequencing (like Illumina short-read sequencing) are highly versatile and can be repurposed to study other "omes".
+\section{DNA Sequencing Technologies}
 
-\sta \textbf{RNA-Sequencing (RNA-Seq)}: Sequencing machines can only read DNA, not RNA. To measure the transcriptome (gene expression levels), RNA must first be isolated from the cell and converted into \textbf{complementary DNA (cDNA)} using a viral enzyme called reverse transcriptase. Because cDNA can base-pair and form a double helix, it can be processed by standard DNA sequencing pipelines.
+To analyze biological sequence data, we must first acquire it. DNA sequencing is a biochemical process used to determine the exact order of nucleotides in a DNA molecule. Knowing the underlying mechanics of these machines is critical for bioinformaticians to understand the specific error profiles and biases present in the resulting data.
 
-\textbf{Example:} ChIP-Seq (Chromatin Immunoprecipitation Sequencing)
-This illustrates how DNA sequencing technology is creatively repurposed to map the exact locations where specific proteins (like transcription factors) bind to the genome.
+\subsection{Sanger Sequencing (First Generation)}
+Developed by Fred Sanger (who won two Nobel Prizes, one for protein structures and one for DNA sequencing), this was the primary sequencing method for decades and was used to sequence the first human genome draft in 2001.
+
+\begin{important}
+  \textbf{Sequencing by Synthesis}: The core conceptual strategy behind Sanger sequencing. To determine the sequence of a single-stranded DNA template, we use cellular enzymes (DNA polymerase) to synthesize its complementary strand. By observing \textit{which} bases the enzyme inserts, we can deduce the sequence of the original template.
+\end{important}
+
+Sanger sequencing relies on special chain-terminating nucleotides: dideoxynucleotides (ddNTPs). These lack a crucial $3^{\prime}$ oxygen. When DNA polymerase integrates a ddNTP into the growing strand, the chemical backbone cannot be extended further, terminating the chain.
+
+\textbf{The Sanger Protocol:}
 \begin{enumerate}
-    \item \textbf{Cross-linking}: Proteins are chemically frozen (cross-linked) to the DNA in the living cell so they do not detach.
-    \item \textbf{Fragmentation}: The entire DNA polymer is shattered into millions of short fragments.
-    \item \textbf{Immunoprecipitation}: An antibody specific to the protein of interest is used to capture only that protein, pulling down the attached DNA fragment along with it.
-    \item \textbf{Purification}: All other unbound DNA fragments and proteins are washed away.
-    \item \textbf{Sequencing}: The target protein is detached, and the remaining short DNA fragments are sequenced.
-    \item \textbf{Mapping}: Bioinformatic algorithms map these sequence reads back to the reference genome to identify the specific loci where the protein was bound.
+  \item Extract multiple copies of the DNA template to be sequenced.
+  \item Mix the template with DNA polymerase, normal nucleotides (dNTPs), and a small ratio of modified, chain-terminating ddNTPs that are labeled (originally with radioactivity, later with fluorescent dyes of 4 different colors: A, C, G, T).
+  \item Let the polymerase synthesize the reverse complementary strands. Because the inclusion of a ddNTP is random, the reaction produces fragments of every possible length, each ending at a specific base.
+  \item Use \textbf{Gel Electrophoresis} to separate the resulting fragments by size. An electric current pulls the fragments through a gel; shorter molecules move much faster than longer ones.
+  \item A laser excites the fluorescent dye on the fragments as they pass the end of the gel.
+  \item By reading the sequence of colors ordered by fragment size (fastest/shortest to slowest/longest), one directly reads the sequence of the synthesized strand.
 \end{enumerate}
+
+% [IMAGE: Chromatogram output of a Sanger sequencing run, showing a series of colored peaks (red, green, blue, black/yellow) over time, representing the sequence of bases.]
+
+Sanger sequencing is highly accurate but suffers from critically low throughput and high costs. Sequencing the first human genome required roughly 45,000 machine runs over many months, costing around $\$100$ million. Today, it is mostly used for localized verification of mutations.
+
+\subsection{Next-Generation Sequencing (NGS) / Illumina Sequencing}
+Next-generation technologies, predominantly led by Illumina, enable massive parallelization. These dropped the cost of sequencing a human genome to under $\$1,000$ and vastly increased data generation. However, the trade-off is shorter sequence read lengths.
+
+\textbf{Illumina Sequencing Workflow:}
+\begin{enumerate}
+  \item \textbf{Library Preparation (Fragmentation)}: Genomic DNA is broken into millions of short fragments (e.g., via sonication). The jagged ends are chemically repaired to be blunt. A single 'A' nucleotide is added to the $3^{\prime}$ ends.
+  \item \textbf{Adapter Ligation}: Known sequences of synthetic DNA called \textbf{adapters} are ligated (attached) to the ends of every unknown fragment. Because the adapters are a known sequence, we can build tools to manipulate the unknown fragments.
+  \item \textbf{Flow-Cell Deposition}: The single-stranded library is washed over a "flow cell" (a glass slide coated with oligonucleotides complementary to the adapters). The fragments hybridize and attach to the surface.
+  \item \textbf{Bridge Amplification}: To create a signal strong enough for a laser to detect, each attached molecule bends over to form a "bridge" with a neighboring oligonucleotide. Polymerase copies the strand. This cycle repeats, creating localized \textbf{clusters} of thousands of identical copies of the original fragment.
+  \item \textbf{Sequencing by Synthesis}: 
+    \begin{itemize}
+        \item Fluorescently labeled nucleotides with \textit{reversible} terminators are washed over the flow cell. 
+        \item Only a single base is incorporated into every growing chain in every cluster because of the terminator block.
+        \item A laser excites the flow cell, and a camera records the color (A, C, G, or T) at each cluster coordinate.
+        \item The terminator block and fluorescent dye are chemically cleaved off, and the cycle repeats.
+    \end{itemize}
+\end{enumerate}
+
+% [IMAGE: Visualization of a flow cell during Sequencing by Synthesis. Colored dots representing thousands of individual DNA clusters are shown fluorescing under a laser read cycle.]
+% [IMAGE: Visual grid showing clusters on an Illumina flow cell lighting up with different colors across sequential cycles to build a sequence string.]
+
+\sta \textbf{Algorithmic Implication (The Read Mapping Problem)}: NGS relies on a stochastic chemical process. Over many cycles, a small fraction of fragments within a cluster fail to incorporate a base, causing them to fall out of phase with the rest of the cluster. As cycles increase, this "noise" compounds, degrading the light signal. Consequently, Illumina sequencing is limited to producing very \textbf{short reads} (e.g., 100 to 500 bases). 
+
+Because bioinformaticians receive millions of these tiny, unassembled reads rather than intact chromosomes, complex algorithms (such as \textbf{Read Mapping} to reference genomes or \textit{de novo} \textbf{Genome Assembly} via De Bruijn graphs) are required to piece the biological puzzle back together. Additionally, base-calling algorithms assign a statistical \textbf{quality score} to every read, which computational pipelines must account for.
+
+\subsection{Third-Generation (Long-Read) Sequencing}
+To overcome the short-read limitations of NGS, third-generation technologies like \textbf{Nanopore Sequencing} were developed. 
+
+These devices pull a single, extremely long DNA strand (up to hundreds of thousands of bases) through a microscopic hole (nanopore) in a membrane. As the molecule passes through, each base distinctively disrupts an applied electrical current. By measuring the changes in the current over time, the sequence is read directly without requiring amplification or synthesis.
+
+While nanopore provides massively long reads (which are incredibly useful for spanning highly repetitive regions of genomes where short reads fail to map correctly), its historic drawback has been a significantly higher base-error rate compared to Illumina and Sanger technologies.
+
+\section{Beyond DNA Sequencing: Alternative Applications}
+
+While the technologies discussed above are fundamentally designed to sequence DNA, their massive parallelization and cost-effectiveness allow them to be repurposed for entirely different biological questions. By using biochemical manipulation, we can convert other biological information into a DNA sequencing problem.
+
+\subsection{RNA Sequencing (RNA-Seq) / Transcriptomics}
+If we want to understand the transcriptomic state of a cell (e.g., measuring how strongly specific genes are expressed to see if a gene is active or switched off), we cannot sequence the RNA directly using standard Illumina machines. 
+Instead, we use an enzyme to make a stable DNA copy of the RNA molecules.
+
+\begin{important}
+  \textbf{cDNA (Complementary DNA)}: DNA synthesized from a single-stranded RNA template in a reaction catalyzed by the enzyme reverse transcriptase. 
+\end{important}
+
+By sequencing this cDNA, we indirectly sequence the RNA. If a particular gene is highly active, it will produce many RNA transcripts, resulting in many sequenced reads. If a gene is switched off, we will observe zero or very few reads.
+
+\subsection{ChIP-Seq (Chromatin Immunoprecipitation Sequencing)}
+Beyond sequencing genomes and transcriptomes, we can also use these technologies to investigate physical interactions, such as discovering exactly where specific proteins (like transcription factors) bind to the DNA across the entire genome.
+
+\textbf{Example:} ChIP-Seq Workflow
+\begin{enumerate}
+  \item \textbf{Cross-linking}: Treat the living cells with a chemical to permanently fuse ("cross-link") proteins to the DNA exactly where they are currently bound.
+  \item \textbf{Fragmentation}: Extract the DNA and shatter it into millions of small pieces, exactly as done in standard library preparation. Some of these DNA pieces will have our protein of interest permanently attached to them.
+  \item \textbf{Antibody Extraction}: Introduce an antibody specifically designed to bind to the target protein. Use this antibody to "pull out" the protein of interest, bringing the attached DNA fragment along with it. All other DNA fragments are washed away.
+  \item \textbf{Protein Removal and Sequencing}: Detach and destroy the protein, leaving only the pure DNA fragments that were physically close to the protein's binding site. Sequence these fragments using standard NGS.
+  \item \textbf{Read Mapping}: Computationally align these sequence reads back to the reference genome to identify the exact genomic coordinates where the protein was originally bound.
+\end{enumerate}
+
+\sta This highlights exactly why algorithmic \textbf{read mapping} is so critical. We use DNA sequencing as a generic tool to answer non-DNA questions, resulting in millions of short reads that must be accurately assigned to their original location in the reference genome to have any biological meaning.
 
 \section{Viruses and Cellular Complexity}
 
@@ -240,16 +293,37 @@ A cell is not just a bag of DNA and proteins; it is an immensely complex system 
 
 Because of the sheer complexity of these intertwining pathways—where a single knockdown mutation can cascade through the entire metabolic network—computational analysis is the only feasible way to model whole-cell behavior.
 
-\section{Looking Ahead: Algorithmic Challenges in Bioinformatics}
+\section{The Data Explosion and Bioinformatics Challenges}
 
-The biological reality discussed above perfectly frames the computational problems that define the core of bioinformatics algorithms. The sequencing data we generate is massively parallel, highly fragmented, and prone to technical errors.
+Due to the rapid advancement of NGS technologies (outpacing even Moore's Law), the cost of sequencing has plummeted (from \$100 million for the first genome to under \$1,000 today) while data generation has skyrocketed. The fundamental bottleneck in modern genomics is no longer data acquisition, but data storage, processing, and interpretation.
 
-Throughout the remainder of this course, we will focus on solving the mathematical and algorithmic puzzles created by this biological data:
+% [IMAGE: Bar chart illustrating the exponential expansion of annual sequence data generation, growing from petabytes in 2014 to over 6.2 exabytes by 2019.]
 
+\begin{itemize}
+  \item In October 2005, the NCBI GenBank database contained roughly 50 gigabases of sequence data.
+  \item By 2008, projects like the 1000 Genomes Project were generating that same amount of data \textit{every single week}.
+  \item Today, large-scale initiatives (like the UK's 100,000 Genomes Project and the EU's 1+ Million Genomes initiative) produce massive datasets that require highly optimized computational infrastructures.
+\end{itemize}
+
+As computer scientist Donald Knuth famously remarked: \textit{"Biology easily has 500 years of exciting problems to work on."} The sheer volume of this data necessitates sophisticated algorithms to assemble genomes, map reads, call variants, and model sequences.
+
+\section{Course Outlook: From Biology to Algorithms}
+
+The biological complexities and technological details discussed in these foundational notes serve to set the stage for the core focus of bioinformatics: \textbf{algorithmic sequence analysis}.
+
+Understanding the underlying biology and technology allows a bioinformatician to:
+\begin{itemize}
+  \item Recognize the importance of the \textbf{reverse complement} when searching for motifs or mapping reads, because biological signals can occur on either strand.
+  \item Account for \textbf{alternative splicing} when mapping RNA-Seq reads back to a reference genome, as a single read might span across a spliced exon junction.
+  \item Understand the \textbf{error profiles} of different sequencing technologies (e.g., stochastic signal degradation in short-read NGS causing specific base-calling errors, or high error rates in long-read technologies) to implement robust statistical models and quality filtering.
+\end{itemize}
+
+Moving forward, the focus will shift from biological mechanisms to mathematical and computational formulations, specifically covering:
 \begin{enumerate}
-    \item \textbf{Sequence Alignment}: Comparing two or more sequences to find regions of similarity. Biologically, this helps identify conserved evolutionary traits or functional domains within proteins and DNA.
-    \item \textbf{Genome Assembly}: If we sequence a completely novel organism without a reference, we generate millions of short reads. How do we puzzle them together into a complete genome? This is mathematically modeled using structures like \textit{De Bruijn graphs}.
-    \item \textbf{Read Mapping (Alignment to a Reference)}: If we sequence a human patient's genome, we do not need to assemble it from scratch. We map their millions of short sequence reads against the known human reference genome. Because the data volume is massive, standard sequence alignment algorithms are too slow, necessitating highly optimized data structures.
-    \item \textbf{Variant Calling}: Once reads are mapped to a reference genome, we computationally identify loci where the patient's sequence differs from the reference (mutations/variants), which has direct clinical applications in fields like precision oncology.
-    \item \textbf{Multiple Sequence Alignment}: Aligning many sequences simultaneously across different species to reconstruct phylogenetic trees and study molecular evolution.
+  \item \textbf{Sequence Alignment}: Identifying conserved regions and evolutionary relationships between sequences. Biologically, this helps identify conserved evolutionary traits or functional domains within proteins and DNA.
+  \item \textbf{Genome Assembly (De Bruijn Graphs)}: Reconstructing full genomes computationally from millions of unassembled short reads. This is mathematically modeled using structures like \textit{De Bruijn graphs}.
+  \item \textbf{Read Mapping (Alignment to a Reference)}: Efficiently aligning millions of short sequence reads back to a massive reference genome. Because the data volume is massive, standard sequence alignment algorithms are too slow, necessitating highly optimized data structures.
+  \item \textbf{Variant Calling}: Identifying clinically or biologically relevant mutations (e.g., in cancer sequencing) from mapped reads.
+  \item \textbf{Multiple Sequence Alignment}: Aligning sequences across multiple species simultaneously to reconstruct phylogenetic trees and study molecular evolution.
+  \item \textbf{Sequence Modeling (HMMs)}: Using statistical models like Hidden Markov Models to probabilistically predict gene locations and sequence properties.
 \end{enumerate}
