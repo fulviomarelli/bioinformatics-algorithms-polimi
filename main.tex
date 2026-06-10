@@ -1,6 +1,6 @@
 \documentclass[a4paper,11pt]{article}
 
-\usepackage[a4paper,margin=1.8cm]{geometry}
+\usepackage[a4paper,margin=1.6cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
@@ -8,6 +8,9 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{fancyhdr}
 \usepackage{tocloft}
+\cftsetindents{section}{0em}{3em}
+\cftsetindents{subsection}{3em}{4em}
+\cftsetindents{subsubsection}{7em}{5em}
 \usepackage{enumitem}
 \usepackage[breakable, most]{tcolorbox}
 \usepackage{wrapfig}
@@ -98,7 +101,7 @@
 \setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\ifnum\value{section}>0 \thesection\ - \leftmark\fi}
+\fancyhead[L]{\ifnum\value{section}>0 \thesection\fi}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 \emergencystretch=3em
