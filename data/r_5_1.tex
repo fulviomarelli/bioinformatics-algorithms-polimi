@@ -51,6 +51,7 @@ Because RNA-seq measures the transcriptome, the mapped reads align almost exclus
 
 % [IMAGE: A "Sashimi" plot showing RNA-seq read coverage over exonic regions. Arcs connect exons to indicate splice-junction spanning reads. A comparison between a control sample and a patient sample illustrates aberrant splicing caused by a mutation, leading to skipped exons.]
 % [IMAGE: A Sashimi plot showing read coverage over exonic regions and arcs representing splice-junction spanning reads. The top plot shows normal splicing in a control sample, while the bottom plot shows aberrant splicing (e.g., exon skipping) due to a mutation in a patient.]
+\myimage{5_1/1.jpg}{A Sashimi plot showing read coverage over exonic regions and arcs representing splice-junction spanning reads. The top plot shows normal splicing in a control sample, while the bottom plot shows aberrant splicing (e.g., exon skipping) due to a mutation in a patient.}
 
 \begin{important}
   \textbf{Hi-C (Chromosome Conformation Capture)}: A method that identifies three-dimensional chromatin interactions by chemically fusing interacting genomic regions and sequencing the resulting artificial junctions.
@@ -261,6 +262,7 @@ If the resulting p-value is $\le 0.05$, the variant is officially called a \text
 To find massive duplications or deletions (Copy Number Variants), we cannot look at single nucleotide pileups. Instead, we analyze \textbf{Read Depth} (coverage) across large consecutive genomic regions.
 
 % [IMAGE: Coverage plot comparing a tumor sample and a control sample. The y-axis shows log2-normalized read counts. The tumor plot shows a massive spike indicating an amplification (e.g., 60 copies of a gene) and sudden drops indicating deletions of entire chromosome arms.]
+\myimage{5_1/2.jpg}{Coverage plot comparing a tumor sample and a control sample. The y-axis shows log2-normalized read counts. The tumor plot shows a massive spike indicating an amplification (e.g., 60 copies of a gene) and sudden drops indicating deletions of entire chromosome arms.}
 % [IMAGE: Coverage plot comparing tumor to control. Log2 median-normalized read counts are plotted as dots along the chromosome. Sudden drops indicate deletions; massive spikes (e.g., 60 copies) indicate gene amplification.]
 
 \subsection{Coverage Plots and the Poisson Distribution}

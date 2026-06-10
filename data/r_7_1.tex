@@ -68,6 +68,7 @@ In biological applications, the functional ``state'' of the genome (e.g., whethe
 \sta In an HMM, \textbf{both} state transitions and symbol emissions are memoryless. The emitted symbol \( x_i \) depends \textit{only} on the current hidden state \( \pi_i \), and the next state \( \pi_{i+1} \) depends \textit{only} on \( \pi_i \). We use Bayes' rule to infer the hidden state given the observed symbol.
 
 % [IMAGE: Side-by-side comparison. Left side shows a Markov Chain of weather (Sun, Clouds, Rain, Snow) transitioning directly between each other. Right side shows an HMM where hidden states (Summer, Winter) transition between each other, and each hidden state emits observable weather symbols with specific probabilities.]
+\myimage{7_1/1.png}{Side-by-side comparison. Left side shows a Markov Chain of weather (Sun, Clouds, Rain, Snow) transitioning directly between each other. Right side shows an HMM where hidden states (Summer, Winter) transition between each other, and each hidden state emits observable weather symbols with specific probabilities.}
 
 \textbf{Example:} Seasons and Weather.
 Consider seasons (Summer, Winter) as the hidden states \( Q \) and the weather (Sunny, Snow) as the observable symbols \( V \). We cannot directly observe the season, but we can deduce it because the hidden state heavily influences the emission probabilities.
@@ -100,6 +101,7 @@ We observe a sequence of die rolls (the emissions) but do not know which die the
 This maps directly to genomics. A genome might randomly transition between human DNA (Background) and integrated viral DNA. The observable alphabet is $\{A, C, G, T\}$. Viral DNA and Human DNA will have distinct emission probabilities for these nucleotides (e.g., varying GC-content), and transitions between them are rare but possible.
 
 % [IMAGE: Header of the paper 'Prediction of Complete Gene Structures in Human Genomic DNA' by Burge and Karlin, introducing GENSCAN.]
+\myimage{7_1/2.png}{Header of the paper 'Prediction of Complete Gene Structures in Human Genomic DNA' by Burge and Karlin, introducing GENSCAN.}
 % [IMAGE: Complex HMM architecture (GENSCAN) for predicting protein-coding genes, showing hidden states for UTRs, Exons, Introns, and start/stop/splice signals across different reading frames.]
 
 \section{The Six Algorithmic Settings for HMMs}
@@ -288,6 +290,7 @@ We embed historical context into the identity of the current state itself. For a
 \end{itemize}
 
 % [IMAGE: Graph showing 8 nodes instead of 2. The four '+' nodes represent nucleotides emitted inside a CpG island, and the four '-' nodes represent nucleotides emitted in background DNA. Transition arrows between C+ and G+ are given very high weight to simulate the biological prevalence of CpG dinucleotides.]
+\myimage{7_1/4.png}{Graph showing 8 nodes instead of 2. The four '+' nodes represent nucleotides emitted inside a CpG island, and the four '-' nodes represent nucleotides emitted in background DNA. Transition arrows between C+ and G+ are given very high weight to simulate the biological prevalence of CpG dinucleotides.}
 
 If the system emits a `C` while in a CpG-island, it enters the \( C_+ \) state. From \( C_+ \), we assign a highly inflated transition probability \( a_{C_+ \to G_+} \), accurately simulating the di-nucleotide frequency while strictly adhering to the memoryless rules.
 

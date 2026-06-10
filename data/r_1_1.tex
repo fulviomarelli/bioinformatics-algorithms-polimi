@@ -24,7 +24,7 @@ Cells are the fundamental units of life. There are two major classifications:
   \item \textbf{Eukaryotes} (e.g., animal and plant cells): More complex cells containing distinct organelles. Crucially, the DNA is packaged into chromosomes and enclosed within a cell nucleus.
 \end{itemize}
 
-\myimage{1_1/1.jpg}{Prokaryotic vs Eukaryotic cell structures.}
+\myimage{1_1/1x.jpg}{Prokaryotic vs Eukaryotic cell structures.}
 
 \subsection{Key Molecules}
 Biological functions are carried out by different types of molecules:
@@ -39,6 +39,7 @@ Biological functions are carried out by different types of molecules:
 \end{itemize}
 
 % [IMAGE: Structure of a protein complex (Polycomb complexes PRC1 and PRC2) interacting with a functional element in the genome.]
+\myimage{1_1/1.jpg}{Structure of a protein complex (Polycomb complexes PRC1 and PRC2) interacting with a functional element in the genome.}
 
 \section{The Chemical Structure of DNA and RNA}
 
@@ -50,7 +51,7 @@ Both DNA and RNA are polymers composed of monomers called \textbf{nucleotides}. 
   \item A nitrogen-containing base.
 \end{enumerate}
 
-\myimage{1_1/2.jpg}{Chemical structure of a nucleotide.}[width=0.6\textwidth]
+\myimage{1_1/2x.jpg}{Chemical structure of a nucleotide.}[width=0.6\textwidth]
 
 In DNA, the pentose sugar is deoxyribose (meaning it lacks one oxygen atom compared to standard ribose), and the four possible bases are: \textbf{Adenine (A)}, \textbf{Cytosine (C)}, \textbf{Guanine (G)}, and \textbf{Thymine (T)}. 
 
@@ -67,7 +68,7 @@ DNA exists as a double helix composed of two strands that wrap around each other
   \textbf{Base Pairing Rules}: Due to chemical affinities, Adenine (A) always pairs with Thymine (T), and Cytosine (C) always pairs with Guanine (G). We refer to these as base pairs (bp).
 \end{important}
 
-\myimage{1_1/3.jpg}{The DNA double helix and base pairing.}[width=0.5\textwidth]
+\myimage{1_1/3x.jpg}{The DNA double helix and base pairing.}[width=0.5\textwidth]
 
 Crucially, the two strands have \textbf{opposite orientations} (antiparallel). If one strand runs $5^{\prime}$ to $3^{\prime}$, the opposite strand runs $3^{\prime}$ to $5^{\prime}$. 
 
@@ -106,6 +107,7 @@ DNA is organized into chromosomes. The number of chromosomes and the total genom
 While this pathway outlines the synthesis of protein-coding genes, modern biology recognizes it as an oversimplification. Many regions of the genome produce non-coding RNAs that bypass the translation step entirely, exerting biological functions directly as RNA molecules.
 
 % [IMAGE: Diagram of the Central Dogma showing DNA replicating itself, being transcribed into RNA, and RNA being translated into Protein.]
+\myimage{1_1/2.jpg}{Diagram of the Central Dogma showing DNA replicating itself, being transcribed into RNA, and RNA being translated into Protein.}
 
 \subsection{Transcription}
 Transcription is the process of copying a specific region of DNA (a gene) into an RNA molecule. 
@@ -123,6 +125,7 @@ In eukaryotic cells, transcription occurs inside the nucleus, producing a precur
 \end{important}
 
 % [IMAGE: Visualization of pre-mRNA splicing, where grey intron loops are removed, leaving green and red exons connected together.]
+\myimage{1_1/3.jpg}{Visualization of pre-mRNA splicing, where grey intron loops are removed, leaving green and red exons connected together.}
 
 \sta A critical biological advantage of eukaryotes is \textbf{Alternative Splicing}. A cell can selectively include or exclude certain exons depending on its current metabolic needs, developmental stage, or tissue type. This allows a single gene to code for multiple different proteins, vastly expanding the complexity of the organism without requiring vastly more DNA. Prokaryotes do not have a nucleus; they transcribe and translate simultaneously, and therefore do not perform splicing.
 
@@ -193,6 +196,7 @@ Sanger sequencing relies on special chain-terminating nucleotides: dideoxynucleo
 \end{enumerate}
 
 % [IMAGE: Chromatogram output of a Sanger sequencing run, showing a series of colored peaks (red, green, blue, black/yellow) over time, representing the sequence of bases.]
+\myimage{1_1/4.jpg}{Chromatogram output of a Sanger sequencing run, showing a series of colored peaks (red, green, blue, black/yellow) over time, representing the sequence of bases.}
 
 Sanger sequencing is highly accurate but suffers from critically low throughput and high costs. Sequencing the first human genome required roughly 45,000 machine runs over many months, costing around $\$100$ million. Today, it is mostly used for localized verification of mutations.
 
@@ -215,6 +219,7 @@ Next-generation technologies, predominantly led by Illumina, enable massive para
 \end{enumerate}
 
 % [IMAGE: Visualization of a flow cell during Sequencing by Synthesis. Colored dots representing thousands of individual DNA clusters are shown fluorescing under a laser read cycle.]
+\myimage{1_1/5.png}{Visualization of a flow cell during Sequencing by Synthesis. Colored dots representing thousands of individual DNA clusters are shown fluorescing under a laser read cycle.}
 % [IMAGE: Visual grid showing clusters on an Illumina flow cell lighting up with different colors across sequential cycles to build a sequence string.]
 
 \sta \textbf{Algorithmic Implication (The Read Mapping Problem)}: NGS relies on a stochastic chemical process. Over many cycles, a small fraction of fragments within a cluster fail to incorporate a base, causing them to fall out of phase with the rest of the cluster. As cycles increase, this "noise" compounds, degrading the light signal. Consequently, Illumina sequencing is limited to producing very \textbf{short reads} (e.g., 100 to 500 bases). 
@@ -274,6 +279,7 @@ Viral genomes are incredibly diverse:
 \end{itemize}
 
 % [IMAGE: The infection cycle of a bacteriophage lambda virus: 1. Attachment to the host cell surface. 2. Entry of viral DNA. 3. Replication of phage DNA using host machinery. 4. Assembly of new viral particles. 5. Release via host cell lysis.]
+\myimage{1_1/7.jpg}{The infection cycle of a bacteriophage lambda virus: 1. Attachment to the host cell surface. 2. Entry of viral DNA. 3. Replication of phage DNA using host machinery. 4. Assembly of new viral particles. 5. Release via host cell lysis.}
 
 \subsection{Cellular Signaling and Metabolism}
 A cell is not just a bag of DNA and proteins; it is an immensely complex system of interlocking chemical reactions and signaling cascades. Bioinformaticians often model these systems mathematically as graphs or networks.
@@ -288,6 +294,7 @@ A cell is not just a bag of DNA and proteins; it is an immensely complex system 
 \end{itemize}
 
 % [IMAGE: Simplified diagram of the Tricarboxylic Acid (TCA) / Citric Acid cycle, demonstrating a highly complex metabolic pathway involving multiple intermediate molecular states and enzymatic reactions.]
+\myimage{1_1/8.jpg}{Simplified diagram of the Tricarboxylic Acid (TCA) / Citric Acid cycle, demonstrating a highly complex metabolic pathway involving multiple intermediate molecular states and enzymatic reactions.}
 
 Because of the sheer complexity of these intertwining pathways—where a single knockdown mutation can cascade through the entire metabolic network—computational analysis is the only feasible way to model whole-cell behavior.
 
