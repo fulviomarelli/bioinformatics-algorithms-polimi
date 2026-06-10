@@ -58,6 +58,7 @@ If aligning an 'A' to a profile column consisting of 50\% 'A', 25\% 'G', and 25\
 The progressive algorithm is fundamentally an application of \textbf{hierarchical clustering}, an unsupervised machine learning data mining technique. Every string is treated as a data point in a multi-dimensional space, and alignment scores serve as the distance metric dictating their grouping.
 
 % [IMAGE: A hierarchical clustering dendrogram plotting nucleo-cytoplasmic large DNA viruses (such as Mamavirus and Mimivirus). The horizontal edge lengths are drawn proportionally to the computed sequence distance, visually demonstrating the evolutionary "closeness" of the viral clusters.]
+\myimage{6_2/1.jpg}{A hierarchical clustering dendrogram plotting nucleo-cytoplasmic large DNA viruses (such as Mamavirus and Mimivirus). The horizontal edge lengths are drawn proportionally to the computed sequence distance, visually demonstrating the evolutionary "closeness" of the viral clusters.}
 % [IMAGE: Hierarchical clustering dendrogram showing branches of varying lengths (e.g., Mamavirus and Mimivirus showing very short branch lengths, indicating close similarity). The y-axis implicitly represents distance, clustering closely related objects before distant ones.]
 
 To perform clustering, we need robust ways to measure distance between a single sequence and a cluster (a profile), or between two clusters. Common choices include:
@@ -117,6 +118,7 @@ For standard human DNA, we assume equiprobable background frequencies of 25\% pe
 
 % [IMAGE: A "sequence logo" mapping the Information Content of a motif. The x-axis shows the column position (length $w$), and the y-axis shows information content (from 0 to 2 bits). Each stacked letter's size visualizes its specific IC contribution to that column.]
 % [IMAGE: Sequence logo visualization. A bar chart where the x-axis represents positions 1 to w. At each position, stacked letters (A, C, G, T) scale in height based on their frequency, and the total height of the stack corresponds to the Information Content (in bits) at that position, up to a maximum of 2.0.]
+\myimage{6_2/2.jpg}{Sequence logo visualization. A bar chart where the x-axis represents positions 1 to w. At each position, stacked letters (A, C, G, T) scale in height based on their frequency, and the total height of the stack corresponds to the Information Content (in bits) at that position, up to a maximum of 2.0.}
 
 \section{Search Space Exploration Strategies (Heuristic Algorithms)}
 Finding the set of $k$ starting positions that maximizes the Information Content score requires exploring a massive search space. An exhaustive search—where every substring of $S_1$ is compared to every substring of $S_2$, expanding exponentially up to $S_k$—generates $O(n^k)$ combinations and is utterly unfeasible. Thus, we must employ heuristic algorithms.

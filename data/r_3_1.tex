@@ -24,6 +24,7 @@ When modern high-throughput platforms (Next-Generation Sequencing, NGS) generate
 \sta Paired-end sequencing is highly advantageous because it provides critical structural context. If two reads map to a reference genome much further apart than their expected fragment length, it strongly implies a structural variant, such as a deletion or translocation, in the sequenced individual.
 
 % [IMAGE: Diagram showing two paired-end reads mapping to different chromosomes, indicating a potential translocation, and another pair mapping far apart on the same chromosome, indicating a deletion.]
+\myimage{3_1/1.jpg}{Diagram showing two paired-end reads mapping to different chromosomes, indicating a potential translocation, and another pair mapping far apart on the same chromosome, indicating a deletion.}
 % [IMAGE: A diagram showing paired-end and single-end reads mapping to a reference genome, illustrating how paired reads span unknown intervening sequences and can highlight translocations or deletions if mapped unusually far apart.]
 
 \subsection{Major Classes of Assembly Algorithms}
@@ -111,6 +112,7 @@ The relationship between base coverage ($\lambda$) and k-mer coverage ($d_k$) is
 This technique is exceptionally powerful for characterizing novel species before assembly begins.
 
 % [IMAGE: A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.]
+\myimage{3_1/2.jpg}{A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.}
 % [IMAGE: A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d_k. A smaller peak near zero represents unique sequencing errors.]
 
 
@@ -123,6 +125,7 @@ Because infinite coverage is impossible, any real genome assembly effort will no
 \end{important}
 
 % [IMAGE: A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.]
+\myimage{3_1/4.png}{A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.}
 
 If we cannot sequence the gaps, we cannot definitively know the order, distance, or orientation of the contigs relative to one another (unless we use paired-end scaffolds, which we will discuss later).
 
@@ -277,8 +280,10 @@ When constructing the graph, the phrase \texttt{"the more"} becomes a single, hi
 \end{tikzpicture}
 \end{center}
 % [IMAGE: A diagram showing a central node labeled "the more" branching outwards into four distinct paths representing the different continuations of the sentence, explicitly capturing the structural ambiguity rather than forcing a greedy choice.]
+\myimage{3_1/5.jpg}{A diagram showing a central node labeled "the more" branching outwards into four distinct paths representing the different continuations of the sentence, explicitly capturing the structural ambiguity rather than forcing a greedy choice.}
 % [IMAGE: A sequence of directed nodes showing "The more" branching into "more things", "more places", and "more that". The path for "more things you will know" is compressed from multiple 2-word nodes into a single long node because it has no diverging branches.]
 % [IMAGE: A sequence of De Bruijn graph diagrams transitioning from isolated edges representing overlapping word-fragments (like 'the more things', 'more things you'), to merged nodes sharing common prefixes/suffixes, and finally to a compressed path merging nodes into longer continuous phrases.]
+\myimage{3_1/6.jpg}{A sequence of De Bruijn graph diagrams transitioning from isolated edges representing overlapping word-fragments (like 'the more things', 'more things you'), to merged nodes sharing common prefixes/suffixes, and finally to a compressed path merging nodes into longer continuous phrases.}
 
 \textbf{Graph Compression}: 
 After the initial global structure is built, the DBG reveals long sequences of unambiguous paths—sections where nodes have an in-degree of 1 and an out-degree of 1. For instance, once a path enters \texttt{"things"}, it must traverse \texttt{"you"} $\rightarrow$ \texttt{"will"} $\rightarrow$ \texttt{"know"}. To save memory and simplify the graph, these sequential nodes are merged into a single, extended contiguous node (e.g., \texttt{"things you will know"}). This drastically reduces the graph size without altering the topological routing options.
@@ -337,6 +342,7 @@ def hierholzer(graph):
 \end{enumerate}
 
 % [IMAGE: A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.]
+\myimage{3_1/7.jpg}{A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.}
 
 
 \section{Practical Challenges in Genome Assembly}

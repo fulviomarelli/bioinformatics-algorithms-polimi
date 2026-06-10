@@ -226,6 +226,7 @@ where \(\text{cost} = 0\) if \(a_i = b_j\) (the characters match), and \(\text{c
 5. \textbf{Result}: The cell at \((n, m)\) (bottom right) contains the minimum edit distance for the complete strings.
 
 % [IMAGE: A dynamic programming matrix showing the step-by-step mathematical population of edit distance values for aligning "SATURDAY" against "SUNDAY", highlighting the initialization of the first row and column with incrementally increasing gap penalties.]
+\myimage{2_1/1.png}{A dynamic programming matrix showing the step-by-step mathematical population of edit distance values for aligning "SATURDAY" against "SUNDAY", highlighting the initialization of the first row and column with incrementally increasing gap penalties.}
 
 \textbf{Example:}
 Calculating the cell $(1,1)$ for $a=$ ``SATURDAY'' and $b=$ ``SUNDAY''. The character for $a(1)$ is 'S' and $b(1)$ is 'S'. 
@@ -298,6 +299,7 @@ LCS(a(i-1), b(j-1)) + 1 & \text{if } a_i = b_j \\
 When filling the LCS matrix, the score only increases upon a diagonal move where \(a_i = b_j\). Backtracking through cells that successfully incremented the score yields the specific characters that form the LCS.
 
 % [IMAGE: Matrix setup for LCS between "SUGAR" and "SUCRE". The first row and column are initialized to 0. The matrix fills progressively by taking the maximum of left and top neighbors, or adding 1 if a diagonal move pairs identical characters. The bottom right cell gives an LCS of 3 (S, U, R).]
+\myimage{2_1/2.png}{Matrix setup for LCS between "SUGAR" and "SUCRE". The first row and column are initialized to 0. The matrix fills progressively by taking the maximum of left and top neighbors, or adding 1 if a diagonal move pairs identical characters. The bottom right cell gives an LCS of 3 (S, U, R).}
 
 \section{Combining Distance and Similarity: Needleman-Wunsch}
 
