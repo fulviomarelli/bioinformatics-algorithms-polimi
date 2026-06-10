@@ -36,7 +36,7 @@
 
 \newcommand{\xor}{\oplus}
 
-%\linespread{1.3}
+\linespread{1.2}
 
 % Blue definition box
 \tcbset{
@@ -93,11 +93,12 @@
 
 \newcounter{docnum}
 \setcounter{docnum}{0}
+\renewcommand{\thesection}{\arabic{docnum}.\arabic{section}}
 
 \setlength{\headheight}{14pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\ifnum\value{section}>0 \thedocnum.\thesection\ - \leftmark\fi}
+\fancyhead[L]{\ifnum\value{section}>0 \thesection\ - \leftmark\fi}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 \emergencystretch=3em
