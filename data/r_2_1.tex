@@ -168,6 +168,7 @@ Because edit operations perfectly mirror biological SNPs and indels, this metric
 
 Let $x[n]$ be the $n$-th character of string $x$ (0-based) and $\text{tail}(x)$ be string $x$ without its first character. The recursive formulation checking from the beginning of the strings is:
 
+\begin{center}
 \[
 \operatorname{lev}(a,b) = 
 \begin{cases}
@@ -181,6 +182,7 @@ Let $x[n]$ be the $n$-th character of string $x$ (0-based) and $\text{tail}(x)$ 
 \end{cases} & \text{otherwise}
 \end{cases}
 \]
+\end{center}
 
 Because testing all infinite possible sequences of operations is computationally infeasible, we discard partial solutions that exceed $\max(|a|, |b|)$ and utilize dynamic programming.
 
@@ -332,7 +334,7 @@ E(a(i-1), b(j-1)) + \text{score}(a_i, b_j) & \text{(Match/Mismatch score)}
 
 When assigning the gap weight \(w_d\), biological algorithms frequently utilize different penalty models depending on the anticipated evolutionary behavior. It is often biologically easier to extend a deletion that has already begun than to open multiple new micro-deletions.
 
-\begin{table}[h]
+\begin{table}[!Ht]
     \centering
     \caption{Common Gap Penalty Models}
     \begin{tabularx}{\textwidth}{l X}
