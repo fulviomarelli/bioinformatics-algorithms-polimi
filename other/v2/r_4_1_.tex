@@ -1,0 +1,327 @@
+\begin{document}
+
+% Lecture Notes: Read Mapping and Reference-based Assembly
+
+\section{Introduction to Read Mapping}
+
+When analyzing DNA sequencing data, such as from whole-genome or exome sequencing, we often have a reference genome available for the species being sequenced. Rather than assembling the newly sequenced genome from scratch, we can align the sequencing reads directly to this reference.
+
+\begin{important}
+    \textbf{Reference-based Assembly (Read Mapping)}: The computational process of aligning short sequence reads to a known reference genome to identify the positions from which the reads originated, primarily to characterize genetic variation (mutations) in an individual.
+\end{important}
+
+While characterizing variations like Single Nucleotide Variants (SNVs) or short insertions/deletions (indels) is the primary goal, read mapping is a foundational step for several other downstream analyses:
+\begin{itemize}
+    \item \textbf{RNA-seq}: Measurement of gene expression by aligning RNA sequences to identify which genes are highly active.
+    \item \textbf{ChIP-seq}: Identification of DNA binding sites by transcription factors.
+    \item \textbf{Epigenomics}: Analysis of epigenetic marks, such as DNA methylation or histone modifications.
+\end{itemize}
+
+\subsection{Applications in Medical Diagnostics and Beyond}
+
+Read mapping has major applications in medical diagnostics, precision medicine, and research. Precision medicine seeks to stratify patients based on large-scale data (like DNA sequencing) beyond traditional signs and symptoms, while personalized medicine tailors treatments to the individual's genetic profile.
+
+\textbf{Example:} Tumor vs. Normal Tissue Comparison
+When sequencing a patient's DNA, we often sequence both a healthy control tissue and the tumor tissue to distinguish between two types of mutations:
+\begin{itemize}
+    \item \textbf{Germline mutations}: Mutations present in the original germ cells (sperm or egg) and consequently present in every cell of the individual. These are associated with hereditary disorders.
+    \item \textbf{Somatic mutations}: Mutations that occur after fertilization in a specific subset of cells, such as those caused by radiation or smoking. These are critical in identifying the driving mutations of a specific tumor.
+\end{itemize}
+
+% [IMAGE: Alignments in the IGV (Integrative Genomics Viewer) Browser. The image shows a target reference sequence at the bottom, an amino acid translation track, and a stack of aligned sequencing reads (gray horizontal bars) on top. Colored marks within the reads indicate mismatches or potential mutations.]
+
+A high coverage (sequencing the same region many times) is critical to distinguish true mutations from random sequencing errors. If an alternate base is seen in only one read out of sixty, it is likely an error. If it is seen in thirty out of sixty reads, it is a high-confidence heterozygous mutation.
+
+\subsection{Why Not De Novo Assembly or Local Alignment?}
+
+Given that we want to characterize an individual's genome, one might wonder why we avoid assembling the reads from scratch or using classic sequence alignment algorithms.
+
+1. \textbf{De Novo Assembly}: Algorithms using de Bruijn graphs are computationally demanding and highly error-prone due to genomic repeats and gaps. It is much more efficient to use our existing knowledge of the reference genome to guide the alignment.
+2. \textbf{Smith-Waterman (Local Alignment)}: The time complexity of Smith-Waterman is $\mathcal{O}(L \cdot G)$, where $L$ is the read length and $G$ is the genome length. 
+
+\textbf{Example:} The Matrix Complexity of Smith-Waterman
+For a human genome ($G > 3 \times 10^9$ bases) and a read length ($L = 200$ bases), aligning a single read would require computing over 600 billion matrix cells. In Next-Generation Sequencing (NGS), we process hundreds of millions of reads. Computing 600 billion cells for hundreds of millions of reads is computationally impossible.
+
+We need a completely different approach that mimics how a database index or a phone book works: jumping directly to the relevant candidates instead of scanning linearly from the beginning. 
+
+\section{String Searching Algorithms}
+
+To map reads efficiently, we must use faster string-matching algorithms based on preprocessing the text (the genome) or the patterns (the reads) to build a \textbf{substring index}. A substring index allows searching within a text in sublinear time.
+
+\subsection{Naive String Search}
+
+The simplest approach is the sliding window method. We slide the read across the reference genome one base at a time and compare characters until we find a match or a mismatch.
+
+% [IMAGE: Naive string search illustration. The string "nas" is aligned under "bananasavannah", shifting one position to the right after every mismatch until a perfect match is found.]
+
+\begin{itemize}
+    \item \textbf{Runtime for one read}: $\mathcal{O}(G \cdot L)$.
+    \item \textbf{Runtime for $\ell$ reads}: $\mathcal{O}(G \cdot \ell \cdot L)$.
+\end{itemize}
+
+Here, $\ell \cdot L$ is the total number of sequenced bases (often 30 to 50 times the size of the genome). The multiplicative nature of this complexity renders the naive approach practically useless for NGS data.
+
+\subsection{Tries}
+
+To improve the runtime, we can flip the process and index the reads rather than the genome.
+
+\begin{important}
+    \textbf{Trie}: A multi-way tree data structure used for storing strings over an alphabet $\Sigma$, where each path from the root to a leaf spells out a string in the collection.
+\end{important}
+
+A Trie (pronounced "try", from \textit{retrieval}) is defined as the smallest tree over an alphabet such that:
+\begin{itemize}
+    \item Each edge is labeled with one character $c \in \Sigma$.
+    \item A node has at most one outgoing edge labeled for each character (at most $|\Sigma|$ outgoing edges).
+    \item Each key (string) is spelled out along a unique path from the root to a leaf.
+\end{itemize}
+
+We can build a trie out of all our sequencing reads. Instead of sliding millions of individual reads across the genome, we scan the genome \textit{once}, matching the current sequence against the trie to check if any read perfectly matches the current genomic position.
+
+% [IMAGE: A trie data structure built from the words "banana", "bandana", "nasa", "anna", and "annex". The root node branches to 'b', 'n', and 'a'. Each path leads uniquely to a termination character '$'.]
+
+\subsubsection{The Termination Character}
+
+Notice the use of a special termination character, `$`, at the end of every string.
+
+\sta The `$` symbol must not appear anywhere else in the alphabet $\Sigma$. We define it to be lexicographically "less" than our other characters (e.g., $\$ < A < C < G < T$).
+
+This ensures that no string in the trie is treated merely as a prefix of another string. For example, if we search for "an" and "anna", without the `$`, "an" would just stop in the middle of the path to "anna", making it ambiguous whether "an" is a search term itself or just a prefix. By adding `$`, "an\$" branches off to a distinct leaf node, guaranteeing a one-to-one correspondence between search terms and leaf nodes.
+
+\subsubsection{Complexity of the Trie Approach}
+
+What have we gained by using a trie of reads?
+\begin{itemize}
+    \item \textbf{Time complexity}: If $L'$ is the maximum read length, the matching runtime is $\mathcal{O}(L' \cdot G)$, plus $\mathcal{O}(\ell \cdot L)$ to build the trie. This is much faster than the naive $\mathcal{O}(G \cdot \ell \cdot L)$.
+    \item \textbf{Memory complexity}: The memory required to store the trie is proportional to the total length of the reads, $\mathcal{O}(\ell \cdot L)$. 
+\end{itemize}
+
+While the time complexity is vastly improved, the memory requirement is enormous. If we have 30x genome coverage, the trie size is roughly $30 \times 3$ billion, which is practically unmanageable. We need to index the genome instead.
+
+\section{Suffix Tries}
+
+Instead of building a trie of our reads, we can build a trie out of \textit{all suffixes} of the reference genome.
+
+\begin{important}
+    \textbf{Suffix Trie}: A trie constructed such that every path from the root to a leaf represents a suffix of a reference text $T$.
+\end{important}
+
+Every substring of a genome is simply the prefix of some suffix. Thus, to check if a read $S$ exists in the genome $T$, we start at the root of the suffix trie and follow the edges spelling out $S$. 
+\begin{itemize}
+    \item If we fall off the tree (no outgoing edge for the next character), the read $S$ is not in the genome.
+    \item If we successfully follow the path for the length of the read, we have found a match.
+    \item The number of times the read occurs in the genome is exactly equal to the number of leaf nodes in the subtree rooted at the node where our search ended.
+\end{itemize}
+
+% [IMAGE: Suffix trie of the string T="MISSISSIPPI$". The tree branches out from the root showing every possible suffix path. Deeply branching nodes represent repeated substrings, like "SSI" and "I".]
+
+\textbf{Example:} Counting substring occurrences
+If we follow the path for "I" in the "MISSISSIPPI\$" suffix trie, we end up at a node that has four leaf nodes in its subtree. This immediately tells us that "I" occurs exactly 4 times in the genome. The deepest node with two or more children reveals the longest repeated substring ("ISSI").
+
+\subsection{Construction and Searching Algorithms}
+
+The naive suffix trie construction is straightforward:
+
+\begin{minted}{python}
+# [pseudocode]
+def SuffixTrie(T):
+    T_end = T + "$"
+    root = {}
+    for i in range(len(T_end)):
+        n = root
+        for c in T_end[i:]:
+            if c not in n:
+                n[c] = {}
+            n = n[c]
+    return root
+\end{minted}
+
+This naive construction algorithm takes an input string, appends the termination character, and iterates through every possible suffix starting from index $i$.
+\begin{enumerate}
+    \item It initializes an empty root.
+    \item For each suffix, it walks down the tree character by character.
+    \item If an edge for the character does not exist at the current node, it creates one.
+    \item It moves to the child node and continues until the suffix is fully inserted.
+\end{enumerate}
+
+To search within this suffix trie:
+
+\begin{minted}{python}
+# [pseudocode]
+def followPath(T, S):
+    root = SuffixTrie(T)
+    n = root
+    for i in range(len(S)):
+        c = S[i]
+        if c not in n:
+            return NULL
+        n = n[c]
+    return n
+
+def hasSubstring(T, S):
+    n = followPath(T, S)
+    if n != NULL:
+        return TRUE
+    return FALSE
+\end{minted}
+
+The `followPath` algorithm walks down the trie matching the query string $S$. If it successfully processes all characters of $S$, it returns the terminating node. The `hasSubstring` function simply acts as a boolean wrapper, confirming if a node was returned (meaning the read exists in the genome) or if it returned NULL (meaning it dropped off the trie). 
+
+\subsection{Size Complexity of a Suffix Trie}
+
+The major downside of a suffix trie is its space complexity. If the string has $m = |T|$ characters:
+\begin{itemize}
+    \item \textbf{Best case}: Minimum complexity string (e.g., $T = aaaaa\$$). The trie has $2m+2$ nodes, bounded by $\mathcal{O}(m)$.
+    \item \textbf{Worst case}: Two distinct characters alternating or grouped (e.g., $T = AAABBB\$$). The number of nodes grows geometrically, resulting in $\mathcal{O}(m^2)$ nodes.
+\end{itemize}
+
+For a 3-billion-base human genome, a quadratic size complexity is completely unacceptable. We must compress this data structure.
+
+\section{Suffix Trees}
+
+To reduce the massive space footprint of the suffix trie, we can compress it into a \textbf{Suffix Tree}.
+
+\begin{important}
+    \textbf{Suffix Tree}: A compacted version of a suffix trie where non-branching paths are combined into a single edge with a string label.
+\end{important}
+
+Whenever a node has only one outgoing edge, it serves no navigational purpose for branching. We can merge it with its child node, concatenating their edge labels. As a side effect, this ensures that all internal nodes in a suffix tree have at least two children.
+
+% [IMAGE: Transformation from a Suffix Trie to a Suffix Tree for the string "MISSISSIPPI$". Long single-path chains like "ISSIPPI$" are merged into a single multi-character edge label, vastly reducing the node count.]
+
+\subsection{Node and Space Complexity Reduction}
+
+By combining non-branching paths:
+\begin{itemize}
+    \item \textbf{Leaf nodes}: Still exactly $m$ (since there are $m$ suffixes).
+    \item \textbf{Internal nodes}: In a tree where every internal node branches at least twice, the number of internal nodes is strictly less than the number of leaf nodes. Therefore, there are at most $m-1$ internal nodes.
+    \item \textbf{Total nodes}: $m$ leaves + 1 root + $(m-1)$ internal nodes $< 2m$.
+\end{itemize}
+
+The number of nodes is now strictly linear, $\mathcal{O}(m)$. However, the \textit{total length of the edge labels} concatenated across the tree still requires $\mathcal{O}(m^2)$ memory to store explicitly.
+
+\textbf{Solution: Offset and Length}
+Instead of storing the literal string labels on the edges, we replace the string label with an $\mathcal{O}(1)$ reference to the original genome string in memory. We only store two integers per edge:
+1. The starting \textbf{offset} in the original genome.
+2. The \textbf{length} of the label.
+
+By doing this, the entire suffix tree structure, including edges and nodes, fits strictly into $\mathcal{O}(m)$ space. We also store the starting position of the suffix in the leaf nodes, allowing us to immediately know the genomic coordinate of any mapped read.
+
+\subsection{Tree Construction: Ukkonen's Algorithm}
+
+Naive construction of a suffix tree takes $\mathcal{O}(m^2)$ time. Esko Ukkonen (1995) developed an "online" linear time algorithm $\mathcal{O}(m)$. 
+
+While the details are complex, the \textbf{basic intuition} is that shorter suffixes are naturally the final parts of longer suffixes. Because of this redundancy, there are highly repeated structural patterns in the tree. Ukkonen's algorithm reuses these already-built patterns and links them via suffix links, allowing the tree to be built efficiently in linear time.
+
+\subsection{Generalized Suffix Trees}
+
+The human genome is not a single string; it is composed of 23 pairs of chromosomes. We can build a combined \textbf{Generalized Suffix Tree} to represent multiple strings.
+
+\begin{itemize}
+    \item We concatenate the sequences but use a \textit{unique} termination character for each chromosome (e.g., `$` for chr1, `#` for chr2, `%` for chrY).
+    \item Unique terminators ensure that every suffix from every string ends in a distinct leaf.
+    \item Each leaf is labeled with two integers: one identifying the sequence (chromosome), and one identifying the offset position.
+\end{itemize}
+
+This structure naturally solves many complex string problems, such as finding the longest common substring between two species or finding the longest reverse complementary pair in RNA sequences.
+
+\section{Suffix Arrays}
+
+Even with the $O(m)$ compression of a Suffix Tree, the constant factors in practical implementations are quite high (around 12.5 to 20 bytes per node). Indexing a 3-billion-character genome still requires massive RAM.
+
+This leads to an even more memory-efficient structure: the \textbf{Suffix Array}.
+
+\begin{important}
+    \textbf{Suffix Array}: A lexicographically sorted array of all suffixes of a string, containing only the integer indices of the suffix starting positions.
+\end{important}
+
+A suffix array requires only 4 bytes per character (just an array of 32-bit integers). 
+
+\subsection{Naive Suffix Array Construction}
+
+Consider the string $T = \text{MISSISSIPPI\$}$ (0-indexed).
+\begin{enumerate}
+    \item \textbf{Form all suffixes}: Extract every suffix and associate it with its starting position (e.g., 0: "MISSISSIPPI\$", 1: "ISSISSIPPI\$", ..., 11: "\$").
+    \item \textbf{Sort lexicographically}: Sort the list of suffixes alphabetically, bringing repeated substrings together. (The `$` symbol is sorted first).
+    \item \textbf{Store only the indices}: Discard the text of the suffixes, keeping only the sorted array of starting positions.
+\end{enumerate}
+
+To search for a read in a suffix array, we can use binary search. Because the array is sorted alphabetically, we can find the query string in $\mathcal{O}(L \log m)$ time. Furthermore, because all occurrences of a repeated substring will fall into adjacent, consecutive slots in the array, retrieving all matches is highly efficient.
+
+\subsection{Manber and Myers Algorithm}
+
+The naive approach of comparing full string prefixes during the sort is $\mathcal{O}(D \cdot N^2)$, which is too slow. Manber \& Myers (1990) introduced an elegant $\mathcal{O}(N \log N)$ algorithm based on prefix doubling.
+
+\begin{itemize}
+    \item \textbf{Initialization}: Perform a radix sort only on the first character ($2^0 = 1$) of every suffix.
+    \item \textbf{Recursive phase}: In phase $i$, given an array of suffixes sorted by their first $2^{i-1}$ characters, create an array sorted by their first $2^i$ characters.
+    \item \textbf{Prefix Doubling}: Sort by 1, 2, 4, 8, 16... characters. To sort 8-mers, we reuse the relative rank information we already computed for the 4-mers. We do not need to rescan the characters; we simply look up the ranks of the two 4-mer halves.
+\end{itemize}
+
+This forms the foundational indexing structure that modern, highly efficient read mapping algorithms (like the FM-index and Burrows-Wheeler Transform) will eventually build upon.
+
+\subsection{Prefix Doubling: Detailed Example}
+
+To understand how Manber and Myers achieve an $\mathcal{O}(m \log m)$ runtime, let us walk through a concrete example of prefix doubling. Suppose we are in the phase where we want to sort the suffixes based on their first 8 characters (8-mers), and we have already successfully sorted them based on their first 4 characters (4-mers).
+
+\textbf{Example:} Comparing two 8-mers
+Consider suffix 0, which begins with \texttt{"cacaaaac..."}, and suffix 9, which begins with \texttt{"cacaaaaa..."}. 
+1. We want to determine which of these two 8-mers is lexicographically smaller.
+2. We first look at the first 4 characters of both suffixes. Both begin with \texttt{"caca"}. Since they are identical, their 4-mer ranks are identical, resulting in a tie.
+3. Instead of scanning the remaining 4 characters character-by-character, we reuse the sorting work we already did in the previous phase. We inspect the \textit{second half} of the 8-mer for both suffixes:
+   \begin{itemize}
+       \item For suffix 0, the next 4 characters start at index $0 + 4 = 4$. We look up the rank of suffix 4 in our already-computed 4-mer sorted array (e.g., let's say it has rank 7).
+       \item For suffix 9, the next 4 characters start at index $9 + 4 = 13$ (wait, referring to the slide's example, we look up its respective rank, e.g., rank 5).
+   \end{itemize}
+4. We simply compare the integer ranks: $5 < 7$. Therefore, without explicitly comparing any string characters, we immediately know that the second half of suffix 9 is lexicographically smaller than the second half of suffix 0. 
+
+\sta By looking up two integer ranks, we resolve the tie in $\mathcal{O}(1)$ time. Because we double the prefix length at every step (1, 2, 4, 8, 16...), it takes exactly $\log_2 m$ phases to fully sort an array of $m$ characters. Each phase takes $\mathcal{O}(m)$ time, giving the final $\mathcal{O}(m \log m)$ complexity.
+
+\section{Applications of Suffix Arrays}
+
+Once the suffix array is constructed, it can serve as the foundational data structure for rapidly answering complex sequence queries.
+
+\subsection{Finding All Matches of a Read}
+
+To find all occurrences of a search pattern (a sequencing read) $P$ of length $L$ in the reference genome $T$:
+\begin{enumerate}
+    \item \textbf{Binary Search}: Because the suffix array is simply a lexicographically sorted list of strings, we can perform a standard binary search to locate $P$. At each step of the binary search, we compare $P$ to the prefix of the suffix at the current midpoint. This takes $\mathcal{O}(L \log m)$ time.
+    \item \textbf{Scan for Duplicates}: If the read maps to multiple repetitive regions in the genome, all occurrences will occupy adjacent slots in the suffix array. Once we find the first match via binary search, we simply scan up and down the array until a mismatch occurs to enumerate all alignments.
+\end{enumerate}
+
+\subsection{The Longest Repeated Substring Problem}
+
+A classic genomic problem is finding the longest repeated sequence in a genome (e.g., identifying long repetitive elements or duplications).
+
+\textbf{Naive Approach:}
+We could try all possible pairs of indices $i$ and $j$ in the genome of length $N$, and compute the longest common prefix for each pair. 
+If the maximum length of a match is $D$, this naive approach requires $\mathcal{O}(D \cdot N^2)$ time. For a 3-billion-base genome, this is completely intractable.
+
+\textbf{Suffix Array Approach:}
+\begin{important}
+    \textbf{Property:} In a lexicographically sorted Suffix Array, identical or highly similar prefixes are inevitably forced into adjacent, consecutive positions.
+\end{important}
+
+Instead of comparing all arbitrary pairs of indices $i$ and $j$, we only need to compare \textit{adjacent} entries in the Suffix Array.
+\begin{enumerate}
+    \item Scan sequentially through the suffix array from index $0$ to $N-1$.
+    \item For each adjacent pair, compute the length of their longest common prefix (LCP).
+    \item Keep track of the maximum LCP found.
+\end{enumerate}
+This reduces the computational complexity to $\mathcal{O}(D \cdot N)$, vastly speeding up the discovery of repetitive elements.
+
+\section{Summary and Path Forward}
+
+To conclude this module on sequence indexing and read mapping:
+
+\begin{itemize}
+    \item \textbf{Naive sliding window algorithms} ($\mathcal{O}(G \cdot \ell \cdot L)$) are too slow to map millions of NGS reads to a massive reference genome.
+    \item \textbf{Tries of reads} ($\mathcal{O}(G \cdot L')$ time, $\mathcal{O}(n_b)$ space) speed up search times drastically but require an unmanageable amount of memory to index hundreds of millions of reads.
+    \item \textbf{Suffix Tries} of the genome allow lightning-fast read lookups bounded only by the read length, but suffer from catastrophic $\mathcal{O}(m^2)$ worst-case space complexity.
+    \item \textbf{Suffix Trees} compress the suffix trie into strictly $\mathcal{O}(m)$ space by merging non-branching paths and using integer (offset, length) edge labels. Ukkonen's algorithm allows constructing this tree in linear time. However, the high memory constant factors ($\sim 12.5$ to $20$ bytes per node) still make indexing a 3-billion-base human genome heavy on RAM.
+    \item \textbf{Suffix Arrays} provide the ultimate memory efficiency, requiring only 4 bytes per character to store a sorted array of 32-bit integers representing suffix start positions. 
+\end{itemize}
+
+\sta \textbf{Next Steps}: While the Suffix Array is highly memory-efficient, modern bioinformatic tools push the boundaries of data compression even further. The principles learned here—specifically the lexicographical sorting of suffixes—are the direct prerequisites for understanding the \textbf{Burrows-Wheeler Transform (BWT)} and the \textbf{FM-index}. These advanced data structures, used by modern, state-of-the-art aligners like BWA and Bowtie, allow us to compress the genome footprint even smaller than the Suffix Array while maintaining sublinear search times.
+
+\end{document}
