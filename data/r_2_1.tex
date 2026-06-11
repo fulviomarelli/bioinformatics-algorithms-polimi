@@ -334,18 +334,18 @@ E(a(i-1), b(j-1)) + \text{score}(a_i, b_j) & \text{(Match/Mismatch score)}
 
 When assigning the gap weight \(w_d\), biological algorithms frequently utilize different penalty models depending on the anticipated evolutionary behavior. It is often biologically easier to extend a deletion that has already begun than to open multiple new micro-deletions.
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
-    \caption{Common Gap Penalty Models}
     \begin{tabularx}{\textwidth}{l X}
         \toprule
         \textbf{Model Type} & \textbf{Description} \\
         \midrule
-        \textbf{Linear Gap Penalty} & A constant multiplier for every gap character. Three consecutive gaps incur a penalty of \(3 \times w_d\). (Used in basic Needleman-Wunsch derivations). \\
+        \textbf{Linear Gap Penalty} & A constant multiplier for every gap character. Three consecutive gaps io1ncur a penalty of \(3 \times w_d\). (Used in basic Needleman-Wunsch derivations). \\
         \textbf{Constant Gap Penalty} & A single fixed penalty is applied to an entire continuous gap block, regardless of whether it is 1 base or 100 bases long. Used when fewer, larger block deletions are biologically preferred over many scattered small indels. \\
         \textbf{Affine Gap Penalty} & The most biologically accurate and widely used model. It separates the cost into a \textit{Gap Opening Penalty} (heavy penalty for starting the first `-`) and a \textit{Gap Extension Penalty} (lighter penalty for adding subsequent `-` characters in the same block). This models the biological reality that a single mutational event often deletes a multi-base block at once. \\
         \bottomrule
     \end{tabularx}
+    \caption*{Common Gap Penalty Models}
 \end{table}
 
 Once the Needleman-Wunsch matrix is fully computed, the alignment score is derived from the cell \((n, m)\), and the final sequence alignment string is extracted via optimal traceback, exactly as demonstrated with basic Edit Distance. The physical matrix is then discarded, keeping only the textual alignment and final integer score as the result.
