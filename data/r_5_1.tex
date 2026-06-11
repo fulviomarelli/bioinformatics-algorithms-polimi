@@ -51,7 +51,7 @@ Because RNA-seq measures the transcriptome, the mapped reads align almost exclus
 
 % [IMAGE: A "Sashimi" plot showing RNA-seq read coverage over exonic regions. Arcs connect exons to indicate splice-junction spanning reads. A comparison between a control sample and a patient sample illustrates aberrant splicing caused by a mutation, leading to skipped exons.]
 % [IMAGE: A Sashimi plot showing read coverage over exonic regions and arcs representing splice-junction spanning reads. The top plot shows normal splicing in a control sample, while the bottom plot shows aberrant splicing (e.g., exon skipping) due to a mutation in a patient.]
-\myimage{5_1/1.jpg}{A Sashimi plot showing read coverage over exonic regions and arcs representing splice-junction spanning reads. The top plot shows normal splicing in a control sample, while the bottom plot shows aberrant splicing (e.g., exon skipping) due to a mutation in a patient.}
+\myimage{5_1/1.jpg}{A Sashimi plot showing read coverage over exonic regions and arcs representing splice-junction spanning reads. The top plot shows normal splicing in a control sample, while the bottom plot shows aberrant splicing (e.g., exon skipping) due to a mutation in a patient.}[width=0.6\textwidth]
 
 \begin{important}
   \textbf{Hi-C (Chromosome Conformation Capture)}: A method that identifies three-dimensional chromatin interactions by chemically fusing interacting genomic regions and sequencing the resulting artificial junctions.
@@ -91,12 +91,12 @@ We distinguish between two fundamentally different types of mutations based on t
 
 Genomic variations range from single-base changes to massive structural rearrangements.
 
-\begin{itemize}
+%\myimage{5_1/3.jpg}{}
+
+\mysidefigure{\begin{itemize}
     \item \textbf{SNP (Single-Nucleotide Polymorphism)}: A single-base change that is relatively common in the general population (by convention, present in $\ge 1\%$ of the population).
     \item \textbf{SNV (Single-Nucleotide Variant)}: Any single-base change identified in an individual genome, regardless of population frequency.
-\end{itemize}
-
-\myimage{5_1/3.jpg}{}
+\end{itemize}}{\myimage{5_1/3.jpg}\\}[0.7]
 
 \sta In medical genomics, researchers are often interested in rare SNVs that are not established SNPs, as common SNPs are unlikely to be the sole cause of a rare, severe genetic disease. There are roughly 3–4 million SNVs in a typical human genome.
 

@@ -9,7 +9,7 @@ The dynamic programming approach to optimal Multiple Sequence Alignment (MSA) re
 \textbf{Progressive Alignment}: A heuristic method that builds a multiple sequence alignment step-by-step by continuously aligning pairs of sequences or alignment profiles according to a guide tree that traces evolutionary divergence backwards.
 \end{important}
 
-\myimage{6_2/3.jpg}{}
+\myimage{6_2/3.jpg}{}[width=0.3\textwidth]
 
 Instead of evaluating an overall multiple alignment score (like the Sum of Pairs score) in a global optimization function, the progressive procedure simply constructs the final solution incrementally. To do this, we need a \textbf{guide tree} that dictates the order of alignment operations.
 
@@ -63,16 +63,15 @@ The progressive algorithm is fundamentally an application of \textbf{hierarchica
 \myimage{6_2/1.jpg}{A hierarchical clustering dendrogram plotting nucleo-cytoplasmic large DNA viruses (such as Mamavirus and Mimivirus). The horizontal edge lengths are drawn proportionally to the computed sequence distance, visually demonstrating the evolutionary "closeness" of the viral clusters.}
 % [IMAGE: Hierarchical clustering dendrogram showing branches of varying lengths (e.g., Mamavirus and Mimivirus showing very short branch lengths, indicating close similarity). The y-axis implicitly represents distance, clustering closely related objects before distant ones.]
 
-To perform clustering, we need robust ways to measure distance between a single sequence and a cluster (a profile), or between two clusters. Common choices include:
-\begin{itemize}
+To perform clustering, we need robust ways to measure distance between a single sequence and a cluster (a profile), or between two clusters. \\Common choices include:
+\vspace{-3em}
+\mysidefigure{\begin{itemize}
     \item \textbf{Closest pair (Single Linkage):} Distance is defined by the minimum distance between any single sequence in cluster A and any sequence in cluster B.
     \item \textbf{Farthest pair (Complete Linkage):} Distance is the maximum distance between a member of A and a member of B.
     \item \textbf{Average distance (UPGMA):} The weighted average distance across all pairs between cluster A and cluster B. 
     \sta This is the standard and most effective choice for sequence profiles.
-\end{itemize}
-
-\myimage{6_2/4.png}{}
-
+\end{itemize}}{\myimage{6_2/4.png}\\}
+\vspace{-1em}
 \subsection{Neighbor Joining}
 A sophisticated variation of average distance clustering highly effective for MSA is \textbf{Neighbor Joining}.
 \begin{important}
@@ -123,7 +122,7 @@ For standard human DNA, we assume equiprobable background frequencies of 25\% pe
 
 % [IMAGE: A "sequence logo" mapping the Information Content of a motif. The x-axis shows the column position (length $w$), and the y-axis shows information content (from 0 to 2 bits). Each stacked letter's size visualizes its specific IC contribution to that column.]
 % [IMAGE: Sequence logo visualization. A bar chart where the x-axis represents positions 1 to w. At each position, stacked letters (A, C, G, T) scale in height based on their frequency, and the total height of the stack corresponds to the Information Content (in bits) at that position, up to a maximum of 2.0.]
-\myimage{6_2/2.jpg}{Sequence logo visualization. A bar chart where the x-axis represents positions 1 to w. At each position, stacked letters (A, C, G, T) scale in height based on their frequency, and the total height of the stack corresponds to the Information Content (in bits) at that position, up to a maximum of 2.0.}
+\myimage{6_2/2.jpg}{Sequence logo visualization. A bar chart where the x-axis represents positions 1 to w. At each position, stacked letters (A, C, G, T) scale in height based on their frequency, and the total height of the stack corresponds to the Information Content (in bits) at that position, up to a maximum of 2.0.}[width=0.6\textwidth]
 
 \section{Search Space Exploration Strategies (Heuristic Algorithms)}
 Finding the set of $k$ starting positions that maximizes the Information Content score requires exploring a massive search space. An exhaustive search—where every substring of $S_1$ is compared to every substring of $S_2$, expanding exponentially up to $S_k$—generates $O(n^k)$ combinations and is utterly unfeasible. Thus, we must employ heuristic algorithms.
@@ -170,7 +169,7 @@ We define the $k$ strings using discrete variables $X_1 \dots X_k$, where each v
     \item \textbf{Iteration}: Cycle to the next variable and repeat. Process sequences sequentially or randomly. Stop when a full cycle produces no improvement. This is a \textbf{local maximum}.
 \end{enumerate}
 
-\myimage{6_2/5.jpg}{}
+\myimage{6_2/5.jpg}{}[width=0.6\textwidth]
 
 \textbf{Example:} The MAX-CUT graph partitioning problem (Binary Variable Analogy).
 To illustrate neighborhood exploration, consider MAX-CUT, where binary variables assign nodes to sets to maximize crossing edges. This is identical in structure to local search. It initializes random assignments, then cycles through nodes. At each step, it fixes all node assignments except one, checks the logical NOT of the current value ($\overline{X_i}$), and if flipping improves the cut score, it's accepted.
@@ -185,13 +184,13 @@ To prevent a local search from getting permanently trapped in suboptimal local m
 \subsection{Simulated Annealing}
 In a binary state space, if an update improves the score ($\Delta f > 0$), we always accept it. If it worsens the score ($\Delta f \le 0$), we accept the detrimental move with a probability:
 \[ P[\text{update } X_i] = e^{\frac{\Delta f}{T}} \quad \text{with } \Delta f \le 0 \]
+
+%\myimage{6_2/7.jpg}{}
 Where $T$ is a dynamic "temperature". 
-\begin{itemize}
+\mysidefigure{\begin{itemize}
     \item It starts "hot" (high $T$), flattening the exponent and making it highly probable to wildly jump across the search space to locate the general region of the global maximum.
     \item Over time, it "cools down" (decreasing $T$ incrementally). As $T \to 0$, the probability approaches 0, freezing the algorithm into deterministic hill-climbing to converge on the peak.
-\end{itemize}
-
-\myimage{6_2/7.jpg}{}
+\end{itemize}}{\myimage{6_2/7.jpg}{}}
 
 \subsection{Gibbs Sampling for Motif Finding}
 For local MSA motif finding, rather than simulated annealing, we rely on a proportional stochastic technique known as \textbf{Gibbs Sampling}, which does not use a cooling schedule.
@@ -206,7 +205,7 @@ In Gibbs sampling, we compute the IC score for \textit{all} possible substrings 
 
 A substring that dramatically improves the alignment might represent 50\% of the total score sum, meaning it has a 50\% chance of being chosen. A terrible substring might only represent 1\% of the sum, giving it a 1\% chance.
 
-\myimage{6_2/8.jpg}{}
+\myimage{6_2/8.jpg}{}[width=0.6\textwidth]
 
 \begin{minted}{python}
 # [pseudocode] Gibbs Sampling for Motif Finding

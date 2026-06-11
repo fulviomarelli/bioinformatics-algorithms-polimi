@@ -37,6 +37,25 @@
 \usepackage{circuitikz}
 \usetikzlibrary{automata, positioning, circuits.logic.US}
 
+\usepackage{etoolbox}
+
+\NewDocumentCommand{\mysidefigure}{m m O{0.65}}{%
+  % #1 = Contenuto del BOX 1 (Immagine / \myimage / \includegraphics)
+  % #2 = Contenuto del BOX 2 (Testo / box descrittivo)
+  % #3 = Larghezza del BOX 1 (Default: 0.65)
+  \par\noindent\hfill
+  \begin{minipage}[c]{#3\textwidth}
+    \centering
+    #1
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[c]{\dimexpr 0.99\textwidth - #3\textwidth\relax}
+    \centering
+    #2
+  \end{minipage}%
+  \hfill\par
+}
+
 \newcommand{\xor}{\oplus}
 
 \linespread{1.1}
@@ -84,11 +103,11 @@
 % Custom image command: \myimage{path}{caption}{options}
 \NewDocumentCommand{\myimage}{m m O{width=0.8\textwidth}}{
   \begin{figure}[H]
-    \vspace{-1.5em}
+    \vspace{-0.5em}
     \centering
     \includegraphics[height=0.4\textheight, keepaspectratio, #3]{#1}
     \ifstrempty{#2}{}{\caption*{#2}}
-    \vspace{-1.5em}
+    \vspace{-1em}
   \end{figure}
 }
 

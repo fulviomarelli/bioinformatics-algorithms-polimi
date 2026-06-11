@@ -114,31 +114,35 @@ To construct the BWT for a text \( T \):
 
 \textbf{Example:} BWT of ``abracadabra\$''
 \begin{table}[ht]
-\centering
-\caption{Burrows-Wheeler Matrix for ``abracadabra\$''}
-\begin{tabularx}{\textwidth}{l X c}
-\toprule
-\textbf{F (First Column)} & \textbf{Rotated String Body} & \textbf{L (Last Column/BWT)} \\
-\midrule
-\$ & a b r a c a d a b r a & a \\
-a & \$ a b r a c a d a b r & r \\
-a & b r a \$ a b r a c a d & d \\
-a & b r a c a d a b r a \$ & \$ \\
-a & c a d a b r a \$ a b r & r \\
-a & d a b r a \$ a b r a c & c \\
-b & r a \$ a b r a c a d a & a \\
-b & r a c a d a b r a \$ a & a \\
-c & a d a b r a \$ a b r a & a \\
-d & a b r a \$ a b r a c a & a \\
-r & a \$ a b r a c a d a b & b \\
-r & a c a d a b r a \$ a b & b \\
-\bottomrule
-\end{tabularx}
+    \centering
+    \begin{tabular}{| c | c | c |} % Usato tabular e colonna 'l' al posto di 'X'
+        \toprule
+        \textbf{F (First Column)} & \textbf{Rotated String Body} & \textbf{L (Last Column/BWT)} \\
+        \midrule
+        \$ & a b r a c a d a b r a & a \\
+        a  & \$ a b r a c a d a b r & r \\
+        a  & b r a \$ a b r a c a d & d \\
+        a  & b r a c a d a b r a \$ & \$ \\
+        a  & c a d a b r a \$ a b r & r \\
+        a  & d a b r a \$ a b r a c & c \\
+        b  & r a \$ a b r a c a d a & a \\
+        b  & r a c a d a b r a \$ a & a \\
+        c  & a d a b r a \$ a b r a & a \\
+        d  & a b r a \$ a b r a c a & a \\
+        r  & a \$ a b r a c a d a b & b \\
+        r  & a c a d a b r a \$ a b & b \\
+        \bottomrule
+    \end{tabular}
+    \caption*{Burrows-Wheeler Matrix for ``abracadabra\$''}
 \end{table}
 
 % [IMAGE: A matrix showing the cyclic rotations of "abracadabra$" sorted lexicographically. The first column is denoted 'F' (First) and the last column is 'L' (Last). The 'L' column represents the final BWT output, highlighting clusters of repeated characters like 'aaaa'.]
-\myimage{4_2/1.png}{A matrix showing the cyclic rotations of "abracadabra\$" sorted lexicographically. The first column is denoted 'F' (First) and the last column is 'L' (Last). The 'L' column represents the final BWT output, highlighting clusters of repeated characters like 'aaaa'.}[width=0.2\textwidth]
+
+%\myimage{4_2/1.png}{A matrix showing the cyclic rotations of "abracadabra\$" sorted lexicographically. The first column is denoted 'F' (First) and the last column is 'L' (Last). The 'L' column represents the final BWT output, highlighting clusters of repeated characters like 'aaaa'.}[width=0.2\textwidth]
+
 % [IMAGE: A large grid visualizing the cyclic rotations of a string sorted lexicographically, highlighting the first column (F) and the last column (L) which becomes the BWT output.]
+
+\mysidefigure{\myimage{4_2/1.png}\\}{A matrix showing the cyclic rotations of "abracadabra\$" sorted lexicographically. The first column is denoted 'F' (First) and the last column is 'L' (Last). The 'L' column represents the final BWT output, highlighting clusters of repeated characters like 'aaaa'.}[0.3]
 
 The resulting BWT sequence is ``ard\$rcaaaabb''. Notice that identical characters (like the runs of 'a' and 'b') tend to group together. Because each row is a cyclic rotation, the last character of any row always immediately precedes the first character of that row in the original circular string. 
 
@@ -149,7 +153,7 @@ Fortunately, the BWT has a direct mathematical relationship with the Suffix Arra
 
 Since the termination character \verb|$| acts as a hard boundary and appears only once in the string, the lexicographical sorting of the cyclic rotations is functionally identical to the lexicographical sorting of the standard suffixes of the text. Consequently, the \( i \)-th row of the sorted Burrows-Wheeler Matrix corresponds directly to the \( i \)-th entry of the Suffix Array. 
 
-\myimage{4_2/2.png}{}
+\myimage{4_2/2.png}{}[width=0.5\textwidth]
 
 The character in the last column of the BWT matrix is simply the character that immediately precedes the suffix in the original string. This relationship allows us to extract the BWT directly from the Suffix Array:
 \[

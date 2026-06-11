@@ -74,7 +74,7 @@ The distribution of coverage depth across the genome is well-modeled by a Poisso
     \end{equation}
 \end{important}
 
-\myimage{3_1/8.jpg}{}
+\myimage{3_1/8.jpg}{}[width=0.35\textwidth]
 
 Using this model, we can calculate the probability that a specific base is \textit{never} sequenced ($k=0$):
 \[ P(X = 0) = \frac{e^{-\lambda} \lambda^0}{0!} = e^{-\lambda} \]
@@ -114,10 +114,10 @@ The relationship between base coverage ($\lambda$) and k-mer coverage ($d_k$) is
 This technique is exceptionally powerful for characterizing novel species before assembly begins.
 
 % [IMAGE: A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.]
-\myimage{3_1/2.jpg}{A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.}[width=0.5\textwidth]
+\myimage{3_1/2.jpg}{A line graph showing an empirical k-mer coverage depth distribution. The x-axis represents the depth (count of a specific k-mer) and the y-axis represents the frequency of k-mers with that depth. The curve starts high near zero due to sequencing errors, drops, and then forms a bell-like peak centered around a depth of 30.4, which represents the true mean k-mer coverage.}[width=0.4\textwidth]
 % [IMAGE: A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d_k. A smaller peak near zero represents unique sequencing errors.]
 
-\myimage{3_1/15.jpg}{A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d\_k. A smaller peak near zero represents unique sequencing errors.}
+\myimage{3_1/15.jpg}{A plot showing the distribution of k-mer frequencies. The x-axis represents the depth of coverage (number of times a k-mer is observed), and the y-axis represents the number of distinct k-mers. A clear peak is visible, representing the mean k-mer coverage depth, d\_k. A smaller peak near zero represents unique sequencing errors.}[width=0.4\textwidth]
 
 \section{Genome Assembly and Contigs}
 
@@ -130,7 +130,7 @@ Because infinite coverage is impossible, any real genome assembly effort will no
 % [IMAGE: A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.]
 \myimage{3_1/4.png}{A diagram showing multiple short reads piling up to form a longer consensus sequence (contig). Six distinct contigs are formed, separated by small gaps where no reads overlap.}
 
-\myimage{3_1/9.jpg}{}
+\myimage{3_1/9.jpg}{}[width=0.7\textwidth]
 
 If we cannot sequence the gaps, we cannot definitively know the order, distance, or orientation of the contigs relative to one another (unless we use paired-end scaffolds, which we will discuss later).
 
@@ -170,7 +170,7 @@ The mathematical derivations above assumed that an overlap of just 1 nucleotide 
 
 Let $\theta$ represent the minimum fraction of read length $L$ required to declare a valid overlap (e.g., $\theta = 0.1$ means $10\%$ of the read must overlap). Two reads are only joined if their overlap is $\ge \theta L$.
 
-\myimage{3_1/10.jpg}{}
+\myimage{3_1/10.jpg}{}[width=0.6\textwidth]
 
 This changes our rightmost read calculation. A read is now the rightmost read if no subsequent read starts within the \textit{leftmost} $(1-\theta)$ portion of its length. Thus, the expected number of contigs increases to:
 \[ \mathbb{E}[\#\text{contigs}] = N e^{-(1-\theta) \lambda} \]
@@ -253,9 +253,9 @@ Construction of a DBG proceeds as follows:
 \begin{enumerate}
     \item Extract all k-mers from the read data.
     \item For each k-mer, create a directed edge originating from a node labeled with its $(k-1)$ prefix and pointing to a node labeled with its $(k-1)$ suffix.
-\myimage{3_1/12.jpg}{}
+\myimage{3_1/12.jpg}{}[width=0.25\textwidth]
     \item \textbf{Merge} all nodes sharing identical $(k-1)$ labels into a single node, while \textbf{retaining all connecting edges}. This means nodes can be visited multiple times, which is biologically accurate as identical repeats exist.
-\myimage{3_1/13.jpg}{}
+\myimage{3_1/13.jpg}{}[width=0.45\textwidth]
 \end{enumerate}
 
 To reconstruct the genome from a DBG, we must utilize all of our observed k-mers, which means we must traverse \textit{every edge} exactly once.
@@ -276,7 +276,7 @@ Let us apply the DBG rules to resolve the ambiguity of the Dr. Seuss-Ome from th
 When constructing the graph, the phrase \texttt{"the more"} becomes a single, highly-traversed node. Instead of forcing a premature guess like the greedy approach, the DBG explicitly models the ambiguity by assigning this node an out-degree of 4, representing the different continuations of the sentence:
 
 \begin{center}
-\begin{tikzpicture}[->, >=stealth, node distance=4cm, thick]
+\begin{tikzpicture}[->, >=stealth, node distance=3cm, thick]
     \node[draw, rectangle, rounded corners, fill=gray!10] (the_more) {\textbf{the more}};
     \node[draw, rectangle, rounded corners] (that_read) [above right of=the_more] {that you read};
     \node[draw, rectangle, rounded corners] (things_know) [right of=the_more] {things you will};
@@ -291,10 +291,18 @@ When constructing the graph, the phrase \texttt{"the more"} becomes a single, hi
 \end{tikzpicture}
 \end{center}
 % [IMAGE: A diagram showing a central node labeled "the more" branching outwards into four distinct paths representing the different continuations of the sentence, explicitly capturing the structural ambiguity rather than forcing a greedy choice.]
-\myimage{3_1/5.jpg}{A diagram showing a central node labeled "the more" branching outwards into four distinct paths representing the different continuations of the sentence, explicitly capturing the structural ambiguity rather than forcing a greedy choice.}
+%\myimage{3_1/5.jpg}{A diagram showing a central node labeled "the more" branching outwards into four distinct paths representing the different continuations of the sentence, explicitly capturing the structural ambiguity rather than forcing a greedy choice.}[width=0.6\textwidth]
+\vspace{1em}
+\mysidefigure{\myimage{3_1/5.jpg}\\}{A diagram showing a central node labeled "the more" branching outwards into four distinct paths representing the different continuations of the sentence, explicitly capturing the structural ambiguity rather than forcing a greedy choice.}[0.75]
+
 % [IMAGE: A sequence of directed nodes showing "The more" branching into "more things", "more places", and "more that". The path for "more things you will know" is compressed from multiple 2-word nodes into a single long node because it has no diverging branches.]
 % [IMAGE: A sequence of De Bruijn graph diagrams transitioning from isolated edges representing overlapping word-fragments (like 'the more things', 'more things you'), to merged nodes sharing common prefixes/suffixes, and finally to a compressed path merging nodes into longer continuous phrases.]
-\myimage{3_1/6.jpg}{A sequence of De Bruijn graph diagrams transitioning from isolated edges representing overlapping word-fragments (like 'the more things', 'more things you'), to merged nodes sharing common prefixes/suffixes, and finally to a compressed path merging nodes into longer continuous phrases.}
+
+%\myimage{3_1/6.jpg}{A sequence of De Bruijn graph diagrams transitioning from isolated edges representing overlapping word-fragments (like 'the more things', 'more things you'), to merged nodes sharing common prefixes/suffixes, and finally to a compressed path merging nodes into longer continuous phrases.}[width=0.6\textwidth]
+
+\mysidefigure{\myimage{3_1/6.jpg}\\}{A sequence of De Bruijn graph diagrams transitioning from isolated edges representing overlapping word-fragments (like 'the more things', 'more things you'), to merged nodes sharing common prefixes/suffixes, and finally to a compressed path merging nodes into longer continuous phrases.}[0.7]
+\vspace{1em}
+
 
 \textbf{Graph Compression}: 
 After the initial global structure is built, the DBG reveals long sequences of unambiguous paths—sections where nodes have an in-degree of 1 and an out-degree of 1. For instance, once a path enters \texttt{"things"}, it must traverse \texttt{"you"} $\rightarrow$ \texttt{"will"} $\rightarrow$ \texttt{"know"}. To save memory and simplify the graph, these sequential nodes are merged into a single, extended contiguous node (e.g., \texttt{"things you will know"}). This drastically reduces the graph size without altering the topological routing options.
@@ -356,7 +364,9 @@ def hierholzer(graph):
 \end{enumerate}
 
 % [IMAGE: A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.]
-\myimage{3_1/7.jpg}{A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.}[width=0.6\textwidth]
+%\myimage{3_1/7.jpg}{A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.}[width=0.6\textwidth]
+
+\mysidefigure{\myimage{3_1/7.jpg}\\}{A stack-based diagram showing tpath and epath at various stages. Nodes are added to tpath until a dead end (node 6) is reached. Node 6 is moved to epath, and the algorithm backtracks to node 4, exploring alternative branches before recursively moving elements to epath until tpath is empty.}[0.6]
 
 
 \section{Practical Challenges in Genome Assembly}
@@ -378,7 +388,7 @@ Sequencing platforms occasionally misread a base. A single base error in a read 
     \item This creates isolated ``spurs'' or ``bubbles'' in the DBG. By plotting the k-mer frequency distribution, algorithms can identify these low-count k-mers (the noise peak on the far left of the distribution plot) and heuristically delete/prune them before constructing the graph.
 \end{itemize}
 
-\myimage{3_1/14.jpg}{}
+\myimage{3_1/14.jpg}{}[width=0.5\textwidth]
 
 \subsection{Repetitive Regions and Strand Ambiguity}
 The human genome is littered with tandem repeats (e.g., \texttt{CATCATCAT...}). If a repetitive region is longer than the chosen k-mer size, the DBG collapses all copies of the repeat into a single strongly connected cycle or highly traversed loop. The algorithm loses the context of how many times the sequence repeats, causing structural ambiguity and destroying contiguity.

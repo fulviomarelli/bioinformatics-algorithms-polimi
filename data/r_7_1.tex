@@ -148,7 +148,7 @@ The all-Fair path is about 6.59 times more likely than the all-Loaded path for t
 To find the \textit{total} probability \( P(x) \) that the model generated the sequence, regardless of the specific path taken, we sum the joint probabilities over an exponential number of possible paths:
 \[ P(x) = \sum_{\pi} P(x, \pi) \]
 
-\myimage{7_1/6.jpg}{}
+\myimage{7_1/6.jpg}{}[width=0.6\textwidth]
 
 We compute this efficiently in $\mathcal{O}(K^2 N)$ time using dynamic programming via the \textbf{Forward Algorithm}. Let \( f_k(i) \) be the probability of generating the prefix sequence \( x_1 \dots x_i \) and ending in state \( k \).
 
@@ -205,9 +205,7 @@ def viterbi(obs, states, init_p, trans_p, emit_p):
     return prob, path[state]
 \end{minted}
 
-\myimage{7_1/8.png}{}
-
-\myimage{7_1/9.png}{}
+\mysidefigure{\myimage{7_1/8.png}\\}{\myimage{7_1/9.png}\\}[0.46]
 
 \textbf{Example: Viterbi Trace for a Viral (V) vs. Self (S) Genome Model} \\
 Assume we observe the sequence \( x = (G, C, G, A, T) \).
@@ -233,7 +231,7 @@ This demonstrates how the high transition probability from Viral to Self (\(0.85
 
 Viterbi gives the single best path, but it ignores the probability mass of all other valid paths. To find the most likely state for a \textit{specific position} \( i \) averaged over all paths, we use \textbf{Posterior Decoding}.
 
-\myimage{7_1/11.jpg}{}
+\myimage{7_1/11.jpg}{}[width=0.6\textwidth]
 
 We combine the \textbf{Forward algorithm} (how we got to position \( i \)) and the \textbf{Backward algorithm} (the probability of observing the remainder of the sequence given we are at state \( k \) at position \( i \)).
 
@@ -245,7 +243,7 @@ Define \( b_k(i) = P(x_{i+1} \dots x_N \mid \pi_i = k) \).
     \[ b_k(i) = \sum_l \left( e_l(x_{i+1}) \cdot a_{kl} \cdot b_l(i+1) \right) \]
 \end{itemize}
 
-\myimage{7_1/12.png}{}
+\myimage{7_1/12.png}{}[width=0.6\textwidth]
 
 By multiplying the forward and backward probabilities, we isolate the probability of being in state \( k \) at position \( i \) given the entire sequence \( x \):
 \[ P(\pi_i = k \mid x) = \frac{f_k(i) \cdot b_k(i)}{P(x)} \]
@@ -255,16 +253,14 @@ where \( P(x) \) can be found via the Forward algorithm, or computed as \( P(x) 
 
 \subsection{Learning: Training HMM Parameters}
 
-Before an HMM can decode a genome, we must estimate its parameters: transition probabilities (\( a_{kl} \)) and emission probabilities (\( e_k(x) \)).
-
-\myimage{7_1/13.png}{}
+\mysidefigure{Before an HMM can decode a genome, we must estimate its parameters: transition probabilities (\( a_{kl} \)) and emission probabilities (\( e_k(x) \)).}{\myimage{7_1/13.png}\\}[0.4]
 
 \subsubsection{Setting 5a: Supervised Learning (Known Labels - When the right answer is known)}
 
 When we have training data fully annotated with true hidden states, learning uses Maximum Likelihood Estimation (MLE) by simply counting frequencies:
 \[ a_{kl} = \frac{A_{kl}}{\sum_i A_{ki}} \quad \text{and} \quad e_k(b) = \frac{E_k(b)}{\sum_c E_k(c)} \]
 
-\myimage{7_1/14.png}{}
+\myimage{7_1/14.png}{}[width=0.6\textwidth]
 
 \sta \textbf{Pseudocounts:} Given limited data, unobserved events might get a strict probability of 0, which is fatal in HMMs (multiplying by 0 negates an entire path). We resolve this by adding artificial constants, or \textbf{pseudocounts} (\( r_{kl}, r_k(b) \)), to all observed counts before normalization:
 \[ A_{kl} = (\text{observed count}) + r_{kl} \]
@@ -310,7 +306,9 @@ We embed historical context into the identity of the current state itself. For a
 \end{itemize}
 
 % [IMAGE: Graph showing 8 nodes instead of 2. The four '+' nodes represent nucleotides emitted inside a CpG island, and the four '-' nodes represent nucleotides emitted in background DNA. Transition arrows between C+ and G+ are given very high weight to simulate the biological prevalence of CpG dinucleotides.]
-\myimage{7_1/4.png}{Graph showing 8 nodes instead of 2. The four '+' nodes represent nucleotides emitted inside a CpG island, and the four '-' nodes represent nucleotides emitted in background DNA. Transition arrows between C+ and G+ are given very high weight to simulate the biological prevalence of CpG dinucleotides.}
+%\myimage{7_1/4.png}{Graph showing 8 nodes instead of 2. The four '+' nodes represent nucleotides emitted inside a CpG island, and the four '-' nodes represent nucleotides emitted in background DNA. Transition arrows between C+ and G+ are given very high weight to simulate the biological prevalence of CpG dinucleotides.}
+
+\mysidefigure{\myimage{7_1/4.png}\\}{Graph showing 8 nodes instead of 2. The four '+' nodes represent nucleotides emitted inside a CpG island, and the four '-' nodes represent nucleotides emitted in background DNA. Transition arrows between C+ and G+ are given very high weight to simulate the biological prevalence of CpG dinucleotides.}
 
 If the system emits a `C` while in a CpG-island, it enters the \( C_+ \) state. From \( C_+ \), we assign a highly inflated transition probability \( a_{C_+ \to G_+} \), accurately simulating the di-nucleotide frequency while strictly adhering to the memoryless rules.
 
